@@ -1,0 +1,149 @@
+---
+title: "Introductory Research Statistics Using R"
+author: "Joy Vaz & Kene David Nwosu, The GRAPH Courses"
+format: html
+---
+
+# Course Overview
+
+This course introduces foundational concepts in statistics through the lens of public health data and practice, using the R programming language. Emphasis is placed on understanding hypothesis testing, regression methods, and interpretation of real-world data.
+
+# Topics and Schedule
+
+The course organized into three modules with increasing complexity.
+
+![](images/stats_cohort_topics_schedule.png){width="523"}
+
+Modules 1 and 2 are comprised of 18 lessons (described below). Each will include:
+
+-   A 20–30 minute interactive video
+
+-   A code-along R script with data and practice exercises
+
+-   Online quizzes on the TGC platform
+
+-   Slides and lecture notes
+
+## **Week 1: Data Types & Descriptive Statistics**
+
+**Lesson 1.1 \| Types of Variables & Measures of Central Tendency:** Mean, median, variance, data viz (histograms, boxplots).\
+(*How do we summarize and visualize different data types?*)
+
+**Lesson 1.2 \| Measures of Dispersion:** Range, variation, and standard deviation around the mean. (*How do we measure the spread or scattering of the data?*)
+
+**Lession 1.3 \|** **Sampling Variation, Estimation, and Confidence Intervals:** Population vs. sample parameters, confidence intervals, sampling error.\
+(*When/Why can we be confident (e.g. 95%) that the true population value lies within a certain range of our sample value ?*)
+
+## **Week 2: Bivariate Analysis (Part 1)**
+
+**Lesson 2.1 \| T-tests for Comparing Means:** Independent samples, paired samples, effect sizes.\
+(*Are differences in means between two groups statistically significant?*)
+
+**Lesson 2.2 \| Understanding Statistical Significance:** P-values, alpha levels, Type I/II errors, effect size.\
+(*How do we interpret p-values, confidence intervals, and the concept of "significant difference"?*)
+
+## **Week 3: Bivariate Analysis (Part 2)**
+
+**Lesson 3.1 \| ANOVA for Comparing Means Across Multiple Groups:** Between-groups variance, post-hoc tests, F-statistic.\
+(*Are differences in means across three or more groups, such as different treatment types, statistically significant?*)
+
+**Lesson 3.2 \| Chi-square Tests for Categorical Variables:** Contingency tables, expected frequencies, degrees of freedom.\
+(*Are differences in categorical variables, such as treatment response across demographic groups, statistically significant?*)
+
+## **Week 4: Simple Linear Regression**
+
+**Lesson 4.1 \| Introduction to Simple Linear Regression:** Slope, intercept, R².\
+(*How do we model and predict the relationship between two continuous variables?*)
+
+**Lesson 4.2 \| Linear Regression Assumptions & Diagnostics:** Homoscedasticity, normality, outliers.\
+(*How do we check if our linear model meets requirements like linearity and normal residuals?*)
+
+## **Week 5: Multiple Linear Regression**
+
+**Lesson 5.1 \| Multiple Predictors & Confounding:** Partial coefficients, multicollinearity, adjusted R².\
+(*How can we isolate the effect of e.g., education on spending by adjusting for age, income, and other factors?*)
+
+**Lesson 5.2 \| Transformations in Linear Models:** Log transformations, polynomial terms.\
+(*What if we need to transform skewed variables?*)
+
+**Lesson 5.3 \| Reporting & Interpreting Linear Regression:** Coefficient tables, visualization, practical significance.\
+(*How do we present coefficients, confidence intervals, and assumptions?*)
+
+## **Week 6: Logistic Regression Basics**
+
+**Lesson 6.1 \| Introduction to Logistic Regression & Odds Ratios:** Binary outcomes, log odds, probability.\
+(*How do we model yes/no outcomes, such as COVID antibody status, and interpret odds ratios?*)
+
+**Lesson 6.2 \| Logistic Regression Model Fit & Diagnostics:** ROC curves, sensitivity, specificity.\
+(*How do we assess model quality using tools like ROC curves or classification accuracy?*)
+
+## **Week 7: Multiple Logistic Regression**
+
+**Lesson 7.1 \| Multiple Predictors & Confounding in Logistic Models:** Adjusted odds ratios, covariate selection, model comparison.\
+(*How can we account for multiple risk factors, such as age and comorbidities, when modeling a binary outcome?*)
+
+**Lesson 7.2 \| Reporting & Interpreting Logistic Regression:** (*How do we present logistic regression results in a paper?*)
+
+**Lesson 7.3 \| Interactions & Special Considerations:** Effect modification, rare events.\
+(*What if the effect of one predictor depends on another, or if certain events are rare?*)
+
+## **Week 8: Count Data (Poisson & Negative Binomial Regression)**
+
+**Lesson 8.1 \| Introduction to Count Data Models:** Rate parameters, exposure time, overdispersion.\
+(*How do we model counts, e.g. number of tests/hospital visits, which often exhibit skewed distributions?*)
+
+**Lesson 8.2 \| Evaluating and Interpreting Count Models:** Incidence rate ratios, goodness-of-fit, zero-inflation.\
+(*How do we interpret and evaluate Poisson or negative binomial results?*)
+
+------------------------------------------------------------------------
+
+## Final Project
+
+Students will complete a comprehensive public health data analysis. This includes cleaning, visualization, hypothesis testing, and applying appropriate regression methods. A written paper and accompanying R script are required.
+
+------------------------------------------------------------------------
+
+# Delivery Model
+
+## Guided cohort course (3-month live bootcamp)
+
+### Learning Components
+
+The live cohorts will employ a blended learning approach, combining self-paced study with interactive workshops and personalized support. The format includes:
+
+**1) Pre-work** (6 hours per week)
+
+![](images/clipboard-3695186804.png)
+
+**2) Weekly Workshops** (2 hours per week)
+
+Interactive sessions where students engage in collaborative data analysis exercises, applying pre-work content and developing new skills while interacting with peers and instructors.
+
+![](images/clipboard-2374065547.png)
+
+**3) Help Sessions** (Two 2-hour sessions per week)
+
+Additional support sessions where students receive personalized guidance on the course material, troubleshoot coding issues and discuss project ideas with instructors.
+
+**4) Final Projects** (3 weeks)
+
+Capstone projects where students apply their acquired skills to significant public health data analysis topics. These projects will be presented to peers and evaluated by instructors, as a tangible demonstration of students' competencies.
+
+# Assessment
+
+| Component                       | Weight |
+|---------------------------------|--------|
+| Self-paced Quizzes              | 15%    |
+| Code-along R Script Submissions | 15%    |
+| Practical Assignments           | 20%    |
+| Workshop Attendance             | 10%    |
+| Final Project                   | 40%    |
+
+**Passing grade: 80%**
+
+------------------------------------------------------------------------
+
+# Prerequisites
+
+-   No prior statistics background required.
+-   Basic familiarity with R topics from our [intro to R course](https://thegraphcourses.org/rbb/).

@@ -1,0 +1,221 @@
+---
+title: "Sampling Variation, Estimation, and Confidence Intervals"
+format: html
+---
+
+```{r, echo = F, message = F, warning = F}
+# Load packages
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(rlang, tidyverse, knitr, here, reactable, gt, flextable)
+
+# Source functions
+source(here("global/functions/lesson_functions.R"))
+
+# Knitr options
+knitr::opts_chunk$set(warning = F, message = F, class.source = "tgc-code-block", error = T)
+
+# Set ggplot theme
+theme_set(theme_minimal())
+```
+
+------------------------------------------------------------------------
+
+# Introduction {.unnumbered}
+
+Welcome back! In this lesson, we will explore the critical concepts of **sampling variation**, **estimation**, and **confidence intervals**. These concepts fall under the broader topic of **statistical inference**, which allows us to draw conclusions about populations based on sample data.
+
+## Learning Outcomes
+
+By the end of this session, students will be able to:
+
+-   Understand the concepts of statistical inference and sampling distributions.
+-   Calculate standard error and confidence intervals.
+-   Calculate standard error and confidence intervals using R.
+-   Interpret confidence intervals for differences in means.
+
+------------------------------------------------------------------------
+
+# Population and Sample
+
+Before diving deeper, let's briefly cover the concepts of populations and samples.
+
+![](images/pop_vs_sample_g4g.jpg)
+
+### Population
+
+A **population** refers to the entire set of individuals or items that we are interested in studying.
+
+-   **Example**: Studying the average height of all adult women in Cameroon would require measuring every adult woman in the country.
+
+### Sample
+
+A **sample** is a subset of the population, selected for practical reasons, from which we infer characteristics of the entire population.
+
+-   **Example**: Studying the height of 1,000 randomly selected adult women from Yaounde, instead of all women in Cameroon.
+
+::: callout-note
+### **Population vs. Sample**
+
+| **Population** | **Sample** |
+|-----------------------------------------|-------------------------------|
+| Includes all members of a specified group | Subset of the population |
+| Often impractical to study entirely | Practical and feasible to study |
+| Example: All residents in Yaounde | Example: 1,000 randomly chosen residents |
+:::
+
+## Population Parameters vs. Sample Statistics
+
+| **Population Parameter** | **Sample Statistic** |
+|---------------------------------------|---------------------------------|
+| Describes entire population (usually unknown) | Computed from sample data (known) |
+| Denoted by symbols like (\mu) and (\sigma) | Denoted by symbols like (\bar{x}) and (s) |
+| Estimated by sample statistics | Used to estimate population parameters |
+
+------------------------------------------------------------------------
+
+# Estimation and Sampling Variation
+
+When we estimate population parameters using samples, our estimates will naturally vary due to random sampling. This is called **sampling variation**.
+
+## Example in R
+
+This lesson will require the following packages to be installed and loaded:
+
+```{r warning = F, message = F}
+# Load packages 
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, 
+               here,
+               inspectdf)
+```
+
+We will use the Yaounde COVID-19 dataset again to illustrate sampling variation:
+
+```{r}
+yao <- read_csv(here::here('data/yaounde_data.csv'))
+
+# Population parameter (true mean height)
+population_mean <- mean(yao$height_cm, na.rm = TRUE)
+print(population_mean)
+```
+
+## Demonstrating Sampling Variation
+
+We take multiple random samples and calculate their means:
+
+```{r}
+set.seed(123)
+sample_means <- replicate(100, mean(sample(yao$height_cm, 50, replace = TRUE), na.rm = TRUE))
+
+# Visualize sampling variation
+hist(sample_means, breaks = 10, main = "Sampling Variation of Mean Height", xlab = "Sample Means")
+abline(v = population_mean, col = "red", lwd = 2)
+```
+
+This illustrates how sample means vary around the true population mean.
+
+------------------------------------------------------------------------
+
+# Standard Error
+
+The **Standard Error (SE)** quantifies the variability of sample statistics:
+
+\[ SE = \frac{s}{\sqrt{n}} \]
+
+-   ( s ) is the sample standard deviation.
+-   ( n ) is the sample size.
+
+### Calculating Standard Error in R
+
+```{r}
+sample_height <- sample(yao$height_cm, 50, replace = TRUE)
+sample_sd <- sd(sample_height, na.rm = TRUE)
+standard_error <- sample_sd / sqrt(length(sample_height))
+
+print(paste("Standard Error:", round(standard_error, 2)))
+```
+
+------------------------------------------------------------------------
+
+# Confidence Intervals
+
+Confidence intervals (CI) provide a range of values that likely contain the **true population** parameter. If several samples are taken from a population, it is very likely that each sample will have a different mean value. However, we want to know the mean of the population, not the mean of the sample. The confidence interval is the range in which the true mean of the population lies with a certain probability.
+
+If a 95% confidence interval is given, you can be 95% sure that the true value of the parameter lies within that interval.
+
+![](images/confidence_interval.png)
+
+## **Why do we need the confidence interval?**
+
+In statistics, parameters of the population are often estimated based on a sample, such as the mean or the variance. However, these are only estimates and the true value in the population will be somewhere around these estimates. It is very useful to define a range or interval where the true value is most likely to lie.
+
+### Calculating Confidence Interval in R
+
+To calculate the confidence interval, the distribution function of the respective parameter (e.g. the mean value) in the population is required. Assuming that this distribution is normally distributed, the confidence interval for the mean is given by:
+
+![](images/Confidence_interval_formula.png)
+
+Where *x* is the sample mean, *z* is the critical Z-value (e.g., 1.96 for 95% CI), *n* is the sample size and *s* is the sample standard deviation. Plus and minus indicate the lower and upper limits of the confidence interval respectively.
+
+Let's calculate a 95% CI:
+
+```{r}
+sample_mean <- mean(sample_height, na.rm = TRUE)
+z_value <- 1.96
+ci_lower <- sample_mean - z_value * standard_error
+ci_upper <- sample_mean + z_value * standard_error
+
+print(paste("95% CI: [", round(ci_lower, 2), ",", round(ci_upper, 2), "]"))
+```
+
+------------------------------------------------------------------------
+
+# Confidence Intervals for Difference in Means
+
+Comparing groups involves the CI for the difference between two means.
+
+Example: Comparing male and female heights:
+
+```{r}
+male_heights <- yao %>% filter(sex == "Male") %>% pull(height_cm)
+female_heights <- yao %>% filter(sex == "Female") %>% pull(height_cm)
+
+mean_diff <- mean(male_heights, na.rm = TRUE) - mean(female_heights, na.rm = TRUE)
+se_diff <- sqrt(var(male_heights, na.rm = TRUE)/length(male_heights) + var(female_heights, na.rm = TRUE)/length(female_heights))
+
+ci_diff_lower <- mean_diff - z_value * se_diff
+ci_diff_upper <- mean_diff + z_value * se_diff
+
+print(paste("95% CI for mean difference: [", round(ci_diff_lower, 2), ",", round(ci_diff_upper, 2), "]"))
+```
+
+Interpretation:
+
+-   If the CI does not include 0, the difference is statistically significant.
+-   Here, we can infer if male and female average heights differ significantly.
+
+------------------------------------------------------------------------
+
+# Interpretation of Confidence Intervals
+
+-   A 95% CI means we are 95% confident the interval contains the true population parameter.
+-   Narrow intervals indicate precise estimates, whereas wide intervals indicate greater uncertainty.
+
+------------------------------------------------------------------------
+
+## Conclusion
+
+Well done! You have successfully learned about sampling variation, estimation, and how to calculate and interpret confidence intervals in R. These skills are foundational in statistical inference, enabling you to draw accurate conclusions from sample data.
+
+# Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r .tgc_contributors_list(ids = c("joy", "kendavidn"))`
+
+# References {.unlisted .unnumbered}
+
+-   TBA
+-   
+
+`r .tgc_license()`
