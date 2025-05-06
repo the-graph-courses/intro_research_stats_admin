@@ -58,17 +58,15 @@ This lesson will require the following packages to be installed and loaded:
 if(!require(pacman)) install.packages("pacman")
 pacman::p_load(tidyverse, 
                here, 
-               yaounde, 
                janitor,
                DescTools)
-
 ```
 
 ------------------------------------------------------------------------
 
 # Variable Types
 
-When conducting descriptive analysis, the method you choose will depend on the *type* of data you’re analyzing. At the most basic level, variables can be described as numerical or categorical.
+When conducting descriptive analysis, the method you choose will depend on the *type* of data you’re analyzing. At the most basic level, variables can be described as numerical or categorical.
 
 ![](images/flowchart_num_and_cat.png)
 
@@ -88,29 +86,29 @@ Descriptive analysis of numerical variables can be measured by different methods
 
     -   **Continuous**
 
-        -   Numerical methods (e.g., mean, median, variance)
+        -   **Numerical methods** (e.g., mean, median, variance)
 
-        -   Graphical methods (e.g., histogram, boxplot)
+        -   **Graphical methods** (e.g., histogram, boxplot)
 
     -   **Discrete**
 
-        -   Numerical methods (e.g., counts, proportions, discrete distributions)
+        -   **Numerical methods** (e.g., counts, proportions, discrete distributions)
 
-        -   Graphical methods (e.g., bar charts, histograms with integer bins)
+        -   **Graphical methods** (e.g., bar charts, histograms with integer bins)
 
 2.  **Categorical Variables**
 
     -   **Ordinal** (clear order, e.g., Likert scale: *poor*, *fair*, *good*)
 
-        -   Numerical methods (e.g., frequencies, percentages)
+        -   **Numerical methods** (e.g., frequencies, percentages)
 
-        -   Graphical methods (e.g., bar chart with ordered categories)
+        -   **Graphical methods** (e.g., bar chart with ordered categories)
 
     -   **Nominal** (no inherent order, e.g., gender, country)
 
-        -   Numerical methods (e.g., frequencies, proportions)
+        -   **Numerical methods** (e.g., frequencies, proportions)
 
-        -   Graphical methods (e.g., bar chart, pie chart)
+        -   **Graphical methods** (e.g., bar chart, pie chart)
 
 ::: key-point
 There are both **numerical** and **graphical** methods we can use to perform descriptive analysis for all types and subtypes of variables.
@@ -121,25 +119,17 @@ There are both **numerical** and **graphical** methods we can use to perform des
 ------------------------------------------------------------------------
 
 ::: practice
-**Identifying Variable Types (draft)**
+**Identifying Variable Types**
 
-MCQs
+For the four variables below, select whether it is numerical or categorical. If categorical, specify if it's ordinal or nominal. If numerical, classify as discrete or continuous.
 
-1.  Education level, responses are "high", "medium", "low". Is the variable type:
+1.  Stress level, responses are "high", "medium", "low".
 
--   Ordinal
+2.  Age in years
 
--   Factor
+3.  Height in centimeters
 
--   Nominal
-
--   Continuous
-
--   Discrete
-
-2.  Age
-3.  Height
-4.  Country
+4.  Country name
 :::
 
 # The Yaounde COVID-19 dataset
@@ -160,7 +150,7 @@ yaounde
 Some examples of categorical variables seen in our `yaounde` data frame are: `sex`, `highest_education`, and `age_category`. In fact, most of the variables in this dataset are categorical.
 
 ```{r render = .reactable_5_rows}
-glimpse(yaounde)
+head(yaounde)
 ```
 
 Can you identify which variables are numeric?
@@ -170,23 +160,26 @@ Can you identify which variables are numeric?
 
 R data classes correspond to different variable types:
 
-| Variable Type | R Data Class      | Example Variables in Yaounde Dataset |
-|---------------|-------------------|--------------------------------------|
-| Continuous    | Numeric           | `height_cm`, `weight_kg`             |
-| Discrete      | Integer, Numeric  | `age`, `n_days_miss_work`            |
-| Ordinal       | Factor (ordered)  | `highest_education`                  |
-| Nominal       | Factor, Character | `sex`, `neighborhood`                |
-| Logical       | Logical           | `is_pregnant`, `is_medicated`        |
-| Date          | Date              | `date_surveyed`                      |
+| Variable Type | R Data Class                |
+|---------------|-----------------------------|
+| Continuous    | Numeric                     |
+| Discrete      | Integer, Numeric            |
+| Ordinal       | Factor (ordered), Character |
+| Nominal       | Factor, Character           |
+| Logical       | Logical (`TRUE` or `FALSE`) |
+| Date          | Date                        |
 :::
-
 
 ::: practice
-**Identifying Variable Types and R Data classes (draft)**
+**Identifying Variable Types and R Data classes** For each of the following variables, identify (1) the variable type (categorical or numerical), (2) its subtype (e.g., nominal, ordinal, discrete, continuous), and (3) the corresponding R data class.
 
-MCQs about different variables in dataset - e.g., birth date variable type is continuous (discrete), and R data class is date.
+1.  `age`
+2.  `highest_education`
+3.  `is_smoker`
+4.  `date_surveyed`
+5.  `weight_kg`
+6.  `igg_result`
 :::
-
 
 ------------------------------------------------------------------------
 
@@ -220,6 +213,9 @@ We can also use the `tabyl()` function to create 2-way frequency tables.
 # Create a summary data frame of two categorical variables
 
 yaounde %>% 
+  tabyl(is_smoker, sex)
+
+yaounde %>% 
   tabyl(is_smoker, sex) %>%
   adorn_percentages("row")
 
@@ -228,11 +224,25 @@ yaounde %>%
 ::: practice
 **Frequency Tables**
 
-Coding question using different categorical variables in dataset.
+Use the `tabyl()` function from the `{janitor}` package to answer the following:
 
--   one way table
+1.  Create a frequency table of `has_contact_covid`.
 
--   two-way table
+```{r echo = F}
+"YOUR ANSWER HERE" 
+```
+
+2.  Create a two-way frequency table between `has_contact_covid` and `igg_result`.
+
+```{r echo = F}
+"YOUR ANSWER HERE" 
+```
+
+3.  Use `adorn_percentages("row")` to display row-wise proportions in the table created above.
+
+```{r echo = F}
+"YOUR ANSWER HERE" 
+```
 :::
 
 ## Graphical Descriptions of Categorical Variables
@@ -304,11 +314,25 @@ ggplot(yaounde) +
 ::: practice
 **Bar Charts**
 
-Coding question using different categorical variables in dataset.
+Use `ggplot()` to create the following charts:
 
--   Nominal
+1.  Plot a bar chart showing the distribution of `age_category_3`, colored by `is_smoker`.
 
--   Ordinal: Reorder health insurance status and plot
+```{r echo = F}
+"YOUR ANSWER HERE" 
+```
+
+2.  Create a percent-stacked bar chart showing the same variables.
+
+```{r echo = F}
+"YOUR ANSWER HERE" 
+```
+
+3.  Reorder the `age_category_3` factor so that the categories appear in the logical order (youngest to oldest) and then plot again.
+
+```{r echo = F}
+"YOUR ANSWER HERE" 
+```
 :::
 
 # Numerical Variables
@@ -343,8 +367,6 @@ Measures of central tendency summarize the "center" of a numerical distribution.
 **Measures of Central Tendency**
 
 MCQs
-
-(copy some ideas from FoSSA quizzes)
 :::
 
 ### Mean
@@ -367,7 +389,7 @@ mean_height
 
 ### Median
 
-A Median is a middle value for sorted data. The sorting of the data can be done either in ascending order or descending order. A median divides the data into two halves. 
+A Median is a middle value for sorted data. The sorting of the data can be done either in ascending order or descending order. A median divides the data into two halves.
 
 The formula to calculate the **median** of the number of terms if the number of terms is even is shown in the image below:
 
@@ -413,16 +435,32 @@ mean(yaounde$n_bedridden_days)
 # Sucessfully calculates the mean
 mean(yaounde$n_bedridden_days, na.rm = TRUE)
 ```
+
+The same applies to the `median()` and `Mode()` funtions.
 :::
 
 ::: practice
-**Caculating Measures of Central Tendency in R**
+**Calculating Measures of Central Tendency in R**
 
-Coding questions using different numeric variables in dataset.
+Use `mean()`, `median()`, and `Mode()` from `{DescTools}` to compute the following:
 
--   summary and str
+1.  Mean of `weight_kg`.
 
--   Ordinal: Reorder health insurance status and plot
+```{r echo = F}
+"YOUR ANSWER HERE" 
+```
+
+2.  Median of `n_days_miss_work` (be sure to handle missing values).
+
+```{r echo = F}
+"YOUR ANSWER HERE" 
+```
+
+3.  Mode of `height_cm` and `n_bedridden_days`.
+
+```{r echo = F}
+"YOUR ANSWER HERE" 
+```
 :::
 
 ### Differences between Mean, Median, and Mode
@@ -511,6 +549,8 @@ ggplot(yaounde, aes(height_cm,
 :::
 
 ::: practice
+**Histograms**
+
 -   Plot a histogram showing the distribution of `n_bedridden_days` in `yaounde`.
 
 ```{r echo = F}
@@ -530,22 +570,20 @@ Make notes on these key questions:
 :::
 
 ::: practice
+**Density Plot: weight by sex**
+
 -   Plot a kernel density plot showing the distribution of weight for each sex in `yaounde`.
 
 ```{r echo = F}
 
 "YOUR ANSWER HERE" 
 
-ggplot(yaounde, aes(weight_kg, 
-                      colour = sex, 
-                      fill = sex)) +
-  geom_density(alpha = 0.1)
 ```
 
 Make notes on these key questions:
 
-1.  What is the "center" or "most typical" value for each continent?
-2.  How do the values spread out? Are they skewed or do they have a relatively normal distribution?
+1.  What is the "center" or "most typical" value for each sex? How similar are the distributions?
+2.  How do the values spread out? Is there a clear peak at the center?
 :::
 
 ### Boxplots
@@ -623,25 +661,13 @@ ggplot(yaounde,
 :::
 
 ::: practice
+**Boxplots**
+
 -   Create a boxplot showing the distribution of weights for each sex. Improve the plot by adding a layer of jittered points and a marker for the mean.
 
 ```{r echo = F}
 
 "YOUR ANSWER HERE"
-
-ggplot(yaounde, 
-       aes(x = sex, 
-           y = weight_kg,
-           fill = sex,
-           color = sex)) +
-  geom_boxplot(alpha = 0.6) +
-  geom_jitter(width = 0.25, alpha = 0.5) +
-  stat_summary(fun = "mean",
-               geom = "point",
-               size = 3,
-               shape = 23,
-               fill = "white")
-
 ```
 :::
 
@@ -673,6 +699,183 @@ inspect_cat(yaounde)
 Continue exploring these concepts with real-world data to gain deeper insight into public health analyses.
 
 ------------------------------------------------------------------------
+
+# Answer Key {.unlisted .unnumbered}
+
+**Identifying Variable Types**
+
+1.  Categorical – Ordinal\
+2.  Numerical – Discrete\
+3.  Numerical – Continuous\
+4.  Categorical – Nominal
+
+**Identifying Variable Types and R Data Classes**
+
+1.  `age` – Numerical (Discrete), R class: Numeric\
+2.  `highest_education` – Categorical (Ordinal), R class: Character or Factor\
+3.  `is_smoker` – Categorical (Nominal), R class: Character\
+4.  `date_surveyed` – Date, R class: Date\
+5.  `weight_kg` – Numerical (Continuous), R class: Numeric\
+6.  `igg_result` – Categorical (Nominal), R class: Character
+
+R data classes correspond to different variable types:
+
+| Variable Type | R Data Class      | Example Variables in Yaounde Dataset |
+|---------------|-------------------|--------------------------------------|
+| Continuous    | Numeric           | `height_cm`, `weight_kg`             |
+| Discrete      | Integer, Numeric  | `age`, `n_days_miss_work`            |
+| Ordinal       | Factor (ordered)  | `highest_education`                  |
+| Nominal       | Factor, Character | `sex`, `neighborhood`                |
+| Logical       | Logical           | `is_pregnant`, `is_medicated`        |
+| Date          | Date              | `date_surveyed`                      |
+
+**Frequency Tables**
+
+Use the `tabyl()` function from the `{janitor}` package to answer the following:
+
+1.  Create a frequency table of `has_contact_covid`.
+
+```{r}
+yaounde %>% tabyl(has_contact_covid)
+```
+
+2.  Create a two-way frequency table between `has_contact_covid` and `igg_result`.
+
+```{r}
+yaounde %>% tabyl(has_contact_covid, 
+                  igg_result)
+```
+
+3.  Use `adorn_percentages("row")` to display row-wise proportions in the table created above.
+
+```{r}
+yaounde %>% tabyl(has_contact_covid, 
+                  igg_result) %>% 
+  adorn_percentages("row")
+```
+
+**Bar Charts**
+
+Use `ggplot()` to create the following charts:
+
+1.  Plot a bar chart showing the distribution of `age_category_3`, colored by `is_smoker`.
+
+```{r}
+ggplot(yaounde) +
+  geom_bar(aes(x = age_category_3, fill = is_smoker))
+```
+
+2.  Create a percent-stacked bar chart showing the same variables.
+
+```{r}
+ggplot(yaounde) +
+  geom_bar(aes(x = age_category_3, fill = is_smoker),
+           position = "fill")
+```
+
+3.  Reorder the `age_category_3` factor so that the categories appear in the logical order and then plot again.
+
+```{r}
+# Reorder categories from youngest to oldest
+yaounde <- yaounde %>%
+  mutate(age_category_3_ordered = 
+           factor(age_category_3,
+                  levels = c("Child",
+                             "Adult",
+                             "Senior")))
+```
+
+```{r}
+# Plot again with the ordered variable
+ggplot(yaounde) +
+  geom_bar(aes(x = age_category_3_ordered, 
+               fill = is_smoker),
+           position = "fill")
+```
+
+**Caculating Measures of Central Tendency in R**
+
+Use `mean()`, `median()`, and `Mode()` from `{DescTools}` to compute the following:
+
+1.  Mean of `weight_kg`.
+
+```{r}
+mean(yaounde$weight_kg)
+```
+
+2.  Median of `n_days_miss_work` (be sure to handle missing values).
+
+```{r}
+mean(yaounde$n_days_miss_work, na.rm = TRUE)
+```
+
+3.  Mode of `height_cm` and `n_bedridden_days`.
+
+```{r}
+Mode(yaounde$height_cm)
+
+Mode(yaounde$n_bedridden_days, na.rm = T)
+```
+
+**Histograms**
+
+-   Plot a histogram showing the distribution of `n_bedridden_days` in `yaounde`.
+
+```{r}
+
+ggplot(data = yaounde, 
+       mapping = aes(x = n_bedridden_days)) +
+  geom_histogram(fill = "steelblue")
+```
+
+Make notes on these key questions:
+
+1.  What are the smallest and largest values?
+2.  What are frequent and infrequent values?
+
+-   Smallest value is 0.\
+-   Largest may be 30, but it is an outlier.\
+-   Most frequent value is 0.\
+-   Distribution is heavily left-skewed, with most patients having no or very few bedridden days.
+
+**Density Plot: weight by sex**
+
+-   Plot a kernel density plot showing the distribution of weight for each sex in `yaounde`.
+
+```{r}
+ggplot(yaounde, aes(weight_kg, 
+                      colour = sex, 
+                      fill = sex)) +
+  geom_density(alpha = 0.1)
+```
+
+-   Shows typical weight slightly differs by sex.\
+-   Distributions largely overlap.
+-   Distribution is bimodal - with two peaks. Perhaps one for children and one for adults.
+-   Males have a slightly higher central tendency.
+
+**Boxplots**
+
+-   Create a boxplot showing the distribution of weights for each sex. Improve the plot by adding a layer of jittered points and a marker for the mean.
+
+```{r}
+
+"YOUR ANSWER HERE"
+
+ggplot(yaounde, 
+       aes(x = sex, 
+           y = weight_kg,
+           fill = sex,
+           color = sex)) +
+  geom_boxplot(alpha = 0.6) +
+  geom_jitter(width = 0.25, alpha = 0.5) +
+  stat_summary(fun = "mean",
+               geom = "point",
+               size = 3,
+               shape = 23,
+               fill = "white")
+
+```
 
 # Appendix: R functions used in this lesson {.unlisted .unnumbered}
 
