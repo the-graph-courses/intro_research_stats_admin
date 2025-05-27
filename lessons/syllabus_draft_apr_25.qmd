@@ -31,8 +31,8 @@ Modules 1 and 2 are comprised of 18 lessons (described below). Each will include
 
 **Lesson 1.2 \| Measures of Dispersion:** Range, variation, and standard deviation around the mean. (*How do we measure the spread or scattering of the data?*)
 
-**Lession 1.3 \|** **Sampling Variation, Estimation, and Confidence Intervals:** Population vs. sample parameters, confidence intervals, sampling error.\
-(*When/Why can we be confident (e.g. 95%) that the true population value lies within a certain range of our sample value ?*)
+**Lession 1.3 \|** **Data Distributions, Estimation, and Confidence Intervals:** Population vs. sample parameters, confidence intervals, sampling error.\
+(*When/Why can we be confident (e.g. 95%) that the true population value lies within a certain range of our sample value?*)
 
 ## **Week 2: Bivariate Analysis (Part 1)**
 

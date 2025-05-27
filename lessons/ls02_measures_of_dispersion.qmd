@@ -1,5 +1,5 @@
 ---
-title: "Measures of Dispersion"
+title: "Descriptive Statistics 3: Measures of Dispersion"
 format: html
 ---
 
@@ -26,76 +26,19 @@ Welcome back! Our journey into *Descriptive Statistics* continues with **Measure
 
 These measures, which include the **range**, **variance**, and **standard deviation**, inform us about the extent to which our data is spread. R's built-in statistical functions offer all we need to measure and understand dispersion in our data. Let's dive right in!
 
+![](images/misc_images/branches4.png)
+
 # Packages
 
 This lesson will require the following packages to be installed and loaded:
 
 ```{r warning = F, message = F}
 # Load packages 
-if(!require(pacman)) install.packages("pacman")
+if (!require(pacman)) install.packages("pacman")
 pacman::p_load(tidyverse, 
                here,
                inspectdf)
 ```
-
-# **The Yaounde COVID-19 dataset**
-
-In this lesson, we will again use the data from the COVID-19 serological survey conducted in Yaounde, Cameroon.
-
-```{r}
-yaounde <- read_csv(here::here('data/yaounde_data.csv'))
-
-# A smaller subset of numeric variables
-yao <- yaounde %>% 
-  filter(age_category_3 != "Child") %>% 
-  select(age, sex, weight_kg, height_cm)
-yao
-```
-
-## Measures of Dispersion and Central Tendency
-
-Both Measures of Dispersion and Central Tendency are numbers that are used to describe various parameters of continuous data. Let’s see the differences between Measures of Dispersion and Central Tendency.
-
-![](images/stats_overview_g4g.png)
-
-In the last lesson on measures of central tendency, we found the mean value, median value, mode value, of the height variable in our `yaounde` dataset. We also created boxplots to visualize the maximum and minimum values of the `height_cm` variables, as well as the quartile ranges.
-
-We can use the `inspect_num()` function from the {inspectdf} package to get a summary table of both measures of central tendency and dispersion of numeric variables in our dataset.
-
-```{r}
-# Summarise central tendency and dispersion for numeric variables in the yao dataframe
-yao %>% inspect_num()
-```
-
-Measures of central tendency describe the “typical” or “average” person in our sample. The result of our analysis above tells us that the average adult was 167cm tall. This information gets us reasonably close to understanding the typical height of the patients surveyed. So a natural extension of our original question is: “How much like the average person are the other people in the data?”
-
-The measures used to answer this question are called **measures of dispersion**, which we can say is the amount of difference between people in the study, or more generally, the amount of variability in the data.
-
-![](images/measure-of-dispersion.png)
-
-In the last lesson we looked at dispersion visually, through charts such as boxplots and histograms. The density curve below gives us an idea of how values vary around the mean.
-
-```{r}
-ggplot(yao, aes(height_cm)) +
-  geom_density(alpha = 0.1) +
-  scale_x_continuous(breaks = seq(70, 200, 10))
-```
-
-Measures of Dispersion allow us to mathematically quantify and measure the level of dispersion.
-
-+-------------------------------------------------------------------------------------+------------------------------------------------------------------------------------+
-| **Central Tendency**                                                                | **Measure of Dispersion**                                                          |
-+:===================================================================================:+:==================================================================================:+
-| Central Tendency is used to quantify typical or most common properties of the data. | Measures of Dispersion are used to quantify the variability or spread of the data. |
-+-------------------------------------------------------------------------------------+------------------------------------------------------------------------------------+
-| The measures of Central tendency include:                                           | Common measures of dispersion are:                                                 |
-|                                                                                     |                                                                                    |
-| Mean                                                                                | Range                                                                              |
-|                                                                                     |                                                                                    |
-| Median                                                                              | Variance                                                                           |
-|                                                                                     |                                                                                    |
-| Mode                                                                                | Standard Deviation                                                                 |
-+-------------------------------------------------------------------------------------+------------------------------------------------------------------------------------+
 
 # **Measures of Dispersion**
 
@@ -111,11 +54,80 @@ Three common measures of dispersion used are the:
 
 ![](images/dispersion_03_overview.png)
 
-::: callout-note
+::: callout-important
+## Defining Measures of Dispersion
+
 Measures of dispersion, also called measures of variability, "describe the extent to which the values of a variable are different."
 
 The most common measures of dispersion are range, variance, and standard deviation.
 :::
+
+# **The Yaounde COVID-19 dataset**
+
+In this lesson, we will again use the data from the COVID-19 serological survey conducted in Yaounde, Cameroon.
+
+```{r}
+yaounde <- read_csv(here::here('data/yaounde_data.csv'))
+
+# A smaller subset focusing on continuous numeric variables - height and weight
+
+yao_num <- yaounde %>% 
+  select(age_category_3, sex, weight_kg, height_cm)
+
+yao_male_adults <- yao_num %>% 
+  filter(age_category_3 != "Child", sex == "Male") 
+
+yao_male_adults
+```
+
+::: callout-tip
+## Recap: Measures of Central Tendency and Dispersion
+
+Both Measures of Dispersion and Central Tendency are numbers that are used to describe various parameters of continuous data. Let's see the differences between Measures of Dispersion and Central Tendency.
+
+![](images/stats_overview_g4g.png)
+
+In the last lesson on measures of central tendency, we found the mean value, median value, mode value, of the height variable in our `yaounde` dataset.
+
+REWORD/EDIT: Earlier, we also created boxplots to visualize the maximum and minimum values of the `height_cm` variables, as well as the quartile ranges.
+:::
+
+We can use the `inspect_num()` function from the {inspectdf} package to get a summary table of both measures of central tendency and dispersion of numeric variables in our dataset.
+
+```{r}
+# Summarise central tendency and dispersion for numeric variables in the yao_male_adults dataframe
+yao_male_adults %>% inspect_num()
+```
+
+REWORD/EDIT: Measures of central tendency describe the "typical" or "average" person in our sample. The result of our analysis above tells us that the average adult was 167cm tall. This information gets us reasonably close to understanding the typical height of the patients surveyed. So a natural extension of our original question is: "How much like the average person are the other people in the data?"
+
+The measures used to answer this question are called **measures of dispersion**, which we can say is the amount of difference between people in the study, or more generally, the amount of variability in the data.
+
+![](images/measure-of-dispersion.png)
+
+REWORD/EDIT: In the last lesson we looked at dispersion graphically, through charts such as boxplots and histograms. The density curve below gives us an idea of how values vary around the mean.
+
+```{r}
+ggplot(yao_male_adults, aes(height_cm)) +
+  geom_density(alpha = 0.1) +
+  scale_x_continuous(breaks = seq(70, 200, 10))
+```
+
+Measures of Dispersion allow us to **mathematically** quantify and measure the level of dispersion.
+
++-------------------------------------------------------------------------------------+------------------------------------------------------------------------------------+
+| **Central Tendency**                                                                | **Measure of Dispersion**                                                          |
++:===================================================================================:+:==================================================================================:+
+| Central Tendency is used to quantify typical or most common properties of the data. | Measures of Dispersion are used to quantify the variability or spread of the data. |
++-------------------------------------------------------------------------------------+------------------------------------------------------------------------------------+
+| The measures of Central tendency include:                                           | Common measures of dispersion are:                                                 |
+|                                                                                     |                                                                                    |
+| Mean                                                                                | Range & IQR                                                                        |
+|                                                                                     |                                                                                    |
+| Median                                                                              | Variance                                                                           |
+|                                                                                     |                                                                                    |
+| Mode                                                                                | Standard Deviation                                                                 |
++-------------------------------------------------------------------------------------+------------------------------------------------------------------------------------+
 
 # **Range**
 
@@ -129,15 +141,39 @@ The **range**, simply the difference between the highest and lowest values, illu
 
 ```{r}
 # Heights of patients from the Yaounde dataset
-height_cm <- yao$height_cm
+height_men <- yao_male_adults$height_cm
 
-
-# Calculate and print the Range
-range_heights <- diff(range(height_cm))
-print(paste("Range of heights:", range_heights))  # Range of heights: 118
+# Calculate the range
+diff(range(height_men))
 ```
 
 Range is not very useful from a statistical standpoint; because it relies only on the outermost values of a dataset, two datasets with the same range could still have drastic differences in their overall distribution.
+
+## Interquartile Range (IQR)
+
+Finding the quartiles of a given dataset is simple with the R `quantile()` function.
+
+```{r}
+quantile(height_men)
+```
+
+IQR is diff between 25 and 75.
+
+```{r}
+IQR(height_men)
+```
+
+```{r}
+ggplot(yao_male_adults, aes(x = height_cm)) +
+  geom_boxplot()
+```
+
+![](images/boxplot_anatomy.png)
+
+```{r}
+168 - (1.5*9)
+177 + (1.5*9)
+```
 
 # Variance
 
@@ -152,7 +188,7 @@ Variance shows how much the numbers in your data **vary** from the average value
 
 ## How to Calculate Variance?
 
-The steps to calculate the variance of a dataset:
+REPEATED A LOT: Variance measures the average of the squared differences from the Mean (μ). Variance is usually represented by the symbol σ^2^. The steps to calculate the variance of a dataset:
 
 > **Step 1:** **Calculate the Mean (Average):**\
 > Add up all the values in the dataset and divide by the total number of values. This gives you the mean (μ).\
@@ -174,8 +210,7 @@ The steps to calculate the variance of a dataset:
 
 Therefore, the formula to calculate the variance of a dataset is as follows:
 
-$ Variance (\sigma^2) =  \frac{1}{N}\sum_{i=1}^N (X_i - \mu)^2 $
-
+$$ Variance (\sigma^2) = \frac{1}{N}\sum_{i=1}^N (x_i - \mu)^2 $$
 
 Where:
 
@@ -186,14 +221,13 @@ Where:
 
 This formula quantifies how spread out the data points are. The more spread out the data, the greater the variance compared to the average.
 
-**Calculating Variance in R**
+### Calculating Variance in R
 
 We can calculate the variance using R's built-in **`var()`** function:
 
 ```{r}
-# Calculate and print the Variance
-variance_heights <- var(height_cm)
-print(paste("Variance of heights:", variance_heights))  # Variance of heights: 93.3
+# Calculate the variance
+var(height_men)
 ```
 
 The output helps us understand the level of variability from the average.
@@ -202,61 +236,66 @@ The output helps us understand the level of variability from the average.
 
 Rooted in Variance, the **Standard Deviation** is the square root of the Variance. It measures how much each data point differs from the mean or average.
 
-![](images/unnamed-chunk-324-1.png)
-
 A low **Standard Deviation** means values are close to the average, while a high standard deviation means values spread out over a wider range.
 
-**Calculating Standard Deviation in R**
+### Standard Deviation Formula
+
+Therefore, the formula to calculate the SD of a dataset is as follows:
+
+$$ Standard Deviation (\sigma) = \sqrt{\frac{1}{N}\sum_{i=1}^N (x_i - \mu)^2} $$
+
+Where:
+
+-   $x_i$is the i^th^ Observation
+-   $\mu$ is the mean (average)
+-   $N$ is the Number of Observations
+-   $\sum$ = Sum over all the values
+
+### Calculating Standard Deviation in R
 
 We can compute it using the **`sd()`** function available in R.
 
 ```{r}
-
-# Calculate and print the Standard Deviation
-std_heights <- sd(height_cm)
-print(paste("Standard deviation of heights:", std_heights))  # Standard deviation of heights: 18.8
+# Calculate the standard deviation
+sd(height_men)
 ```
-
-Why is the standard deviation important when we already have variance? Compared to variance, the standard deviation is expressed in the same units as the data, making it easier to interpret. Additionally, the standard deviation is frequently used in statistical analysis because data within one standard deviation of the mean account for approximately 68% of the set, while data within two standard deviations cover around 95%. These percentages aid our understanding of data dispersion in a probability distribution. Therefore, while variance provides numerical insight into data spread, the standard deviation conveys these insights in a more comprehensible and applicable manner.
 
 ## Variance Vs Standard Deviation
 
-+-----------------------------------------------------------------------+--------------------------------------------------------------+
-| **Variance**                                                          | **Deviation (Standard Deviation)**                           |
-+:=====================================================================:+:============================================================:+
-| The measure of spread in a dataset.                                   | Measure of average distance from the mean.                   |
-+-----------------------------------------------------------------------+--------------------------------------------------------------+
-| Average of squared differences from the mean.                         | The square root of the variance.                             |
-+-----------------------------------------------------------------------+--------------------------------------------------------------+
-| $\sigma^2$ (sigma squared)                                            | $\sigma$ (sigma)                                             |
-+-----------------------------------------------------------------------+--------------------------------------------------------------+
+Why is the standard deviation important when we already have variance? Compared to variance, the standard deviation is expressed in the same units as the data, making it easier to interpret.
+
+Additionally, the standard deviation is frequently used in statistical analysis because data within one standard deviation of the mean account for approximately 68% of the set, while data within two standard deviations cover around 95%.
+
+![](images/sd_percentages.png){width="604"}
+
+These percentages aid our understanding of data dispersion in a probability distribution. Therefore, while variance provides numerical insight into data spread, the standard deviation conveys these insights in a more comprehensible and applicable manner.
+
+| **Variance** | **Deviation (Standard Deviation)** |
+|:--:|:--:|
+| The measure of spread in a dataset. | Measure of average distance from the mean. |
+| Average of squared differences from the mean. | The square root of the variance. |
+| $\sigma^2$ (sigma squared) | $\sigma$ (sigma) |
 | Indicates the average squared deviation of data points from the mean. | Indicates the average distance of data points from the mean. |
-+-----------------------------------------------------------------------+--------------------------------------------------------------+
-| Harder to interpret directly (due to squared units)                   | Easier to interpret; shows how spread out the data is        |
-+-----------------------------------------------------------------------+--------------------------------------------------------------+
+| Harder to interpret directly (due to squared units) | Easier to interpret; shows how spread out the data is |
 
-![](images/standard-deviation-1626765925.png)
-
-Variance measures the average of the squared differences from the Mean (μ). Variance is usually represented by the symbol σ^2^.
-
-Visualizing Mean, Variance, and Standard Deviation Together
+## Visualizing Mean, Variance, and Standard Deviation Together
 
 Here we create a density plot of `height_cm`, and overlay the mean, standard deviation, and variance on the plot.
 
 ```{r}
 # Calculate mean, variance, and standard deviation
-mean_value <- mean(height_cm)
-sd_value <- sd(height_cm)
+mean_value <- mean(height_men)
+sd_value <- sd(height_men)
 
 # Calculate the variance
-variance_value <- var(height_cm)
+variance_value <- var(height_men)
 
 # Create the plot with variance annotation
-ggplot(data.frame(height_cm), aes(x = height_cm)) +
+ggplot(yao_male_adults, aes(x = height_cm)) +
   geom_density(fill = "dodgerblue", alpha = 0.5) +  # Density plot
-  geom_vline(aes(xintercept = mean_value), color = "indianred", linetype = "dashed", size = 1.2) +  # Mean line
-  geom_vline(aes(xintercept = mean_value + sd_value), color = "forestgreen", linetype = "dotted", size = 1) +  # SD line (right)
-  geom_vline(aes(xintercept = mean_value - sd_value), color = "forestgreen", linetype = "dotted", size = 1) +  # SD line (left)
+  geom_vline(aes(xintercept = mean_value), color = "indianred", linetype = "dashed", linewidth = 1.2) +  # Mean line
+  geom_vline(aes(xintercept = mean_value + sd_value), color = "forestgreen", linetype = "dotted", linewidth = 1) +  # SD line (right)
+  geom_vline(aes(xintercept = mean_value - sd_value), color = "forestgreen", linetype = "dotted", linewidth = 1) +  # SD line (left)
   labs(title = "Visualization of Mean, Variance, and Standard Deviation",
        x = "Data Values",
        y = "Density") +
@@ -267,9 +306,45 @@ ggplot(data.frame(height_cm), aes(x = height_cm)) +
   annotate("text", x = 185, y = 0.05, label = paste("Variance =", round(variance_value, 2)), color = "blue", vjust = -1)
 ```
 
+```{r}
+norm_dist <- data.frame(x = seq(-4, 4, len = 50)*sd_value + mean_value) |> 
+  mutate(density = dnorm(x, mean_value, sd_value))
+```
+
+```{r}
+ggplot(yao_male_adults, aes(x = height_cm)) +
+  geom_density(fill = "dodgerblue", alpha = 0.5) +
+  geom_line(aes(x, density),  data = norm_dist, color = "red") 
+```
+
+```{r}
+# eCDF
+
+ggplot(data.frame(height_cm), aes(x = height_cm)) + 
+  stat_ecdf() +
+  labs(x = "a", y = "F(a)") +
+  scale_y_continuous(breaks=seq(0,1,0.1))
+```
+
+Similar to what the frequency table does for categorical data, the eCDF defines the distribution for numerical data. From the plot, we can see that 65% of the values are below 175 cm, since F(175)= 0.65, or that 10% of the values are below 165, since F(165)= 0.1, and so on.
+
+We can define the empirical cumulative distribution function (eCDF) as:
+
+```{r}
+F <- function(a) mean(height_cm <= a)
+```
+
+which, for any value `a`, gives the proportion of values in the list `x` that are smaller or equal than `a`.
+
+Let's connect the eCDF to probability by asking: if I randomly pick one of the male patients, what is the chance that he is taller than 180 cm? Since every patient has the same chance of being picked, the answer to this is equivalent to the proportion of patients that are taller than 180 cm. Using the eCDF we obtain an answer by typing:
+
+```{r}
+1 - F(180)
+```
+
 ## Conclusion
 
-Great job! You've just dived into Measures of Dispersion with R! These skills will assist you in better interpreting and visualizing data. Most importantly, the standard deviation is a crucial statistical measure that provides valuable information about the variability or dispersion of data within a dataset. It helps us understand how spread out the data points are from the mean, offering a clearer picture of the data’s consistency and reliability. It is widely used in various fields, including statistics, finance, and science, to understand the distribution of data and make informed decisions based on the level of variability present.
+Great job! You've just dived into Measures of Dispersion with R! These skills will assist you in better interpreting and visualizing data. Most importantly, the standard deviation is a crucial statistical measure that provides valuable information about the variability or dispersion of data within a dataset. It helps us understand how spread out the data points are from the mean, offering a clearer picture of the data's consistency and reliability. It is widely used in various fields, including statistics, finance, and science, to understand the distribution of data and make informed decisions based on the level of variability present.
 
 # Contributors {.unlisted .unnumbered}
 
@@ -279,7 +354,13 @@ The following team members contributed to this lesson:
 
 # References {.unlisted .unnumbered}
 
--   TBA
--   
+Some material in this lesson was adapted from the following sources:
+
+-   Irizarry, Rafael A. 2019. *Introduction to Data Science: Statistics and Prediction Algorithms Through Case Studies*. <https://rafalab.dfci.harvard.edu/dsbook-part-2/>.
+-   Cannell, Brad, and Melvin Livingston. n.d. *R for Epidemiology*. <https://www.r4epi.com/>.
+-   GeeksforGeeks. 2025. "Introduction of Statistics and Its Types." <https://www.geeksforgeeks.org/introduction-of-statistics-and-its-types/>.
+-   Starmer, Josh. *StatQuest with Josh Starmer* \[YouTube Channel\]. <https://www.youtube.com/channel/UCtYLUTtgS3k1Fg4y5tAhLbw>.
+-   The GRAPH Courses. *FoSSA: Fundamentals of Statistical Software & Analysis*. <https://thegraphcourses.org/courses/fossa/>.
+-   University of Miami Libraries. *Introduction to Data Analysis and R*. <https://www.library.miami.edu/data-services/data-analysis.html>.
 
 `r .tgc_license()`
