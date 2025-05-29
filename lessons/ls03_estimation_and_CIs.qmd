@@ -57,7 +57,7 @@ A **sample** is a subset of the population, selected for practical reasons, from
 ### **Population vs. Sample**
 
 | **Population** | **Sample** |
-|-----------------------------------------|-------------------------------|
+|----|----|
 | Includes all members of a specified group | Subset of the population |
 | Often impractical to study entirely | Practical and feasible to study |
 | Example: All residents in Yaounde | Example: 1,000 randomly chosen residents |
@@ -66,7 +66,7 @@ A **sample** is a subset of the population, selected for practical reasons, from
 ## Population Parameters vs. Sample Statistics
 
 | **Population Parameter** | **Sample Statistic** |
-|---------------------------------------|---------------------------------|
+|----|----|
 | Describes entire population (usually unknown) | Computed from sample data (known) |
 | Denoted by symbols like (\mu) and (\sigma) | Denoted by symbols like (\bar{x}) and (s) |
 | Estimated by sample statistics | Used to estimate population parameters |
@@ -105,7 +105,8 @@ We take multiple random samples and calculate their means:
 
 ```{r}
 set.seed(123)
-sample_means <- replicate(100, mean(sample(yao$height_cm, 50, replace = TRUE), na.rm = TRUE))
+sample_means <- replicate(100, mean(sample(yao$height_cm, 50, 
+                                           replace = TRUE), na.rm = TRUE))
 
 # Visualize sampling variation
 hist(sample_means, breaks = 10, main = "Sampling Variation of Mean Height", xlab = "Sample Means")
@@ -124,6 +125,8 @@ The **Standard Error (SE)** quantifies the variability of sample statistics:
 
 -   ( s ) is the sample standard deviation.
 -   ( n ) is the sample size.
+
+SUBSTITUTION OF SAMPLE SD FOR POPULATION SD.
 
 ### Calculating Standard Error in R
 

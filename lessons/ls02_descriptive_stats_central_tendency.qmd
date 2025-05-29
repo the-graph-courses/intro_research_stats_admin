@@ -25,19 +25,14 @@ theme_set(theme_minimal())
 
 # Introduction {.unnumbered}
 
-In this lesson, we explore the fundamental concepts of **descriptive analysis**, focusing on:
-
--   **Types of Variables**: Numerical (continuous, discrete) and Categorical (ordinal, nominal)
--   **Measures of Central Tendency**: Mean, Median, Mode
--   **Basic Numerical and Graphical Summaries** for each type
+In this lesson, we explore **Measures of Central Tendency** for numeric variables: Mean, Median, Mode.
 
 # Learning Objectives {.unnumbered}
 
 By the end of this lesson, you will be able to:
 
-1.  Identify numerical and categorical variables and their subtypes.
-2.  Compute and interpret measures of central tendency (mean, median, mode).
-3.  Create appropriate numerical and graphical summaries for different variable types using R.
+1.  Compute and interpret measures of central tendency (mean, median, mode) in R.
+2.  Know which ones are appropriate for what. 
 
 # Packages
 
@@ -56,7 +51,6 @@ pacman::p_load(
 ```
 
 ------------------------------------------------------------------------
-
 
 # Recap: Methods of Descriptive analysis
 
@@ -85,10 +79,7 @@ There are both **numerical** and **graphical** methods we can use to perform des
 ![](images/flowchart_full.png)
 :::
 
-
 # The Yaounde COVID-19 dataset
-
-
 
 ```{r message = F}
 # Import data to RStudio
@@ -99,13 +90,9 @@ yaounde <- read_csv(here("data/yaounde_data.csv"))
 yaounde
 ```
 
-
-
 ```{r render = .reactable_5_rows}
 head(yaounde)
 ```
-
-
 
 # Categorical Variables
 
@@ -166,7 +153,6 @@ Use the `tabyl()` function from the `{janitor}` package to answer the following:
 "YOUR ANSWER HERE"
 ```
 :::
-
 
 # Numerical Variables
 
@@ -300,15 +286,13 @@ Use `mean()`, `median()`, and `Mode()` from `{DescTools}` to compute the followi
 Mean, median, and mode are measures of central tendency in statistics.
 
 | **Feature** | **Mean** | **Median** | **Mode** |
-|:----------------:|:----------------:|:----------------:|:----------------:|
+|:--:|:--:|:--:|:--:|
 | **Definition** | Mean is the average of all values. | The median is the middle value when data is sorted. | Mode is the most frequently occurring value in the dataset. |
 | **Sensitivity** | The mean is sensitive to outliers. | The median is not sensitive to outliers. | The mode is not sensitive to outliers. |
 | **Calculation** | Calculated by adding up all values of a dataset and dividing them by the total number of values in the dataset. | Calculated by finding the middle value in a list of data. | Calculated by finding which value occurs more number of times in a dataset. |
 | **Representation** | The value of themean may or may not be in the dataset. | Value of the median is always a value from the dataset. | The value of the mode is also always a value from the dataset. |
 
 ------------------------------------------------------------------------
-
-
 
 # Key Takeaways {.unnumbered}
 
@@ -325,38 +309,7 @@ Continue exploring these concepts with real-world data to gain deeper insight in
 
 # Answer Key {.unlisted .unnumbered}
 
-**Identifying Variable Types**
 
-For the four variables below, select whether it is numerical or categorical. If categorical, specify if it's ordinal or nominal. If numerical, classify as discrete or continuous.
-
-1.  Stress level, responses are "high", "medium", "low". **Categorical – Ordinal**
-2.  Age in years. **Numerical – Discrete**
-3.  Height in centimeters. **Numerical – Continuous**
-4.  Country name. **Categorical – Nominal**
-
-**Identifying Variable Types**
-
-If I measure age (in years) in a sample of 10,000 women, what type of variable would this be classified as? **Discrete**
-
-**Identifying Variable Types and R Data Classes**
-
-1.  `age` – **Numerical (Discrete), R class: Numeric**\
-2.  `highest_education` – **Categorical (Ordinal), R class: Character or Factor**\
-3.  `is_smoker` – **Categorical (Nominal), R class: Character**\
-4.  `date_surveyed` – **Date, R class: Date**\
-5.  `weight_kg` – **Numerical (Continuous), R class: Numeric**\
-6.  `igg_result` – **Categorical (Nominal), R class: Character**
-
-R data classes correspond to different variable types:
-
-| Variable Type | R Data Class      | Example Variables in Yaounde Dataset |
-|---------------|-------------------|--------------------------------------|
-| Continuous    | Numeric           | `height_cm`, `weight_kg`             |
-| Discrete      | Integer, Numeric  | `age`, `n_days_miss_work`            |
-| Ordinal       | Factor (ordered)  | `highest_education`                  |
-| Nominal       | Factor, Character | `sex`, `neighborhood`                |
-| Logical       | Logical           | `is_pregnant`, `is_medicated`        |
-| Date          | Date              | `date_surveyed`                      |
 
 **Frequency Tables**
 
@@ -388,54 +341,6 @@ yaounde %>%
   adorn_percentages("row")
 ```
 
-**Bar Charts**
-
-Use `ggplot()` to create the following charts:
-
-1.  Plot a bar chart showing the distribution of `age_category_3`, colored by `is_smoker`.
-
-```{r}
-ggplot(yaounde) +
-  geom_bar(aes(x = age_category_3, fill = is_smoker))
-```
-
-2.  Create a percent-stacked bar chart showing the same variables.
-
-```{r}
-ggplot(yaounde) +
-  geom_bar(aes(x = age_category_3, fill = is_smoker),
-    position = "fill"
-  )
-```
-
-3.  Reorder the `age_category_3` factor so that the categories appear in the logical order and then plot again.
-
-```{r}
-# Reorder categories from youngest to oldest
-yaounde <- yaounde %>%
-  mutate(
-    age_category_3_ordered =
-      factor(age_category_3,
-        levels = c(
-          "Child",
-          "Adult",
-          "Senior"
-        )
-      )
-  )
-```
-
-```{r}
-# Plot again with the ordered variable
-ggplot(yaounde) +
-  geom_bar(
-    aes(
-      x = age_category_3_ordered,
-      fill = is_smoker
-    ),
-    position = "fill"
-  )
-```
 
 **Caculating Measures of Central Tendency in R**
 
@@ -461,81 +366,6 @@ Mode(yaounde$height_cm)
 Mode(yaounde$n_bedridden_days, na.rm = T)
 ```
 
-**Histograms**
-
--   Plot a histogram showing the distribution of `n_bedridden_days` in `yaounde`.
-
-```{r}
-ggplot(
-  data = yaounde,
-  mapping = aes(x = n_bedridden_days)
-) +
-  geom_histogram(fill = "steelblue")
-```
-
-Make notes on these key questions:
-
-1.  What are the smallest and largest values?
-2.  What are frequent and infrequent values?
-
--   Smallest value is 0.\
--   Largest may be 30, but it is an outlier.\
--   Most frequent value is 0.\
--   Distribution is heavily left-skewed, with most patients having no or very few bedridden days.
-
-**Density Plot: weight by sex**
-
--   Plot a kernel density plot showing the distribution of weight for each sex in `yaounde`.
-
-```{r}
-ggplot(yaounde, aes(weight_kg,
-  colour = sex,
-  fill = sex
-)) +
-  geom_density(alpha = 0.1)
-```
-
--   Shows typical weight slightly differs by sex.\
--   Distributions largely overlap.
--   Distribution is bimodal - with two peaks. Perhaps one for children and one for adults.
--   Males have a slightly higher central tendency.
-
-**Boxplots**
-
--   Create a boxplot showing the distribution of weights for each sex. Improve the plot by adding a layer of jittered points and a marker for the mean.
-
-```{r}
-"YOUR ANSWER HERE"
-
-ggplot(
-  yaounde,
-  aes(
-    x = sex,
-    y = weight_kg,
-    fill = sex,
-    color = sex
-  )
-) +
-  geom_boxplot(alpha = 0.6) +
-  geom_jitter(width = 0.25, alpha = 0.5) +
-  stat_summary(
-    fun = "mean",
-    geom = "point",
-    size = 3,
-    shape = 23,
-    fill = "white"
-  )
-```
-
-**Graphical methods for numeric variables**
-
-We measured the age of 10,000 women in the UK. How would you suggest we look at the distribution of age across the sample population?
-
-1.  Produce a bar chart, with age across the x-axis and frequency on the y-axis
-2.  Produce a frequency table with all the ages in ascending order
-3.  **Produce a histogram using age**
-4.  Produce a bar chart, with age across the x-axis and gender across the y-axis
-5.  Produce two histograms using age, one for men and one for women
 
 # Appendix: R functions used in this lesson {.unlisted .unnumbered}
 

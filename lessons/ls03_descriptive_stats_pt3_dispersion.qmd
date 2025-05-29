@@ -28,6 +28,13 @@ These measures, which include the **range**, **variance**, and **standard deviat
 
 ![](images/misc_images/branches4.png)
 
+# Learning Objectives {.unnumbered}
+
+By the end of this lesson, you will be able to:
+
+1.  Compute and interpret measures of dispersion (range, variation, standard deviation) in R.
+2.  Properties of the normal distribution and its implications. 
+
 # Packages
 
 This lesson will require the following packages to be installed and loaded:
@@ -40,7 +47,7 @@ pacman::p_load(tidyverse,
                inspectdf)
 ```
 
-# **Measures of Dispersion**
+# Measures of Dispersion
 
 **Measures of Dispersion** capture the spread within a dataset. For example, knowing the average height (a Measure of Centrality) isn't enough. Understanding how those heights vary from the average provides a fuller picture. This enhanced comprehension is vital for daily data analysis.
 
@@ -62,7 +69,7 @@ Measures of dispersion, also called measures of variability, "describe the exten
 The most common measures of dispersion are range, variance, and standard deviation.
 :::
 
-# **The Yaounde COVID-19 dataset**
+# The Yaounde COVID-19 dataset
 
 In this lesson, we will again use the data from the COVID-19 serological survey conducted in Yaounde, Cameroon.
 
@@ -129,7 +136,7 @@ Measures of Dispersion allow us to **mathematically** quantify and measure the l
 | Mode                                                                                | Standard Deviation                                                                 |
 +-------------------------------------------------------------------------------------+------------------------------------------------------------------------------------+
 
-# **Range**
+# Range
 
 Range is a very simple statistic, as it is simply the difference between the maximum and minimum values in the data.
 
@@ -342,7 +349,7 @@ Let's connect the eCDF to probability by asking: if I randomly pick one of the m
 1 - F(180)
 ```
 
-## Conclusion
+## Conclusion {.unnumbered}
 
 Great job! You've just dived into Measures of Dispersion with R! These skills will assist you in better interpreting and visualizing data. Most importantly, the standard deviation is a crucial statistical measure that provides valuable information about the variability or dispersion of data within a dataset. It helps us understand how spread out the data points are from the mean, offering a clearer picture of the data's consistency and reliability. It is widely used in various fields, including statistics, finance, and science, to understand the distribution of data and make informed decisions based on the level of variability present.
 
