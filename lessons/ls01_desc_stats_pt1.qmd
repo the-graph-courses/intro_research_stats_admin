@@ -1,6 +1,8 @@
 ---
-title: 'Descriptive Statistics 1: Visualizing Data Distributions'
-format: html
+title: 'Descriptive Statistics 1: Introduction to Statistics & Describing Data'
+format:
+  html:
+    embed-resources: true
 ---
 
 ```{r, echo = F, message = F, warning = F}
@@ -21,7 +23,7 @@ knitr::opts_chunk$set(
 theme_set(theme_minimal())
 ```
 
-```{r warning = F, message = F}
+```{r warning = F, message = F, echo=F}
 # Load packages 
 
 # This lesson will require the following packages to be installed and loaded:
@@ -29,7 +31,8 @@ if (!require(pacman)) install.packages("pacman")
 pacman::p_load(
   tidyverse,
   here,
-  inspectdf
+  inspectdf,
+  visdat
 )
 ```
 
@@ -37,26 +40,28 @@ pacman::p_load(
 
 # Introduction {.unnumbered}
 
-![](images/stats_cohort_topics_schedule.png)
+In this lesson, we will:
 
-In this lesson, we will
+1.  Introduce the key **branches of statistics** and their uses.
 
-Introduce the key branches of statistics and its uses.
+2.  Explore the fundamental concepts of **descriptive analysis**, focusing on:
 
-Explore the fundamental concepts of **descriptive analysis**, focusing on:
+    -   **Types of Variables**: Numerical (continuous, discrete) and Categorical (ordinal, nominal)
 
--   **Types of Variables**: Numerical (continuous, discrete) and Categorical (ordinal, nominal)
--   **Basic Graphical Summaries** for each type.
+    -   **Graphical Summaries** for each type.
+
+    -   **Numerical Summaries** for categorial variables.
 
 # Learning Objectives {.unnumbered}
 
 By the end of this lesson, you will be able to:
 
-1.  Understand the key branches of statistics.
-2.  Explain the purpose and methods of descriptive statistics.
-3.  Identify numerical and categorical variables and their subtypes.
-4.  Create appropriate graphical summaries for different variable types using {ggplot2} and {inspectdf} R.
-5.  Recognize common data distributions and assess symmetry. 
+1.  Understand the key branches of statistics: **descriptive** and **inferential**.
+2.  Explain the aims and methods of **descriptive statistics**.
+3.  Identify **numerical and categorical variables** and their subtypes.
+4.  Create appropriate **graphical summaries** for each variable type in R, using {ggplot2} and {inspectdf}.
+5.  Create **numerical summaries** for categorical variables.
+6.  Visually assess **skew and symmetry** in data distributions.
 
 ------------------------------------------------------------------------
 
@@ -70,15 +75,13 @@ By the end of this lesson, you will be able to:
 
 **Inferential statistics** involves using *sample data* to draw conclusions about a *population*.
 
-![](images/stats_overview_g4g.png)
+![](images/stats_branches.png)
 
-## Statistical Inference: Population and Samples
-
-![](images/inference_bmi.png)
+# Population and Samples
 
 Before diving deeper, let's briefly cover the concepts of populations and samples.
 
-![](images/pop_vs_sample_g4g.jpg)
+![UPDATE FIGURE](images/pop_vs_sample_g4g.jpg)
 
 ### Population
 
@@ -92,7 +95,7 @@ A **sample** is a subset of the population, selected for practical reasons, from
 
 -   **Example**: Studying the height of 1,000 randomly selected adult women from Yaounde, instead of all women in Cameroon.
 
-::: callout-note
+::: callout-tip
 ### **Population vs. Sample**
 
 | **Population** | **Sample** |
@@ -103,6 +106,8 @@ A **sample** is a subset of the population, selected for practical reasons, from
 :::
 
 We can almost never measure every single unit in a population, so we use sample data to **estimate** the true population parameters.
+
+![](images/inference_bmi.png)
 
 ------------------------------------------------------------------------
 
@@ -151,6 +156,34 @@ Can you identify which variables are numeric? Of those, which are continuous and
 glimpse(yaounde)
 ```
 
+TRYING DFSUMMARY HERE
+
+```{r}
+# VIS DAT
+
+vis_dat(yaounde)
+```
+
+```{r}
+# INSPECT CAT
+yao_cat_summary <- inspect_cat(yaounde)
+
+
+show_plot(yao_cat_summary)
+```
+
+```{r}
+# INSPECT NUM
+
+yao_num_summary <- inspect_num(yaounde)
+
+show_plot(yao_num_summary)
+```
+
+
+
+SIDE NOTE: DISCRETE NUMERIC DATA PRACTICALLY ORDINAL? – there are examples that can be considered both numerical and ordinal (e.g., number of children?).
+
 ::: callout-tip
 ## Review of the Main Data Classes in R
 
@@ -164,6 +197,7 @@ R data classes correspond to different variable types:
 | Nominal       | Factor, Character           |
 | Logical       | Logical (`TRUE` or `FALSE`) |
 | Date          | Date                        |
+| Binary        | Integer, Numeric            |
 :::
 
 ::: callout-note
@@ -191,51 +225,35 @@ Remember, we are ultimately aiming to make inferences about populations rather t
 
 How do we describe distributions? One option is to display all the data, but that is not necessarily useful or practical.
 
+![](images/stats_overview_g4g.png)
+
 Descriptive analysis of numerical variables can be measured by two different methods: **graphical** or **numerical**. The best way to describe a distribution depends on the type of variable being summarized and its distribution.
 
 1.  **Graphical methods** (e.g., tables, charts)
-    -   **Categorical Distributions**
-
-        -   **Nominal variables** (no inherent order, e.g., gender, country)
-
-            -   Bar chart or pie cahrt
-            -   Box plot (if plotted against a continuous variable)
-
-        -   **Ordinal variables** (clear order, e.g., Likert scale: *poor*, *fair*, *good*)
-
+    -   **Categorical variables**
+        -   **Nominal** (no inherent order, e.g., gender, country)
+            -   Bar chart or pie chart
+        -   **Ordinal** (clear order, e.g., Likert scale: *poor*, *fair*, *good*)
             -   Bar chart with ordered categories
-            -   Box plot (if plotted against a continuous variable)
-
-    -   **Numerical Distributions**
-
-        -   **Continuous variables** (those that can take any value, e.g., heights and weights)
-
+    -   **Numerical variables**
+        -   **Continuous** (those that can take any value, e.g., heights and weights)
             -   Histogram
             -   Density curve
-            -   Box plot
-
-        -   **Discrete variables** (integer counts, e.g., number of cases, age)
-
-            -   Bar charts
-            -   Histograms with integer bins
+            -   Box plot or violin plot
+        -   **Discrete** (integer counts, e.g., number of cases, age)
+            -   Bar chart
+            -   Histogram with integer bins
 2.  **Numerical methods** (i.e., summarizing the data in a small number of key values – summary statistics)
-    -   **Categorical Distributions**
-
+    -   **Categorical variables**
         -   **Ordinal** or **Nominal**
-
             -   Frequencies or counts
             -   Proportions or percentages
-            -   Cumulative frequency
-
-    -   **Numerical Distributions**
-
+    -   **Numerical variables**
         -   **Discrete**
-
-            -   Counts and proportions
+            -   Frequency/counts and proportions
             -   Discrete distributions
-
+            -   Cumulative frequency (?)
         -   **Continuous**
-
             -   **Measures of Central Tendency** (e.g., mean, median, variance)
             -   **Measures of Dispersion** (e.g., range, variance, standard deviation)
 
@@ -275,7 +293,65 @@ If I measure age (in years) in a sample of 10,000 women, what type of variable w
 4.  Discrete
 :::
 
-# Graphing Data Distributions
+# Categorical Variables
+
+We'll start by describing categorical variables, both numerically and graphically. As a reminder, categorical variables are variables whose values fit into distinct categories.
+
+## Numerical Descriptions of Categorical Variables
+
+We'll begin our discussion of descriptive statistics in the categorical half of our flow chart. Specifically, we'll start by numerically describing categorical variables.
+
+![](images/flowchart_cat_numerical.png)
+
+The two most common numerical descriptions of categorical variables are probably the **frequency count** (you will often hear this referred to as simply the frequency, the count, or the n) and the **proportion or percentage** (the percentage is just the proportion multiplied by 100).
+
+Using the `tabyl()` function from the `{janitor}` package, we can make frequency tables displaying the frequencies and percentages of categorical variable(s).
+
+```{r}
+# Make a frequency table of the `is_smoker` variable.
+yaounde %>% tabyl(is_smoker)
+```
+
+The count (`n` column) is simply the number of observations, in this case deaths, which fall into each possible category.
+
+The proportion (`percentage` column) is just the count divided by the total number of observations. In this example, almost 9 out of 10 deaths (.87 or 87%) died in a hospital or clinic.
+
+We can also use the `tabyl()` function to create 2-way frequency tables (I.E., CONTINGENCY TABLES OR CROSS-TABULATIONS).
+
+```{r}
+# Create a summary data frame of two categorical variables
+yaounde %>%
+  tabyl(is_smoker, sex)
+yaounde %>%
+  tabyl(is_smoker, sex) %>%
+  adorn_percentages("row")
+```
+
+::: callout-note
+## Practice
+
+**Frequency Tables**
+
+Use the `tabyl()` function from the `{janitor}` package to answer the following:
+
+1.  Create a frequency table of `has_contact_covid`.
+
+```{r include = F}
+"YOUR ANSWER HERE"
+```
+
+2.  Create a two-way frequency table between `has_contact_covid` and `igg_result`.
+
+```{r include = F}
+"YOUR ANSWER HERE"
+```
+
+3.  Use `adorn_percentages("row")` to display row-wise proportions in the table created above.
+
+```{r include = F}
+"YOUR ANSWER HERE"
+```
+:::
 
 ## Graphical Descriptions of Categorical Variables
 
@@ -302,12 +378,16 @@ ggplot(yaounde) +
   )
 ```
 
-**ADD BAR CHART OF ORDINAL VARIABLE WITH ORDERED CATEGORIES**
+**BAR CHART OF ORDINAL VARIABLE WITH ORDERED CATEGORIES**
+
+DEFAULT GGPLOT ORDERING IS ALPHABETICAL
 
 ```{r}
 ggplot(yaounde) +
   geom_bar(aes(x = highest_education))
 ```
+
+REORDER THE FACTOR LEVELS
 
 ```{r}
 yaounde <- yaounde %>%
@@ -326,27 +406,39 @@ yaounde <- yaounde %>%
   )
 ```
 
+PLOT AGAIN --
+
 ```{r}
 ggplot(yaounde) +
   geom_bar(aes(x = highest_education))
 ```
+
+SRATIFICATION -- COMPARE DISTRIBUTIONS BETWEEN CATEGORIES
 
 ```{r}
 ggplot(yaounde) +
   geom_bar(aes(x = highest_education, fill = sex))
 ```
 
+PROPORTIONS RATHER THAN COUNTS --
+
 ```{r}
 ggplot(yaounde) +
   geom_bar(aes(x = highest_education, fill = sex),
     position = "fill"
   )
+```
 
+SWAP THE STRATIFICATION HIERARCHY --
+
+```{r}
 ggplot(yaounde) +
   geom_bar(aes(x = sex, fill = highest_education),
     position = "fill"
   )
 ```
+
+\[ADD INSIGHTS AFTER EACH PLOT ABOVE\]
 
 ::: callout-note
 ## Practice
@@ -374,6 +466,8 @@ Use `ggplot()` to create the following charts:
 ```
 :::
 
+# Numerical Variables
+
 ## Graphical Summaries of Numerical Variables
 
 Visualizations are essential in public health to communicate findings clearly. Two common plots for numerical data are **histograms** and **boxplots**.
@@ -397,7 +491,7 @@ The function for creating histogram in `{ggplot2}` is **`geom_histogram()`**. We
 Now let's use {ggplot2} to plot the distribution of heights, which is recorded in the `height_cm` column.
 
 ```{r}
-# Simple histogram showing the distribution of height_cm
+# Histogram showing the distribution of height_cm
 ggplot(
   data = yaounde,
   mapping = aes(x = height_cm)
@@ -410,7 +504,7 @@ ggplot(
     breaks = scales::pretty_breaks(n = 12),
     expand = c(0, 0)
   ) +
-  scale_y_continuous(expand = c(0, 0))
+  scale_y_continuous(expand = c(0, 0)) 
 ```
 
 -   The histogram shows up **how the probabilities of measurements are distributed**.
@@ -444,7 +538,7 @@ yao_adults_height +
 ```
 
 -   We have a much more normal distribution, which is what you would expect for a variable like height or weight.
--   Note the outliers: 2 adults under 140 cm.
+-   Note the **outliers**: 2 adults under 140 cm.
 
 We can vary the number of bins to get more or less detail from the histogram.
 
@@ -493,9 +587,6 @@ yao_adults_height +
     alpha = 0.25,
     linewidth = 1,
     bw = 3
-  ) +
-  geom_vline(aes(xintercept = mean(height_cm)),
-    linetype = "dashed", linewidth = 1
   )
 ```
 
@@ -510,7 +601,7 @@ The curve has a few advantages over the histogram.
 -   Furthermore, the curve is not limited by the width of the bins - we can use calculus to determine the probability of measuring someone between 172.5 and 183.7 cm, without having to round to the nearest bin size.
 -   Lastly, if we have very few measurements, we can still approximate a curve using the mean and standard deviation of the few data points that we have.
 
-```{r}
+```{r warning = F}
 ggplot(
   data = sample_n(yao_adults, 100),
   mapping = aes(x = height_cm)
@@ -524,12 +615,11 @@ ggplot(
   geom_density(
     color = "indianred2",
     alpha = 0.25,
-    linewidth = 1,
-    bw = 4
+    linewidth = 1
   ) +
   scale_x_continuous(
-    breaks = scales::pretty_breaks(n = 12),
-    expand = c(0, 0)
+    breaks = scales::pretty_breaks(n = 24),
+    expand = c(0, 0), limits = c(70 , 200)
   ) +
   scale_y_continuous(expand = c(0, 0)) +
   geom_vline(aes(xintercept = mean(height_cm)),
@@ -540,7 +630,7 @@ ggplot(
 Try rerunning the code; each time will use a different random sample of 100 individuals from the dataset.
 
 ::: callout-tip
-## Kernel density plots
+## Stratifying kernel density plots
 
 The **`geom_density()`** function draws kernel density estimates, which is a smoothed version of a histogram. This is a useful alternative to the histogram for continuous data.
 
@@ -631,7 +721,9 @@ ggplot(
 
 We can clearly see that there are notable differences in median height (central line of each box) between sexes. However, there is a lot of overlap between the range of values.
 
-Boxplots have the limitation that they summarize the data into just five numbers: the 1st quartile, the median (the 2nd quartile), the 3rd quartile, and the upper and lower whiskers. By doing this, we might miss important characteristics of the data. One way to add more detail is to plot the individual observations as a **layer of points** on top of the boxplot with the **`geom_jitter()`** function.
+Boxplots have the limitation that they summarize the data into just five numbers: the 1st quartile, the median (the 2nd quartile), the 3rd quartile, and the upper and lower whiskers. By doing this, we might miss important characteristics of the data.
+
+One way to add more detail is to plot the individual observations as a **layer of points** on top of the boxplot with the **`geom_jitter()`** function.
 
 ```{r}
 ggplot(
@@ -642,14 +734,55 @@ ggplot(
     fill = sex
   )
 ) +
-  geom_boxplot() +
+  geom_boxplot(aes(color = sex)) +
   geom_jitter(
+    size = 2,
     width = 0.25,
-    alpha = 0.5
+    alpha = 0.3
   )
 ```
 
 Here, additional patterns become visible, such as variations and potential outliers within each sex group.
+
+**VIOLIN PLOTS**
+
+-   divide stuff up to compare distributions, shapes
+
+```{r}
+# Comparing distributions across sub categories
+ggplot(yaounde, aes(x = age_category_3, y = height_cm,
+    fill = age_category_3,
+    shape = sex)) +
+  geom_boxplot() +
+  facet_wrap(~sex)
+```
+
+\[ADD EXPLANTORY TEXT\]
+
+```{r}
+# Density curve mirrored on the sides
+ggplot(yaounde, aes(x = age_category_3, y = height_cm,
+    fill = age_category_3,
+    shape = sex)) +
+  geom_violin() +
+  facet_wrap(~sex)
+```
+
+\[ADD EXPLANTORY TEXT\]
+
+```{r}
+# Add points
+ggplot(yaounde, aes(x = age_category_3, y = height_cm,
+    fill = age_category_3,
+    shape = sex)) +
+  geom_violin() +
+  facet_wrap(~sex) +
+  geom_jitter(alpha = 0.5, aes(color = age_category_3))
+
+# See how some of the bumps are due to just a few points (curves are normalised?)
+```
+
+\[ADD INTERPRETATION\]
 
 ::: callout-tip
 ## Adding mean markers to a boxplot
@@ -701,9 +834,8 @@ We measured the age of 10,000 women in the UK. How would you suggest we look at 
 
 1.  Produce a bar chart, with age across the x-axis and frequency on the y-axis
 2.  Produce a frequency table with all the ages in ascending order
-3.  Produce a histogram using age
+3.  Produce a histogram using age bins
 4.  Produce a bar chart, with age across the x-axis and gender across the y-axis
-5.  Produce two histograms using age, one for men and one for women
 :::
 
 ------------------------------------------------------------------------
@@ -744,6 +876,36 @@ R data classes correspond to different variable types:
 | Nominal       | Factor, Character | `sex`, `neighborhood`                |
 | Logical       | Logical           | `is_pregnant`, `is_medicated`        |
 | Date          | Date              | `date_surveyed`                      |
+
+**Frequency Tables**
+
+Use the `tabyl()` function from the `{janitor}` package to answer the following:
+
+1.  Create a frequency table of `has_contact_covid`.
+
+```{r}
+yaounde %>% tabyl(has_contact_covid)
+```
+
+2.  Create a two-way frequency table between `has_contact_covid` and `igg_result`.
+
+```{r}
+yaounde %>% tabyl(
+  has_contact_covid,
+  igg_result
+)
+```
+
+3.  Use `adorn_percentages("row")` to display row-wise proportions in the table created above.
+
+```{r}
+yaounde %>%
+  tabyl(
+    has_contact_covid,
+    igg_result
+  ) %>%
+  adorn_percentages("row")
+```
 
 **Bar Charts**
 
@@ -794,7 +956,6 @@ ggplot(yaounde) +
   )
 ```
 
-
 **Histograms**
 
 -   Plot a histogram showing the distribution of `n_bedridden_days` in `yaounde`.
@@ -839,8 +1000,6 @@ ggplot(yaounde, aes(weight_kg,
 -   Create a boxplot showing the distribution of weights for each sex. Improve the plot by adding a layer of jittered points and a marker for the mean.
 
 ```{r}
-"YOUR ANSWER HERE"
-
 ggplot(
   yaounde,
   aes(
@@ -867,9 +1026,8 @@ We measured the age of 10,000 women in the UK. How would you suggest we look at 
 
 1.  Produce a bar chart, with age across the x-axis and frequency on the y-axis
 2.  Produce a frequency table with all the ages in ascending order
-3.  **Produce a histogram using age**
-4.  Produce a bar chart, with age across the x-axis and gender across the y-axis
-5.  Produce two histograms using age, one for men and one for women
+3.  **Produce a histogram using age bins**
+4.  Produce a bar chart, with age across the x-axis and gender across the y-axism
 
 # Contributors {.unlisted .unnumbered}
 
@@ -889,4 +1047,3 @@ Some material in this lesson was adapted from the following sources:
 -   University of Miami Libraries. *Introduction to Data Analysis and R*. <https://www.library.miami.edu/data-services/data-analysis.html>.
 
 `r .tgc_license()`
-

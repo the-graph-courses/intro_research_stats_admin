@@ -495,7 +495,7 @@ Use `mean()`, `median()`, and `Mode()` from `{DescTools}` to compute the followi
 Mean, median, and mode are measures of central tendency in statistics.
 
 | **Feature** | **Mean** | **Median** | **Mode** |
-|:----------------:|:----------------:|:----------------:|:----------------:|
+|:--:|:--:|:--:|:--:|
 | **Definition** | Mean is the average of all values. | The median is the middle value when data is sorted. | Mode is the most frequently occurring value in the dataset. |
 | **Sensitivity** | The mean is sensitive to outliers. | The median is not sensitive to outliers. | The mode is not sensitive to outliers. |
 | **Calculation** | Calculated by adding up all values of a dataset and dividing them by the total number of values in the dataset. | Calculated by finding the middle value in a list of data. | Calculated by finding which value occurs more number of times in a dataset. |
