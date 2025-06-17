@@ -1,6 +1,8 @@
 ---
 title: 'Estimation 2: Standard Error and Confidence intervals'
-format: html
+format:
+  html:
+    embed-resources: true
 ---
 
 ```{r, echo = F, message = F, warning = F}
@@ -78,7 +80,7 @@ Standard Error is used for **inference**:
 -   decreases with increasing sample size.
 
 | Measure | Primary Use | What It Quantifies | Extra Notes |
-|----------------|----------------|------------------|-----------------------|
+|-----------------|-----------------|-----------------|----------------------|
 | **Standard Deviation (SD)** | Description of data (descriptive statistics) | Variability / spread of individual observations around the mean | Same units as the original data; always non-negative |
 | **Standard Error (SE)** | Inference about a population (inferential statistics) | Precision / spread of a sample statistic across repeated samples | $$\text{SE} = \dfrac{\text{SD}}{\sqrt{n}}$$; decreases as sample size $n$ increases |
 
@@ -86,6 +88,7 @@ Standard Error is used for **inference**:
 
 Sampling distribution and standard error are used in the calculation of confidence intervals.
 
+::: callout-tip
 Recap of estimation:
 
 We rarely have data for every single individual in a population. Instead, we draw a **sample** and calculate **statistics**—like the mean or proportion—as **point estimates** of the unknown population parameters.
@@ -97,7 +100,8 @@ Its spread is captured by the **standard error (SE)**—literally, the standard 
 
 *Visual: Histogram of repeated sample means; overlay the SE as a horizontal bracket.*
 
-**Key idea pop‑up:** Smaller SE ⇒ tighter distribution ⇒ more precise estimates.
+**Key idea:** Smaller SE ⇒ tighter distribution ⇒ more precise estimates.
+:::
 
 So how can we make inferences about the value population parameter which encapsulates our uncertainty? ANSWER: CONFIDENCE INTERVALS!
 

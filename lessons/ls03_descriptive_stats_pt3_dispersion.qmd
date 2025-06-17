@@ -1,6 +1,8 @@
 ---
 title: "Descriptive Statistics 3: Measures of Dispersion"
-format: html
+format:
+  html:
+    embed-resources: true
 ---
 
 ```{r, echo = F, message = F, warning = F}
@@ -26,14 +28,14 @@ Welcome back! Our journey into *Descriptive Statistics* continues with **Measure
 
 These measures, which include the **range**, **variance**, and **standard deviation**, inform us about the extent to which our data is spread. R's built-in statistical functions offer all we need to measure and understand dispersion in our data. Let's dive right in!
 
-![](images/misc_images/branches4.png)
+![](images/stats_overview_g4g.png)
 
 # Learning Objectives {.unnumbered}
 
 By the end of this lesson, you will be able to:
 
 1.  Compute and interpret measures of dispersion (range, variation, standard deviation) in R.
-2.  Properties of the normal distribution and its implications. 
+2.  Properties of the normal distribution and its implications.
 
 # Packages
 
@@ -61,7 +63,7 @@ Three common measures of dispersion used are the:
 
 ![](images/dispersion_03_overview.png)
 
-::: callout-important
+::: callout-tip
 ## Defining Measures of Dispersion
 
 Measures of dispersion, also called measures of variability, "describe the extent to which the values of a variable are different."
@@ -76,6 +78,36 @@ In this lesson, we will again use the data from the COVID-19 serological survey 
 ```{r}
 yaounde <- read_csv(here::here('data/yaounde_data.csv'))
 
+
+```
+
+\[ADD EXPLANTORY TEXT\]
+
+demo of symmetry:
+
+```{r}
+
+
+ggplot(yaounde, aes(x = age_category_3, y = height_cm,
+    fill = age_category_3,
+    shape = sex)) +
+  geom_violin() +
+  stat_summary(
+    fun = "mean",
+    geom = "point",
+    size = 2,
+    #shape = 23,
+    fill = "white"
+  ) +
+  facet_wrap(~sex)
+
+```
+
+-   
+
+HERE WE FILTER IT DOWN TO MALE ADULTS... \[EXPLAIN WHY\]
+
+```{r}
 # A smaller subset focusing on continuous numeric variables - height and weight
 
 yao_num <- yaounde %>% 
@@ -87,23 +119,39 @@ yao_male_adults <- yao_num %>%
 yao_male_adults
 ```
 
-::: callout-tip
-## Recap: Measures of Central Tendency and Dispersion
-
-Both Measures of Dispersion and Central Tendency are numbers that are used to describe various parameters of continuous data. Let's see the differences between Measures of Dispersion and Central Tendency.
-
-![](images/stats_overview_g4g.png)
-
-In the last lesson on measures of central tendency, we found the mean value, median value, mode value, of the height variable in our `yaounde` dataset.
-
-REWORD/EDIT: Earlier, we also created boxplots to visualize the maximum and minimum values of the `height_cm` variables, as well as the quartile ranges.
-:::
-
 We can use the `inspect_num()` function from the {inspectdf} package to get a summary table of both measures of central tendency and dispersion of numeric variables in our dataset.
 
 ```{r}
 # Summarise central tendency and dispersion for numeric variables in the yao_male_adults dataframe
 yao_male_adults %>% inspect_num()
+```
+
+```{r}
+# REMOVE THIS PART??
+
+# Sex - see lowest sd, diff between mean and median
+yaounde %>% 
+  select(age_category_3, sex, weight_kg, height_cm) %>% 
+  group_by(sex) %>% 
+  inspect_num()
+
+# Age cat
+yaounde %>% 
+  select(age_category_3, sex, weight_kg, height_cm) %>% 
+  group_by(age_category_3) %>% 
+  inspect_num()
+
+# Remove??
+yaounde %>% 
+  select(age_category_3, sex, weight_kg, height_cm) %>% 
+  group_by(sex, age_category_3) %>% 
+  summarise(median_height = median(height_cm),
+            mean_height = mean(height_cm),
+            diff = abs(median_height - mean_height),
+            sd_height = sd(height_cm),
+            median_weight = median(weight_kg),
+            mean_weight = mean(weight_kg),
+            sd_weight = sd(weight_kg))
 ```
 
 REWORD/EDIT: Measures of central tendency describe the "typical" or "average" person in our sample. The result of our analysis above tells us that the average adult was 167cm tall. This information gets us reasonably close to understanding the typical height of the patients surveyed. So a natural extension of our original question is: "How much like the average person are the other people in the data?"
@@ -122,19 +170,29 @@ ggplot(yao_male_adults, aes(height_cm)) +
 
 Measures of Dispersion allow us to **mathematically** quantify and measure the level of dispersion.
 
-+-------------------------------------------------------------------------------------+------------------------------------------------------------------------------------+
-| **Central Tendency**                                                                | **Measure of Dispersion**                                                          |
-+:===================================================================================:+:==================================================================================:+
-| Central Tendency is used to quantify typical or most common properties of the data. | Measures of Dispersion are used to quantify the variability or spread of the data. |
-+-------------------------------------------------------------------------------------+------------------------------------------------------------------------------------+
-| The measures of Central tendency include:                                           | Common measures of dispersion are:                                                 |
-|                                                                                     |                                                                                    |
-| Mean                                                                                | Range & IQR                                                                        |
-|                                                                                     |                                                                                    |
-| Median                                                                              | Variance                                                                           |
-|                                                                                     |                                                                                    |
-| Mode                                                                                | Standard Deviation                                                                 |
-+-------------------------------------------------------------------------------------+------------------------------------------------------------------------------------+
+::: callout-tip
+## Recap: Measures of Central Tendency and Dispersion (rename and edit)
+
+Both Measures of Dispersion and Central Tendency are numbers that are used to describe various parameters of continuous data. Let's see the differences between Measures of Dispersion and Central Tendency.
+
+In the last lesson on measures of central tendency, we found the mean value, median value, mode value, of the height variable in our `yaounde` dataset.
+
+REWORD/EDIT: Earlier, we also created boxplots to visualize the maximum and minimum values of the `height_cm` variables, as well as the quartile ranges. These are VISUAL cues of dispersion – can we put a number to it this time?
+:::
+
++-------------------------------------------------------------------------------------------+------------------------------------+
+| **Central Tendency**                                                                      | **Measure of Dispersion**          |
++:=========================================================================================:+:==================================:+
+| Central Tendency \| Measures of Dispersion are used to quantify the variability or spr \| |                                    |
++-------------------------------------------------------------------------------------------+------------------------------------+
+| The measures of Central tendency include:                                                 | Common measures of dispersion are: |
+|                                                                                           |                                    |
+| Mean                                                                                      | Range & IQR                        |
+|                                                                                           |                                    |
+| Median                                                                                    | Variance                           |
+|                                                                                           |                                    |
+| Mode                                                                                      | Standard Deviation                 |
++-------------------------------------------------------------------------------------------+------------------------------------+
 
 # Range
 
@@ -144,11 +202,14 @@ Range is a very simple statistic, as it is simply the difference between the max
 
 **Calculating Range in R**
 
-The **range**, simply the difference between the highest and lowest values, illustrates the spread between the extremes of our dataset. We can calculate the range of a set of numbers using R's built-in function, **`range()`**. Here, we calculate the range of test heights for five students:
+The **range**, simply the difference between the highest and lowest values, illustrates the spread between the extremes of our dataset. We can calculate the range of a set of numbers using R's built-in function, **`range()`**. Here, we calculate the range of heights in our data subset:
 
 ```{r}
-# Heights of patients from the Yaounde dataset
+# Heights of patients from the Yaounde dataset as a numeric vector
 height_men <- yao_male_adults$height_cm
+
+# The range() function gives us the minimum and maximum values
+range(height_men)
 
 # Calculate the range
 diff(range(height_men))
@@ -170,12 +231,16 @@ IQR is diff between 25 and 75.
 IQR(height_men)
 ```
 
+\[ADD EXPLANTORY TEXT\]
+
 ```{r}
 ggplot(yao_male_adults, aes(x = height_cm)) +
   geom_boxplot()
 ```
 
 ![](images/boxplot_anatomy.png)
+
+\[ADD EXPLANTORY TEXT\]
 
 ```{r}
 168 - (1.5*9)
@@ -195,7 +260,7 @@ Variance shows how much the numbers in your data **vary** from the average value
 
 ## How to Calculate Variance?
 
-REPEATED A LOT: Variance measures the average of the squared differences from the Mean (μ). Variance is usually represented by the symbol σ^2^. The steps to calculate the variance of a dataset:
+EDIT- REPEATED A LOT: Variance measures the average of the squared differences from the Mean (μ). Variance is usually represented by the symbol σ^2^. The steps to calculate the variance of a dataset:
 
 > **Step 1:** **Calculate the Mean (Average):**\
 > Add up all the values in the dataset and divide by the total number of values. This gives you the mean (μ).\
@@ -267,11 +332,13 @@ We can compute it using the **`sd()`** function available in R.
 sd(height_men)
 ```
 
-## Variance Vs Standard Deviation
+## Variance vs Standard Deviation
 
-Why is the standard deviation important when we already have variance? Compared to variance, the standard deviation is expressed in the same units as the data, making it easier to interpret.
+Why is the standard deviation important when we already have variance? Compared to variance, the standard deviation is expressed in the **same units as the data**, making it easier to interpret.
 
 Additionally, the standard deviation is frequently used in statistical analysis because data within one standard deviation of the mean account for approximately 68% of the set, while data within two standard deviations cover around 95%.
+
+\[EXPLAIN Z-SCORES\]
 
 ![](images/sd_percentages.png){width="604"}
 
@@ -313,8 +380,47 @@ ggplot(yao_male_adults, aes(x = height_cm)) +
   annotate("text", x = 185, y = 0.05, label = paste("Variance =", round(variance_value, 2)), color = "blue", vjust = -1)
 ```
 
+# The Normal Distribution
+
+## Identifying skew
+
+Identifying skew (non-normality) in the data is important because our choice of statistical tests depends on the distribution of the data.
+
+-   When continuous data are (approximately) normally distributed, we use **parametric tests** such as t-tests, ANOVA, Pearson correlation.
+
+-   Otherwise we use **non-parametric tests** such as Mann-Whitney U test, Kruskal-Wallis test, chi-square test.
+
+## Assessing symmetry
+
+1.  Visual tests – EXAMPLE OF HIST AND BOXPLOT NEXT TO EACH OTHER - BOTH SHOW SKEW
+
+2.  Summary statistics
+
+    -   Median similar to mean
+
+    -   SD \> mean?
+
+    -   Coefficient of skewness
+
+When normal, distribution can be summarised by mean and standard deviation. If not, median or mode may be more appropriate.
+
+::: callout-tip
+## Transforming data
+
+TRANSFORMATIONS – NOT RELEVANT for this course rn, but quick side note that you can transform to get the mean and CIs, and then back transform to original scale.
+:::
+
+explain that to draw a normal distribution, you need to know: average, standard deviation.
+
+-   sd mainly relevant to normally distributed/symmetrical data.
+
+-   We subset to male adults because they are more normally distributed.
+
+-   Plot the graph with normal dis overlay first
+
 ```{r}
-norm_dist <- data.frame(x = seq(-4, 4, len = 50)*sd_value + mean_value) |> 
+# use tibble here?
+norm_dist <- data.frame(x = seq(-4, 4, len = 50)*sd_value + mean_value) %>%  
   mutate(density = dnorm(x, mean_value, sd_value))
 ```
 
@@ -324,30 +430,58 @@ ggplot(yao_male_adults, aes(x = height_cm)) +
   geom_line(aes(x, density),  data = norm_dist, color = "red") 
 ```
 
+-   Plot the graph with all the things
+
+-   Show the thing with percentages, say that we can now interpret that 68% lie between this and this value (proof down below). NUMERICAL rather than just visual.
+
+![](images/clipboard-805111297.png)
+
+::: callout-tip
+## The Normal Distribution
+
+Normal distribution is seen a lot in nature – Central limit theorem!! (later)
+:::
+
+### MISC: Cumulative Distribution Functions
+
+include this?
+
 ```{r}
 # eCDF
 
-ggplot(data.frame(height_cm), aes(x = height_cm)) + 
+ggplot(data.frame(height_men), aes(x = height_men)) + 
   stat_ecdf() +
   labs(x = "a", y = "F(a)") +
   scale_y_continuous(breaks=seq(0,1,0.1))
 ```
 
-Similar to what the frequency table does for categorical data, the eCDF defines the distribution for numerical data. From the plot, we can see that 65% of the values are below 175 cm, since F(175)= 0.65, or that 10% of the values are below 165, since F(165)= 0.1, and so on.
+COPIED: Similar to what the frequency table does for categorical data, the eCDF defines the distribution for numerical data. From the plot, we can see that 65% of the values are below 175 cm, since F(175)= 0.65, or that 10% of the values are below 165, since F(165)= 0.1, and so on.
 
 We can define the empirical cumulative distribution function (eCDF) as:
 
 ```{r}
-F <- function(a) mean(height_cm <= a)
+F <- function(a) mean(height_men <= a)
 ```
 
 which, for any value `a`, gives the proportion of values in the list `x` that are smaller or equal than `a`.
 
-Let's connect the eCDF to probability by asking: if I randomly pick one of the male patients, what is the chance that he is taller than 180 cm? Since every patient has the same chance of being picked, the answer to this is equivalent to the proportion of patients that are taller than 180 cm. Using the eCDF we obtain an answer by typing:
+COPIED: Let's connect the eCDF to probability by asking: if I randomly pick one of the male patients, what is the chance that he is taller than 180 cm? Since every patient has the same chance of being picked, the answer to this is equivalent to the proportion of patients that are taller than 180 cm. Using the eCDF we obtain an answer by typing:
 
 ```{r}
 1 - F(180)
+
+
 ```
+
+Normal dist good approx for `heights_men` data.
+
+Test: If perfectly normal distributed, 68, 95, and 99.7 percent within mean etc.
+
+```{r}
+F(179.87) - F(165.58)
+```
+
+OPTIONAL: get that highlighted color stripe thing code from dsbook.
 
 ## Conclusion {.unnumbered}
 

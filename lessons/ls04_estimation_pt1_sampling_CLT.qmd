@@ -1,6 +1,8 @@
 ---
 title: 'Estimation 1: Sampling Distributions and the Central Limit Theorem'
-format: html
+format:
+  html:
+    embed-resources: true
 ---
 
 ```{r, echo = F, message = F, warning = F}
@@ -23,62 +25,65 @@ theme_set(theme_minimal())
 
 # **Introduction**
 
-Recap:
-
-**Descriptive statistics** involves the organization, summarization, and display of data (e.g., tables, charts, numerical summary statistics).
-
-**Inferential statistics** involves using *sample data* to draw conclusions about a *population*.
+Statistical research begins with two complementary toolkits: descriptive and inferential statistics. Descriptive statistics help us organise, condense, and visualise raw information—for example with tables, charts, or numerical summaries. Inferential statistics, by contrast, use a carefully selected sample to say something about an unseen population. So far in this course, we have focused on descriptive statistics - investigating our data and its distributions before diving into analysis. Today we begin our journey into inferential statistics, starting with **estimation**.
 
 ![](images/stats_overview_g4g.png){width="723"}
 
 # **Learning Objectives**
 
--   Understand the concepts of statistical inference
--   Sampling distributions and sampling variation
--   Central Limit Theorem
+By the end of this less you should be able to
+
+-   Understand why statistical inference is necessary and what makes a good inference.
+
+-   Explain sampling distributions and recognise the role of sampling variation.
+
+-   State and apply the Central Limit Theorem (CLT).
 
 # **Inferential statistics**
 
-Statistical inference is the process of making statements about properties of an underlying population, based on data drawn from that population.
+Statistical inference is the disciplined process of drawing conclusions about population-level quantities from limited, sample-level data. The population is every individual, unit, or measurement we ultimately care about; the sample is a smaller, manageable subset chosen—ideally at random—from that population.
 
-EDIT THIS IMAGE AND LABEL IN PPT
+![](images/pop_vs_sample.png)
 
-![](images/pop_vs_sample_g4g.jpg)
+Two classical branches of inference are:
 
-Two branches of inferential statistics:
+1.  **Estimation.** *We estimate unknown population parameters (e.g., the population mean blood-pressure μ) with corresponding sample statistics (e.g., the sample mean* $\bar{x}$).
 
-1.  **Estimation** - Population parameters from sample statistics - sample mean vs. population mean. (e.g., what is the population mean blood pressure?)
-
-2.  **Hypothesis testing** - what can we say about a hypothesis on population parameters given sample data? (e.g., is the population mean blood pressure equal between men and women?)
+2.  **Hypothesis testing.** *We formally weigh evidence for or against a claim about a population parameter (e.g., “Men and women have equal mean blood-pressure”).*
 
 ![](images/inference_bmi.png)
 
 # **Population and Samples**
 
-We briefly covered the concepts of population and samples in the first lesson. Let's go over them again and dive into how they are important for understanding inferential statistics.
+We introduced populations and samples in Lesson 1. Here we dig deeper because every inferential tool relies on this distinction.
 
-::: callout-important
-## Definitions
+::: callout-tip
+## Terminology Recap
 
-A **sample** is a subset of the population used in our study, selected for practical reasons, from which we infer characteristics of the entire population. Given some sample of data, we can calculate **sample statistics** – numbers that we can calculate from our observed data.
+A **sample** is the subset we actually observe. From it we compute sample **statistics**.
 
--   **Example**: Given a sample of height measurements from 1,000 randomly selected adult women in Yaounde, Cameroon, we can calculate sample statistics such as the sample mean height.
+-   *Example:* From 1 000 randomly selected adult women in Yaoundé we compute xˉ\bar xxˉ, sss, etc.
 
-A **population** refers to the entire set of individuals or items that we are interested in studying. We rarely, if ever, have the entire population data, so we always estimate **population parameters** from sample data.
+A **population** is the full set we wish to understand. Its true **parameters** (μ,σ,…\mu, \sigma,\ldotsμ,σ,…) are almost never known exactly.
 
--   **Example**: Calculating the true population mean blood pressure of all adults in China would require measuring every adult in the country. Since this is not feasible, the true population parameter is unknown.
+-   *Example:* The true mean blood pressure of *all* adults in China is a population parameter.
+
+| Population Parameter (Greek) | Measure | **Sample Statistic (Latin)** |
+|:--:|:--:|:--:|
+| $\mu$ (mu) | Mean | $\bar{x}$ (x bar) |
+| $\sigma^2$ (sigma squared) | Variance | $s^2$ |
+| $\sigma$ (sigma) | Standard Deviation | $s$ |
+| $N$ | Size | $n$ |
 :::
 
--   WE ALMOST NEVER CAN MEASURE EVERY SINGLE THING A POPULATION, SO WE USE SAMPLES TO ESTIMATE THE TRUE POPULATION PARAMETERS. 
-
-    -   Why? – to get reproducible results – LOOK THIS PART OF THE VIDEO UP
+Because complete enumeration is impractical, we almost always substitute statistics for their unknown parameters and then quantify the inevitable uncertainty.
 
 ## Population Parameters vs. Sample Statistics
 
 | **Population Parameter** | **Sample Statistic** |
-|---------------------------------------|---------------------------------|
+|----|----|
 | Describes entire population (usually unknown) | Computed from sample data (known) |
-| Denoted by symbols like $\mu$ (population mean) and $\sigma$ (population standard deviation) | Denoted by symbols like $\bar{x}$ (sample mean) and $s$ (sample standard deviation) |
+| Denoted by Greek symbols like $\mu$ (population mean) and $\sigma$ (population standard deviation) | Denoted by Latin symbols like $\bar{x}$ (sample mean) and $s$ (sample standard deviation) |
 | Estimated by sample statistics | Calculated from sample data and used to estimate population parameters |
 
 ------------------------------------------------------------------------
@@ -89,22 +94,15 @@ A **population** refers to the entire set of individuals or items that we are in
 
 ------------------------------------------------------------------------
 
-
 # Sampling Variation
 
-Now you understand that samples are just a subset of the population, and the sample statistic is different from the true population parameter, which is unknown.
+Even with flawless randomisation, **different random samples would produce different statistics.** That wiggle from sample to sample is **sampling variation**.
 
--   We generally take one sample, but we could’ve taken many different samples, which would give us different values for any particular sample statistic (e.g., the mean).
-
-REPLACE WITH REAL DATA HISTOGRAMS?? - with mean line.
-
-![](images/clipboard-3370747018.png)
-
--   This variation is known as **sampling variation**.
+![](images/clipboard-916810754.png)
 
 ## An example of sampling variation
 
-Step:
+Steps:
 
 1.  Select a random sample of 50 from a population.
 
@@ -112,11 +110,9 @@ Step:
 
 3.  Calculate the sample mean blood pressure from those values.
 
-In this plot, each light grey dot represents EVERY individual in our entire population.
+In this plot, each light grey dot represents the full population of over 200,000 individuals in a retrospective study. The y-axis shows the blood pressure of each person
 
--   the y-axis shows the blood pressure of each person
-
--   taking a random sample of 50 individuals (blue dots), then calculating the sample mean, we get a value of 120.9 millimeters of mercury.
+-   Taking a random sample of 50 individuals (blue dots), then calculating the sample mean, we get a value of 120.9 millimeters of mercury.
 
 ![](images/sbp_jitter_var_234.png)
 
@@ -126,75 +122,51 @@ In this plot, each light grey dot represents EVERY individual in our entire popu
 
 -   But when selecting our random sample, we could have obtained a different set of 50 individuals.
 
--   Let's plot again. This time we get a different value for the sample mean -- 117.5 mmHg.
+-   Let's plot again. This time we get a different value for the sample mean – 117.5 mmHg.
 
 ![](images/sbp_jitter_var_123.png)
 
--   Again plot with new random sample 
+-   As we repeat the experiment, we see the mean hop around the target.
 
 ![](images/sbp_jitter_var_345.png)
 
-–   Each different sample we could have obtained would give us a different set of data, and therefore a different sample mean and estimate of the population mean.
-
--   This variation of the value of a sample statistic between the different samples that *could* have been taken is known as **sampling variation**.
-
-![](images/clipboard-3370747018.png)
-
-```{r}
-ggplot(diabetes_china_chen) +
-  geom_histogram(aes(x = sbp_mm_hg), bins = 12)
-```
-
+Each different sample we could have obtained would give us a different set of data, and therefore a different sample mean and estimate of the population mean.
 
 # **Sampling distributions**
 
--   DEFINITION: THE SAMPLE DISTRIBUTION IS THE DISTRIBUTION OF A STATISTIC ACROSS EVERY POSSIBLE SAMPLE.
+**Definition.** *The* sampling distribution *of a statistic is the distribution of that statistic over every possible random sample of a given size from the population.*
 
-    -   THEORETICAL
-
--   Example: theoretical (plot sampling distribution from diabetes china)
-
-    -   vary size and number of samples
-
-    -   note the change in shape
-
-    -   Conclusion: more (?) and larger samples = narrower distribution
+In practice we approximate it by simulation or theory. The next figures show simulated sampling distributions of the mean SBP for sample sizes 50, 200, 400, 800:
 
 ![Sampling distribution of mean SBP in many samples of size 50.](images/sbp_n50.png)
 
 ![Sampling distribution of mean SBP in many samples of size 200.](images/sbp_n200.png)
 
-
 ![Sampling distribution of mean SBP in many samples of size 400.](images/sbp_n400.png)
-
 
 ![Sampling distribution of mean SBP in many samples of size 800.](images/sbp_n800.png)
 
--   As we increase the sample size, the center and overall shape of the distribution doesn't change, but the spread of values gets much narrower. 
-
--   We see less variability in our sample means with increasing sample size.
-
-
--   Normally we use standard deviation to describe the spread of data, BUT HERE IT IS NOT A DATA DISTRIBUTION BUT THIS IS THE VARIABILITY OF A STATISTIC, CALCULATED OVER EVERY POSSIBLE SAMPLE. SO HERE THE SD HAS A SPECIAL NAME: STANDARD ERROR.
-
-
+**Notice how larger samples give a *narrower* (less variable) distribution—yet the centre stays at the true mean.** The standard deviation of this sampling distribution is notated SExˉ\text{SE}\_{\bar x}SExˉ​ and called the **standard error**.
 
 # Central Limit Theorem
 
--   notice how the distribution of sample means is normal?
+A remarkable fact—**the Central Limit Theorem (CLT)**—makes inference tractable:
 
--   UNDER SIMPLE RANDOM SAMPLING, THE SAMPLING DISTRIBUTION OF THE SAMPLE MEAN IS A MEAN EQUAL TO THE POPULATION MEAN.
-
--   CENTRAL LIMIT THEOREM - the sampling distribution of the sample mean is (approximately) a normal distribution.
-
-    -   we get this even if the og data distribution is not normal
+> **For sufficiently large random samples, the sampling distribution of the sample mean is approximately normal, regardless of the shape of the parent population.**
 
 ![](images/clt_uniform_evolution.gif){width="699"}
 
+Even if we have only one sample of data, we can use statistical theory to get an idea of what the sampling distribution of a particular statistic looks like.
 
--   Even if we have only one sample of data, we can use statistical theory to get an idea of what the sampling distribution of a particular statistic looks like.
+**Key implications**
 
+-   **Mean of the sampling distribution = population mean (**E\[xˉ\]=μ\mathrm E\[\bar x\]=\muE\[xˉ\]=μ).
 
+-   **Standard deviation =** σ/n\sigma/\sqrt{n}σ/n​, the standard error.
+
+-   **Normality enables confidence intervals and p-values with simple formulas—even for skewed data in the raw scale.**
+
+Remember: *A statistic’s behaviour over repeated sampling is encoded in its sampling distribution. The CLT tells us that, for the mean, this distribution is normal when* nnn is moderately large (often n≥30n\ge 30n≥30 suffices).
 
 ::: callout-important
 The distribution of a statistic across every possible sample is its **sampling distribution**.
@@ -202,30 +174,27 @@ The distribution of a statistic across every possible sample is its **sampling d
 The **Central Limit Theorem (CLT)** states that the sampling distribution of the sample mean is (approximately) a normal distribution.
 :::
 
+------------------------------------------------------------------------
 
+# Conclusion
 
------------
+In summary, every inferential statement rests on three pillars: a good sample, an understanding of sampling variation, and the power of the Central Limit Theorem. Master these, and you hold the keys to reproducible, defensible statistical research in R.
 
--   Show estimated population mean and estimated population standard deviation (??).
+# Contributors {.unlisted .unnumbered}
 
-    -   EACH WE DO THE EXPERIMENT WE GET DIFFERENT ESTIMATES OF THE POPULATION PARAMETERS. They are different from the true population parameters.
+The following team members contributed to this lesson:
 
-    -   But if we get different estimates each time we do they experiment, then how is it giving reproducible results?
+`r .tgc_contributors_list(ids = c("joy", "kendavidn"))`
 
--   
+# References {.unlisted .unnumbered}
 
--   THE MORE DATA THAT WE HAVE, THE MORE CONFIDENCE WE CAN HAVE IN THE ACCURACY OF THE ESTIMATES.
+Some material in this lesson was adapted from the following sources:
 
-    -   P-VALUES AND CONFIDENCE INTERVALS QUANTIFY THE CONFIDENCE IN THE ESTIMATED PARAMETERS. A p-value will tell us that even though there were differences between the estimates from the 2 experiments, they should not be significantly different, and that means we can replicate the results.
+-   Irizarry, Rafael A. 2019. *Introduction to Data Science: Statistics and Prediction Algorithms Through Case Studies*. <https://rafalab.dfci.harvard.edu/dsbook-part-2/>.
+-   Cannell, Brad, and Melvin Livingston. n.d. *R for Epidemiology*. <https://www.r4epi.com/>.
+-   GeeksforGeeks. 2025. "Introduction of Statistics and Its Types." <https://www.geeksforgeeks.org/introduction-of-statistics-and-its-types/>.
+-   Starmer, Josh. *StatQuest with Josh Starmer* \[YouTube Channel\]. <https://www.youtube.com/channel/UCtYLUTtgS3k1Fg4y5tAhLbw>.
+-   The GRAPH Courses. *FoSSA: Fundamentals of Statistical Software & Analysis*. <https://thegraphcourses.org/courses/fossa/>.
+-   University of Miami Libraries. *Introduction to Data Analysis and R*. <https://www.library.miami.edu/data-services/data-analysis.html>.
 
------------
-
--   The parameters that determine how a distribution fits the population data are called population parameters. (HERE GIVE HEIGHTS EXAMPLE, OVERLAY NORMAL DIST)
-
--   WE RARELY IF EVER HAVE POPULATION DATA SO WE ALWAYS ESTIMATE POPULATION PARAMETERS.
-
-    -   ALONG WITH THAT WE CALCULATE HOW MUCH CONFIDENCE WE SHOULD HAVE IN THOSE ESTIMATES.
-
-    -   THE MORE DATA WE HAVE, THE MORE CONFIDENCE WE HAVE IN THOSE ESTIMATES.
-
-    -   BY ESTIMATING THE POPULATION PARAMETERS AND QUANTIFYING OUR CONFIDENCE IN THEM, WE CAN GENERATE RESULTS THAT ARE REPRODUCIBLE IN FUTURE EXPERIMENTS.
+`r .tgc_license()`
