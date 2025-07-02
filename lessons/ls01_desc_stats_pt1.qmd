@@ -32,7 +32,8 @@ pacman::p_load(
   tidyverse,
   here,
   inspectdf,
-  visdat
+  visdat,
+  janitor
 )
 ```
 
@@ -99,7 +100,7 @@ A **sample** is a subset of the population, selected for practical reasons, from
 ### **Population vs. Sample**
 
 | **Population** | **Sample** |
-|------------------------------------|------------------------------------|
+|----|----|
 | Includes all members of a specified group | Subset of the population |
 | Often impractical to study entirely | Practical and feasible to study |
 | Example: All residents in Yaounde | Example: 1,000 randomly chosen residents |
@@ -162,6 +163,24 @@ TRYING DFSUMMARY HERE
 # VIS DAT
 
 vis_dat(yaounde)
+
+vis_dat(yao_adults)
+```
+
+```{r}
+# Contingency table of pregnancy status and sex
+
+tabyl(yaounde, is_pregnant, sex)
+```
+
+```{r}
+yao2 <- yaounde %>%  mutate(across(starts_with("is_drug"), 
+                                   as.logical),
+                            across(starts_with("symp_"), 
+                                   ~ ifelse(.x == "Yes", TRUE, FALSE)))
+
+
+vis_dat(yao2)
 ```
 
 ```{r}
@@ -180,7 +199,10 @@ yao_num_summary <- inspect_num(yaounde)
 show_plot(yao_num_summary)
 ```
 
-
+```{r}
+yaounde <- yaounde %>%
+  mutate(across(starts_with("is_drug"), as.logical))
+```
 
 SIDE NOTE: DISCRETE NUMERIC DATA PRACTICALLY ORDINAL? – there are examples that can be considered both numerical and ordinal (e.g., number of children?).
 
@@ -205,7 +227,13 @@ R data classes correspond to different variable types:
 
 **Identifying Variable Types and R Data classes**
 
-For each of the following variables, identify (1) the variable type (categorical or numerical), (2) its subtype (e.g., nominal, ordinal, discrete, continuous), and (3) the corresponding R data class.
+For each of the following variables, identify
+
+\(1\) the variable type (categorical or numerical),
+
+\(2\) its subtype (e.g., nominal, ordinal, discrete, continuous), and
+
+\(3\) the corresponding R data class.
 
 1.  `age`
 2.  `highest_education`
@@ -270,27 +298,35 @@ There are both **numerical** and **graphical** methods we can use to perform des
 ::: callout-note
 ## Practice
 
-**Identifying Variable Types**
+**Variable Types (Multiple‑Choice)**
 
-For the four variables below, select whether it is numerical or categorical. If categorical, specify if it's ordinal or nominal. If numerical, classify as discrete or continuous.
+Below are four variables. For each one, indicate whether it is
 
-1.  Stress level, responses are "high", "medium", "low".
-2.  Age in years
-3.  Height in centimeters
-4.  Country name
+-   **Numerical** (and, if so, whether it is **discrete** or **continuous**)
+-   **Categorical** (and, if so, whether it is **ordinal** or **nominal**)
+
+1.  **Stress level**, with response options “high,” “medium,” and “low.”
+2.  **Age** in completed years (integer values).
+3.  **Height** in centimeters.
+4.  **Country name**
 :::
 
 ::: callout-note
 ## Practice
 
-**Identifying Variable Types**
+**Variable Types (Fill‑in‑the‑Blanks)**
 
-If I measure age (in years) in a sample of 10,000 women, what type of variable would this be classified as?
+Complete each sentence with the most appropriate term:
 
-1.  Continuous
-2.  Binary
-3.  Nominal
-4.  Discrete
+1.  Quantitative variables are called \_\_\_\_\_\_\_\_, whereas qualitative variables are called \_\_\_\_\_\_\_\_.
+
+2.  Binary variables have exactly \_\_\_\_ categories.
+
+3.  \_\_\_\_\_\_\_\_ categorical variables contain groups that cannot be meaningfully ordered.
+
+4.  Discrete numeric variables consist of whole numbers, also referred to as \_\_\_\_\_\_\_\_.
+
+5.  Long ordinal variables can often be treated as \_\_\_\_\_\_\_\_\_\_\_, if they have sufficient categories and are relatively evenly distributed.
 :::
 
 # Categorical Variables
@@ -846,16 +882,26 @@ We measured the age of 10,000 women in the UK. How would you suggest we look at 
 
 **Identifying Variable Types**
 
-For the four variables below, select whether it is numerical or categorical. If categorical, specify if it's ordinal or nominal. If numerical, classify as discrete or continuous.
+For each of the four variables below, state whether it is numerical or categorical. If the variable is categorical, specify if it's ordinal or nominal. If numerical, classify as discrete or continuous.
 
 1.  Stress level, responses are "high", "medium", "low". **Categorical – Ordinal**
 2.  Age in years. **Numerical – Discrete**
 3.  Height in centimeters. **Numerical – Continuous**
 4.  Country name. **Categorical – Nominal**
 
-**Identifying Variable Types**
+**Variable Types (Fill‑in‑the‑Blanks)**
 
-If I measure age (in years) in a sample of 10,000 women, what type of variable would this be classified as? **Discrete**
+Complete each sentence with the most appropriate term:
+
+1.  Quantitative variables are called **numeric**, whereas qualitative variables are called **categorical**.
+
+2.  Binary variables have exactly **two** categories.
+
+3.  **Nominal** categorical variables contain groups that cannot be meaningfully ordered.
+
+4.  Discrete numeric variables consist of whole numbers, also referred to as **integers**.
+
+5.  Long ordinal variables can often be treated as **continuous/numeric**, if they have sufficient categories and are relatively evenly distributed.
 
 **Identifying Variable Types and R Data Classes**
 
@@ -1045,5 +1091,10 @@ Some material in this lesson was adapted from the following sources:
 -   Starmer, Josh. *StatQuest with Josh Starmer* \[YouTube Channel\]. <https://www.youtube.com/channel/UCtYLUTtgS3k1Fg4y5tAhLbw>.
 -   The GRAPH Courses. *FoSSA: Fundamentals of Statistical Software & Analysis*. <https://thegraphcourses.org/courses/fossa/>.
 -   University of Miami Libraries. *Introduction to Data Analysis and R*. <https://www.library.miami.edu/data-services/data-analysis.html>.
+-   that yt video for the var types summary image
+-   kene yaounde
+-   Sullivan, G. M., & Artino, A. R., Jr (2013). Analyzing and interpreting data from likert-type scales. *Journal of graduate medical education*, *5*(4), 541–542. https://doi.org/10.4300/JGME-5-4-18
+-   <https://r4ds.hadley.nz/>
+-   
 
 `r .tgc_license()`

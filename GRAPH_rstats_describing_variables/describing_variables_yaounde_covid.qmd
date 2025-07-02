@@ -1,0 +1,76 @@
+---
+title: "describing_variables_yaounde"
+format: html
+editor: visual
+---
+
+# Load Packages
+
+```{r}
+# Load packages 
+
+```
+
+# The Yaounde COVID-19 dataset
+
+```{r}
+# Import data to RStudio
+
+```
+
+-   Let's spend some time browsing through this dataset.
+
+```{r}
+# View first 6 rows of the dataframe
+
+```
+
+-   Each line corresponds to one patient surveyed.
+
+-   There are some demographic, socio-economic and COVID-related variables.
+
+-   The results of the IgG and IgM antibody tests are in the columns `igg_result` and `igm_result`.
+
+![](images/white_square.jpg){fig-align="center"}
+
+```{r}
+# View variable data classes
+glimpse(yaounde)
+```
+
+![](images/white_square.jpg){fig-align="center"}
+
+```{r}
+# VISUALIZE DATA TYPE OF EACH VARIABLE
+
+vis_dat(yaounde)
+```
+
+![](images/white_square.jpg){fig-align="center"}
+
+```{r}
+# INSPECT CATEGOTIRICAL VARIABLES
+
+yao_cat_summary <- inspect_cat(yaounde)
+
+
+show_plot(yao_cat_summary)
+```
+
+![](images/white_square.jpg){fig-align="center"}
+
+```{r}
+# INSPECT NUMERIC VARIABLES
+
+yao_num_summary <- inspect_num(yaounde)
+
+show_plot(yao_num_summary)
+```
+
+![](images/white_square.jpg){fig-align="center"}
+
+SUMMARY, CLASS ETC. – ADD THOSE OTHER FUNCTIONS, WITH THE DOT GRAPHS.
+
+R DATA CLASSES VS VARIABLE TYPES
+
+INSPECT CAT AND INSPECT NUM
