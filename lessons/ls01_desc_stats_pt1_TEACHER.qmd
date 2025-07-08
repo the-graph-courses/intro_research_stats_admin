@@ -43,7 +43,11 @@ pacman::p_load(
 
 ```{r}
 # Load packages - we use pload form pacman, loads them and installs. tidyverse data manip, here for file paths, janitor tabyls, inspect and vis for data exploration.
-pacman::p_load(tidyverse, here, janitor, inspectdf, visdat)
+pacman::p_load(tidyverse, 
+               here, 
+               janitor, 
+               inspectdf, 
+               visdat)
 ```
 
 ![](images/white_square.jpg)
@@ -51,10 +55,9 @@ pacman::p_load(tidyverse, here, janitor, inspectdf, visdat)
 # The Yaounde COVID-19 dataset
 
 ```{r}
-# Import data to RStudio
+# Import data to RStudio (live type?)
 yaounde <- read_csv(here("data/yaounde_data.csv"))
 ```
-
 
 ```{r}
 spec(yaounde)
@@ -66,16 +69,12 @@ spec(yaounde)
 
 ```{r}
 # View first 6 rows of the dataframe
-head(yaounde)
+head(yaounde) 
 ```
-
-![](images/white_square.jpg){fig-align="center"}
 
 ![](images/structure-of-dataset.png){fig-align="center"}
 
-![](images/white_square.jpg){fig-align="center"}
-
--   Each line corresponds to one patient surveyed.
+-   Each row corresponds to one patient surveyed.
 
 -   There are some demographic, socio-economic and COVID-related variables.
 
@@ -87,9 +86,6 @@ head(yaounde)
 # View variable data classes
 glimpse(yaounde)
 ```
-
-
-
 
 ![](images/white_square.jpg){fig-align="center"}
 
@@ -165,15 +161,25 @@ SIDE NOTE: DISCRETE NUMERIC DATA PRACTICALLY ORDINAL? – there are examples tha
 
 R data classes correspond to different variable types:
 
-| Variable Type | R Data Class                |
-|---------------|-----------------------------|
-| Continuous    | Numeric                     |
-| Discrete      | Integer, Numeric            |
-| Ordinal       | Factor (ordered), Character |
-| Nominal       | Factor, Character           |
-| Logical       | Logical (`TRUE` or `FALSE`) |
-| Date          | Date                        |
-| Binary        | Integer, Numeric            |
++---------------+------------------------------------------------------------------+
+| Variable Type | R Data Class                                                     |
++===============+==================================================================+
+| Continuous    | `numeric`, specifically `double`                                 |
++---------------+------------------------------------------------------------------+
+| Discrete      | `numeric`, specifically `integer`                                |
++---------------+------------------------------------------------------------------+
+| Ordinal       | `factor` (ordered)                                               |
++---------------+------------------------------------------------------------------+
+| Nominal       | `character`                                                      |
++---------------+------------------------------------------------------------------+
+| Binary        | `numeric`, specifically `integer` with 2 values (e.g., 0 and 1), |
+|               |                                                                  |
+|               | -   `logical` a.k.a. Boolean (`TRUE` or `FALSE`)                 |
+|               |                                                                  |
+|               | -   `character` with 2 values (e.g., "success" and "failure")    |
+|               |                                                                  |
+|               | -   `factor` with 2 values, (e.g., "low" and "high")             |
++---------------+------------------------------------------------------------------+
 :::
 
 ::: callout-note
@@ -844,14 +850,21 @@ If I measure age (in years) in a sample of 10,000 women, what type of variable w
 
 R data classes correspond to different variable types:
 
++---------------+-------------------+--------------------------------------+
 | Variable Type | R Data Class      | Example Variables in Yaounde Dataset |
-|---------------|-------------------|--------------------------------------|
++===============+===================+======================================+
 | Continuous    | Numeric           | `height_cm`, `weight_kg`             |
++---------------+-------------------+--------------------------------------+
 | Discrete      | Integer, Numeric  | `age`, `n_days_miss_work`            |
++---------------+-------------------+--------------------------------------+
 | Ordinal       | Factor (ordered)  | `highest_education`                  |
++---------------+-------------------+--------------------------------------+
 | Nominal       | Factor, Character | `sex`, `neighborhood`                |
++---------------+-------------------+--------------------------------------+
 | Logical       | Logical           | `is_pregnant`, `is_medicated`        |
++---------------+-------------------+--------------------------------------+
 | Date          | Date              | `date_surveyed`                      |
++---------------+-------------------+--------------------------------------+
 
 **Frequency Tables**
 

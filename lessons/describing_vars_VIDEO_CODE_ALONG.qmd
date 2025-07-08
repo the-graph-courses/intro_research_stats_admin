@@ -4,10 +4,10 @@ format: html
 editor: visual
 ---
 
-# Load Packages
+# Packages
 
 ```{r}
-# Load packages 
+# This lesson will require the following packages to be installed and loaded
 
 ```
 
