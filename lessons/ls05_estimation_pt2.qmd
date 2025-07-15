@@ -117,6 +117,32 @@ ggplot(data.frame(xbar = sam_means), aes(x = xbar)) +
        y = "Frequency")
 ```
 
+::: callout-note
+## Practice
+
+**Question 1**
+
+Which of the following best describes the **standard error (SE)**?
+
+A. The average value of all sample means from repeated sampling  
+B. The typical distance between an individual observation and the sample mean  
+C. The typical distance between a sample statistic and the true population parameter  
+D. The variability in the raw dataset
+:::
+
+::: callout-note
+## Practice
+
+**Question 2**
+
+Suppose a researcher collects a sample of 64 people and finds a sample mean of 150 with a sample standard deviation of 16. What is the **approximate** standard error of the mean?
+
+A. 2  
+B. 4  
+C. 16  
+D. 0.25
+:::
+
 ---
 
 # 2 Confidence Intervals
@@ -207,6 +233,19 @@ Thus CIs provide **both** an estimate **and** a significance decision in one gra
 | Slope $β_1$ in simple regression      | $b_1$               | $b_1 \pm t_{.975,df}\times\text{SE}(b_1)$                                              |
 
 When sample sizes are *small*, use the $t$ distribution, *not* 1.96, and check assumptions.
+
+::: callout-note
+## Practice
+
+**Question 3**
+
+Which of the following changes will **narrow** a 95% confidence interval for the mean?
+
+A. Increasing the confidence level from 95% to 99%  
+B. Increasing the sample size  
+C. Increasing the sample standard deviation  
+D. Increasing the variability in the population
+:::
 
 ---
 

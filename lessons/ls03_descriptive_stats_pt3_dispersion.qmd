@@ -76,17 +76,18 @@ The most common measures of dispersion are range, variance, and standard deviati
 In this lesson, we will again use the data from the COVID-19 serological survey conducted in Yaounde, Cameroon.
 
 ```{r}
+# Import the dataset
 yaounde <- read_csv(here::here('data/yaounde_data.csv'))
-
-
 ```
 
-\[ADD EXPLANTORY TEXT\]
+The survey estimated how many people had been infected with COVID-19 in the region, by testing for IgG and IgM antibodies. The full dataset can be obtained from [Zenodo](https://zenodo.org/record/5218965), and the paper can be viewed [here](https://www.nature.com/articles/s41467-021-25946-0).
 
-demo of symmetry:
+Spend some time browsing through this dataset. Each line corresponds to one patient surveyed. There are some demographic, socio-economic and COVID-related variables. The results of the IgG and IgM antibody tests are in the columns `igg_result` and `igm_result`.
+
+### Distrubution of heights across age groups
 
 ```{r}
-
+# Plot a faceted violin chart
 
 ggplot(yaounde, aes(x = age_category_3, y = height_cm,
     fill = age_category_3,
@@ -103,16 +104,21 @@ ggplot(yaounde, aes(x = age_category_3, y = height_cm,
 
 ```
 
--   
+Here you can see that male adults had a most symmetrical distribution.
 
-HERE WE FILTER IT DOWN TO MALE ADULTS... \[EXPLAIN WHY\]
+Let's use a smaller data subset focusing on two continuous numeric variables - `weight_kg` and `height_cm`.
 
 ```{r}
-# A smaller subset focusing on continuous numeric variables - height and weight
+# Filter to create data subsets height and weight
 
 yao_num <- yaounde %>% 
   select(age_category_3, sex, weight_kg, height_cm)
 
+```
+
+Next we will further narrow it down to create a data frame of male adults only.
+
+```{r}
 yao_male_adults <- yao_num %>% 
   filter(age_category_3 != "Child", sex == "Male") 
 
@@ -125,6 +131,8 @@ We can use the `inspect_num()` function from the {inspectdf} package to get a su
 # Summarise central tendency and dispersion for numeric variables in the yao_male_adults dataframe
 yao_male_adults %>% inspect_num()
 ```
+
+Remember that {tidyverse} functions can also be used to create custom summary tables.
 
 ```{r}
 # REMOVE THIS PART??
@@ -154,13 +162,13 @@ yaounde %>%
             sd_weight = sd(weight_kg))
 ```
 
-REWORD/EDIT: Measures of central tendency describe the "typical" or "average" person in our sample. The result of our analysis above tells us that the average adult was 167cm tall. This information gets us reasonably close to understanding the typical height of the patients surveyed. So a natural extension of our original question is: "How much like the average person are the other people in the data?"
+Measures of central tendency describe the "typical" or "average" person in our sample. The result of our analysis above tells us that the average adult was 167cm tall. This information gets us reasonably close to understanding the typical height of the patients surveyed. So a natural extension of our original question is: "How much like the average person are the other people in the data?"
 
 The measures used to answer this question are called **measures of dispersion**, which we can say is the amount of difference between people in the study, or more generally, the amount of variability in the data.
 
 ![](images/measure-of-dispersion.png)
 
-REWORD/EDIT: In the last lesson we looked at dispersion graphically, through charts such as boxplots and histograms. The density curve below gives us an idea of how values vary around the mean.
+In the last lesson we looked at dispersion graphically, through charts such as boxplots and histograms. The density curve below gives us an idea of how values vary around the mean.
 
 ```{r}
 ggplot(yao_male_adults, aes(height_cm)) +
@@ -177,7 +185,7 @@ Both Measures of Dispersion and Central Tendency are numbers that are used to de
 
 In the last lesson on measures of central tendency, we found the mean value, median value, mode value, of the height variable in our `yaounde` dataset.
 
-REWORD/EDIT: Earlier, we also created boxplots to visualize the maximum and minimum values of the `height_cm` variables, as well as the quartile ranges. These are VISUAL cues of dispersion – can we put a number to it this time?
+Earlier, we also created boxplots to visualize the maximum and minimum values of the `height_cm` variables, as well as the quartile ranges. These are VISUAL cues of dispersion – can we put a number to it this time?
 :::
 
 +-------------------------------------------------------------------------------------------+------------------------------------+
@@ -231,21 +239,30 @@ IQR is diff between 25 and 75.
 IQR(height_men)
 ```
 
-\[ADD EXPLANTORY TEXT\]
+Recall that the "box" part of a box-and-whisker plot (a.k.a. boxplot) extents from Q1 to Q3, visualizing the interquartile range.![](images/clipboard-2329769433.png)
 
-```{r}
-ggplot(yao_male_adults, aes(x = height_cm)) +
-  geom_boxplot()
-```
+The "whiskers" are calculated with the formula $Q1 - 1.5 \times IQR$ for the lower whisker and $Q3 + 1.5 \times IQR$ for the uppper whisker.
 
-![](images/boxplot_anatomy.png)
-
-\[ADD EXPLANTORY TEXT\]
+For our distribution of heights, we can manually calculate them like so:
 
 ```{r}
 168 - (1.5*9)
 177 + (1.5*9)
 ```
+
+Let's confirm the length of the whiskers by drawing a real boxplot with {ggplot2}.
+
+```{r}
+# Simple boxplot of heights
+ggplot(yao_male_adults, aes(x = height_cm)) +
+  geom_boxplot()
+```
+
+::: callout-note
+## Practice
+
+**Use the `yao_male_adults` dataframe. Write R code to compute the interquartile range (IQR) of the `weight_kg` column.**
+:::
 
 # Variance
 
@@ -260,7 +277,7 @@ Variance shows how much the numbers in your data **vary** from the average value
 
 ## How to Calculate Variance?
 
-EDIT- REPEATED A LOT: Variance measures the average of the squared differences from the Mean (μ). Variance is usually represented by the symbol σ^2^. The steps to calculate the variance of a dataset:
+Variance measures the average of the squared differences from the Mean (μ). Variance is usually represented by the symbol σ^2^. The steps to calculate the variance of a dataset:
 
 > **Step 1:** **Calculate the Mean (Average):**\
 > Add up all the values in the dataset and divide by the total number of values. This gives you the mean (μ).\
@@ -323,6 +340,14 @@ Where:
 -   $N$ is the Number of Observations
 -   $\sum$ = Sum over all the values
 
+::: callout-note
+1.  **Which of the following statements best describes the standard deviation?**
+    A)  It measures the highest value minus the lowest value in a dataset.
+    B)  It is the square of the mean.
+    C)  It quantifies the average distance of data points from the mean.
+    D)  It is always larger than the variance.
+:::
+
 ### Calculating Standard Deviation in R
 
 We can compute it using the **`sd()`** function available in R.
@@ -332,25 +357,51 @@ We can compute it using the **`sd()`** function available in R.
 sd(height_men)
 ```
 
+::: callout-note
+## Practice
+
+**Which of these R functions correctly calculates the variance of a numeric vector?**
+
+A)  `range()`
+B)  `sd()`
+C)  `var()`
+D)  `mean()`
+:::
+
 ## Variance vs Standard Deviation
 
 Why is the standard deviation important when we already have variance? Compared to variance, the standard deviation is expressed in the **same units as the data**, making it easier to interpret.
 
 Additionally, the standard deviation is frequently used in statistical analysis because data within one standard deviation of the mean account for approximately 68% of the set, while data within two standard deviations cover around 95%.
 
-\[EXPLAIN Z-SCORES\]
-
 ![](images/sd_percentages.png){width="604"}
 
 These percentages aid our understanding of data dispersion in a probability distribution. Therefore, while variance provides numerical insight into data spread, the standard deviation conveys these insights in a more comprehensible and applicable manner.
 
-| **Variance** | **Deviation (Standard Deviation)** |
-|:--:|:--:|
-| The measure of spread in a dataset. | Measure of average distance from the mean. |
-| Average of squared differences from the mean. | The square root of the variance. |
-| $\sigma^2$ (sigma squared) | $\sigma$ (sigma) |
++-----------------------------------------------------------------------+--------------------------------------------------------------+
+| **Variance**                                                          | **Deviation (Standard Deviation)**                           |
++:=====================================================================:+:============================================================:+
+| The measure of spread in a dataset.                                   | Measure of average distance from the mean.                   |
++-----------------------------------------------------------------------+--------------------------------------------------------------+
+| Average of squared differences from the mean.                         | The square root of the variance.                             |
++-----------------------------------------------------------------------+--------------------------------------------------------------+
+| $\sigma^2$ (sigma squared)                                            | $\sigma$ (sigma)                                             |
++-----------------------------------------------------------------------+--------------------------------------------------------------+
 | Indicates the average squared deviation of data points from the mean. | Indicates the average distance of data points from the mean. |
-| Harder to interpret directly (due to squared units) | Easier to interpret; shows how spread out the data is |
++-----------------------------------------------------------------------+--------------------------------------------------------------+
+| Harder to interpret directly (due to squared units)                   | Easier to interpret; shows how spread out the data is        |
++-----------------------------------------------------------------------+--------------------------------------------------------------+
+
+::: callout-note
+## Practice
+
+**Why is the standard deviation often preferred over the variance for interpretation?**
+
+A)  It is always smaller than the variance.
+B)  It has no units, so it's more universal.
+C)  It is easier to compute by hand.
+D)  It is in the same units as the original data, making it easier to interpret.
+:::
 
 ## Visualizing Mean, Variance, and Standard Deviation Together
 
@@ -390,61 +441,123 @@ Identifying skew (non-normality) in the data is important because our choice of 
 
 -   Otherwise we use **non-parametric tests** such as Mann-Whitney U test, Kruskal-Wallis test, chi-square test.
 
-## Assessing symmetry
+## Assessing Symmetry
 
-1.  Visual tests – EXAMPLE OF HIST AND BOXPLOT NEXT TO EACH OTHER - BOTH SHOW SKEW
+Understanding the **symmetry** of a distribution is essential for choosing the right summary statistics and statistical tests. A **symmetric distribution** looks the same on both sides of its central point, typically the mean. In contrast, a **skewed distribution** is lopsided, with a longer tail on one side.
 
-2.  Summary statistics
+We assess symmetry using both **visual tools** and **numerical summaries**:
 
-    -   Median similar to mean
+### 1. Visual Assessment
 
-    -   SD \> mean?
+Visualizations help us quickly detect skewness or symmetry in the data:
 
-    -   Coefficient of skewness
+-   **Histogram**: A symmetric histogram has a bell-shaped curve centered around the mean.
+-   **Boxplot**: Symmetry is suggested when the median is centered within the box and the whiskers are approximately equal in length.
 
-When normal, distribution can be summarised by mean and standard deviation. If not, median or mode may be more appropriate.
+For example:
+
+```{r}
+# Side-by-side: Histogram and Boxplot of Height
+p1 <- ggplot(yao_male_adults, aes(height_cm)) +
+  geom_histogram(binwidth = 2, fill = "steelblue", color = "white") +
+  labs(title = "Histogram of Height")
+
+p2 <- ggplot(yao_male_adults, aes(y = height_cm)) +
+  geom_boxplot(fill = "lightgreen") +
+  coord_flip() +
+  labs(title = "Boxplot of Height")
+
+library(patchwork)
+p1 / p2
+```
+
+From these plots, if the histogram is bell-shaped and the boxplot appears balanced (median centered, whiskers roughly equal), we can infer symmetry.
+
+### 2. Summary statistics
+
+We can also check for symmetry numerically. Here are some key indicators:
+
+-   **Mean ≈ Median**: In a symmetric distribution, the mean and median are close in value. If they differ significantly, the distribution may be skewed.
+
+-   **Skewness ≈ 0**: The **coefficient of skewness** quantifies symmetry. A skewness value near zero indicates symmetry.
+
+-   **Standard Deviation (SD) and Mean Relationship**: In some cases, a very high standard deviation relative to the mean can hint at skewness or outliers, although this is not a formal rule.
+
+For example:
+
+```{r}
+# Calculate mean, median, skewness
+library(e1071)
+
+mean_h <- mean(height_men, na.rm = TRUE)
+median_h <- median(height_men, na.rm = TRUE)
+skew_h <- skewness(height_men, na.rm = TRUE)
+
+tibble(
+  Mean = mean_h,
+  Median = median_h,
+  Difference = abs(mean_h - median_h),
+  Skewness = skew_h
+)
+```
+
+**Interpretation:**
+
+-   If `Mean ≈ Median`, and `Skewness` is close to `0`, the distribution is likely symmetric.
+
+-   Positive skewness (\> 0): Tail is longer on the right.
+
+-   Negative skewness (\< 0): Tail is longer on the left.
+
+### 3. Why Symmetry Matters
+
+-   **Symmetric data** can be summarized using **mean** and **standard deviation**.
+
+-   **Skewed data** is better summarized using the **median** and **interquartile range (IQR)**, because they are less sensitive to extreme values (outliers).
+
+For instance, in the `yao_male_adults` subset, the distribution of `height_cm` is approximately symmetric, which is why we’ve used mean and SD to summarize and model it (e.g., overlaying a normal distribution).
+
+### 4. Drawing a Normal Curve (Overlay)
+
+When data is symmetric, we can use the **mean and standard deviation** to draw a theoretical **normal distribution** and overlay it for comparison.
+
+```{r}
+# Normal distribution overlay
+norm_dist <- data.frame(x = seq(-4, 4, length.out = 100) * sd_value + mean_value) %>%  
+  mutate(density = dnorm(x, mean = mean_value, sd = sd_value))
+
+ggplot(yao_male_adults, aes(x = height_cm)) +
+  geom_density(fill = "dodgerblue", alpha = 0.5) +
+  geom_line(data = norm_dist, aes(x = x, y = density), color = "red", linewidth = 1) +
+  labs(title = "Overlay of Empirical and Normal Distributions",
+       x = "Height (cm)",
+       y = "Density")
+
+```
+
+This overlay helps visually confirm the fit of a normal model. If the red curve aligns well with the observed density (blue), the distribution is approximately normal (i.e., symmetric).
+
+### Summary
+
+| Method               | Symmetric if...                         |
+|----------------------|-----------------------------------------|
+| Histogram            | Bell-shaped, centered                   |
+| Boxplot              | Median centered, whiskers roughly equal |
+| Mean vs Median       | Close in value                          |
+| Skewness             | Close to 0                              |
+| Normal Curve Overlay | Empirical matches theoretical curve     |
+
+Knowing whether your data is symmetric helps you choose the right tools. For symmetric distributions, the **mean and standard deviation** are informative and valid summaries. For skewed data, it's often better to rely on the **median and IQR**.
 
 ::: callout-tip
 ## Transforming data
 
-TRANSFORMATIONS – NOT RELEVANT for this course rn, but quick side note that you can transform to get the mean and CIs, and then back transform to original scale.
+Non-normal data can be transformed to get the mean and CIs, and then back transformed to the original scale.
 :::
 
-explain that to draw a normal distribution, you need to know: average, standard deviation.
+### Cumulative Distribution Functions
 
--   sd mainly relevant to normally distributed/symmetrical data.
-
--   We subset to male adults because they are more normally distributed.
-
--   Plot the graph with normal dis overlay first
-
-```{r}
-# use tibble here?
-norm_dist <- data.frame(x = seq(-4, 4, len = 50)*sd_value + mean_value) %>%  
-  mutate(density = dnorm(x, mean_value, sd_value))
-```
-
-```{r}
-ggplot(yao_male_adults, aes(x = height_cm)) +
-  geom_density(fill = "dodgerblue", alpha = 0.5) +
-  geom_line(aes(x, density),  data = norm_dist, color = "red") 
-```
-
--   Plot the graph with all the things
-
--   Show the thing with percentages, say that we can now interpret that 68% lie between this and this value (proof down below). NUMERICAL rather than just visual.
-
-![](images/clipboard-805111297.png)
-
-::: callout-tip
-## The Normal Distribution
-
-Normal distribution is seen a lot in nature – Central limit theorem!! (later)
-:::
-
-### MISC: Cumulative Distribution Functions
-
-include this?
+Similar to what the frequency table does for categorical data, the eCDF defines the distribution for numerical data. From the plot, we can see that 65% of the values are below 175 cm, since F(175)= 0.65, or that 10% of the values are below 165, since F(165)= 0.1, and so on.
 
 ```{r}
 # eCDF
@@ -455,8 +568,6 @@ ggplot(data.frame(height_men), aes(x = height_men)) +
   scale_y_continuous(breaks=seq(0,1,0.1))
 ```
 
-COPIED: Similar to what the frequency table does for categorical data, the eCDF defines the distribution for numerical data. From the plot, we can see that 65% of the values are below 175 cm, since F(175)= 0.65, or that 10% of the values are below 165, since F(165)= 0.1, and so on.
-
 We can define the empirical cumulative distribution function (eCDF) as:
 
 ```{r}
@@ -465,23 +576,19 @@ F <- function(a) mean(height_men <= a)
 
 which, for any value `a`, gives the proportion of values in the list `x` that are smaller or equal than `a`.
 
-COPIED: Let's connect the eCDF to probability by asking: if I randomly pick one of the male patients, what is the chance that he is taller than 180 cm? Since every patient has the same chance of being picked, the answer to this is equivalent to the proportion of patients that are taller than 180 cm. Using the eCDF we obtain an answer by typing:
+Let's connect the eCDF to probability by asking: if I randomly pick one of the male patients, what is the chance that he is taller than 180 cm? Since every patient has the same chance of being picked, the answer to this is equivalent to the proportion of patients that are taller than 180 cm. Using the eCDF we obtain an answer by typing:
 
 ```{r}
 1 - F(180)
-
-
 ```
 
-Normal dist good approx for `heights_men` data.
+Normal distribution is a good approx for `heights_men` data.
 
 Test: If perfectly normal distributed, 68, 95, and 99.7 percent within mean etc.
 
 ```{r}
 F(179.87) - F(165.58)
 ```
-
-OPTIONAL: get that highlighted color stripe thing code from dsbook.
 
 ## Conclusion {.unnumbered}
 
