@@ -99,11 +99,15 @@ A **sample** is a subset of the population, selected for practical reasons, from
 ::: callout-tip
 ### **Population vs. Sample**
 
-| **Population** | **Sample** |
-|----|----|
-| Includes all members of a specified group | Subset of the population |
-| Often impractical to study entirely | Practical and feasible to study |
-| Example: All residents in Yaounde | Example: 1,000 randomly chosen residents |
++-------------------------------------------+------------------------------------------+
+| **Population**                            | **Sample**                               |
++===========================================+==========================================+
+| Includes all members of a specified group | Subset of the population                 |
++-------------------------------------------+------------------------------------------+
+| Often impractical to study entirely       | Practical and feasible to study          |
++-------------------------------------------+------------------------------------------+
+| Example: All residents in Yaounde         | Example: 1,000 randomly chosen residents |
++-------------------------------------------+------------------------------------------+
 :::
 
 We can almost never measure every single unit in a population, so we use sample data to **estimate** the true population parameters.
@@ -154,7 +158,7 @@ head(yaounde)
 Can you identify which variables are numeric? Of those, which are continuous and which are discrete? The `glimpse()` function can help us get a better look at this.
 
 ```{r render = .reactable_print}
-glimpse(yaounde)
+str(yaounde)
 ```
 
 TRYING DFSUMMARY HERE
@@ -163,8 +167,6 @@ TRYING DFSUMMARY HERE
 # VIS DAT
 
 vis_dat(yaounde)
-
-vis_dat(yao_adults)
 ```
 
 ```{r}
@@ -185,7 +187,7 @@ vis_dat(yao2)
 
 ```{r}
 # INSPECT CAT
-yao_cat_summary <- inspect_cat(yaounde)
+yao_cat_summary <- yaounde %>% select(-c(id, treatment_combinations)) %>% inspect_cat()
 
 
 show_plot(yao_cat_summary)
@@ -200,26 +202,63 @@ show_plot(yao_num_summary)
 ```
 
 ```{r}
-yaounde <- yaounde %>%
+# Convert "is_drug" variables to logical
+
+yao2 <- yaounde %>% 
   mutate(across(starts_with("is_drug"), as.logical))
+```
+
+```{r}
+show_plot(inspect_num(yao2))
+```
+
+```{r}
+yaounde <- yaounde %>%  
+  mutate(across(starts_with("is_drug"), as.logical),
+         across(starts_with("n_"), as.integer),
+         age_category_3 = factor(age_category_3,
+                                 levels = c("Child", "Adult", "Senior")), 
+         is_smoker = factor(is_smoker,
+                            levels = c("Non-smoker", "Ex-smoker", "Smoker")),
+         highest_education = factor(highest_education,
+                                    levels = c("No formal instruction", 
+                                               "Primary",
+                                               "Secondary",
+                                               "University",
+                                               "Doctorate",
+                                               "No response"))
+         )
+
+
+vis_dat(yaounde)
 ```
 
 SIDE NOTE: DISCRETE NUMERIC DATA PRACTICALLY ORDINAL? – there are examples that can be considered both numerical and ordinal (e.g., number of children?).
 
 ::: callout-tip
-## Review of the Main Data Classes in R
+## Review of the Main Data Types in R
 
-R data classes correspond to different variable types:
+Each variable type corresponds to different R data classes/types:
 
-| Variable Type | R Data Class                |
-|---------------|-----------------------------|
-| Continuous    | Numeric                     |
-| Discrete      | Integer, Numeric            |
-| Ordinal       | Factor (ordered), Character |
-| Nominal       | Factor, Character           |
-| Logical       | Logical (`TRUE` or `FALSE`) |
-| Date          | Date                        |
-| Binary        | Integer, Numeric            |
++---------------+---------------------------------------------------------------------+
+| Variable Type | R Data Type                                                         |
++===============+=====================================================================+
+| Continuous    | `numeric`, specifically `double`                                    |
++---------------+---------------------------------------------------------------------+
+| Discrete      | `numeric`, specifically `integer`                                   |
++---------------+---------------------------------------------------------------------+
+| Nominal       | `character`                                                         |
++---------------+---------------------------------------------------------------------+
+| Ordinal       | `factor` (ordered)                                                  |
++---------------+---------------------------------------------------------------------+
+| Binary        | -   `numeric`, specifically `integer` with 2 values (e.g., 0 and 1) |
+|               |                                                                     |
+|               | -   `logical` a.k.a. Boolean (`TRUE` or `FALSE`)                    |
+|               |                                                                     |
+|               | -   `character` with 2 values (e.g., "success" and "failure")       |
+|               |                                                                     |
+|               | -   `factor` with 2 values, (e.g., "low" and "high")                |
++---------------+---------------------------------------------------------------------+
 :::
 
 ::: callout-note
@@ -227,7 +266,7 @@ R data classes correspond to different variable types:
 
 **Identifying Variable Types and R Data classes**
 
-For each of the following variables, identify
+For each of the following variables, in the `yaounde` data frame, identify:
 
 \(1\) the variable type (categorical or numerical),
 
@@ -914,14 +953,21 @@ Complete each sentence with the most appropriate term:
 
 R data classes correspond to different variable types:
 
++---------------+-------------------+--------------------------------------+
 | Variable Type | R Data Class      | Example Variables in Yaounde Dataset |
-|---------------|-------------------|--------------------------------------|
++===============+===================+======================================+
 | Continuous    | Numeric           | `height_cm`, `weight_kg`             |
++---------------+-------------------+--------------------------------------+
 | Discrete      | Integer, Numeric  | `age`, `n_days_miss_work`            |
++---------------+-------------------+--------------------------------------+
 | Ordinal       | Factor (ordered)  | `highest_education`                  |
++---------------+-------------------+--------------------------------------+
 | Nominal       | Factor, Character | `sex`, `neighborhood`                |
++---------------+-------------------+--------------------------------------+
 | Logical       | Logical           | `is_pregnant`, `is_medicated`        |
++---------------+-------------------+--------------------------------------+
 | Date          | Date              | `date_surveyed`                      |
++---------------+-------------------+--------------------------------------+
 
 **Frequency Tables**
 
@@ -1095,6 +1141,7 @@ Some material in this lesson was adapted from the following sources:
 -   kene yaounde
 -   Sullivan, G. M., & Artino, A. R., Jr (2013). Analyzing and interpreting data from likert-type scales. *Journal of graduate medical education*, *5*(4), 541–542. https://doi.org/10.4300/JGME-5-4-18
 -   <https://r4ds.hadley.nz/>
+-   <https://users.phhp.ufl.edu/rlp176/Courses/PHC6089/R_notes/DataClasses.html>
 -   
 
 `r .tgc_license()`
