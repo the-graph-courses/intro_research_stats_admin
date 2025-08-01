@@ -82,32 +82,32 @@ By the end of this lesson, you will be able to:
 
 Before diving deeper, let's briefly cover the concepts of populations and samples.
 
-![UPDATE FIGURE](images/pop_vs_sample_g4g.jpg)
+![](images/pop_vs_sample_g4g.jpg)
 
 ### Population
 
 A **population** refers to the entire set of individuals or items that we are interested in studying.
 
--   **Example**: Calculating the average height of all adult women in Cameroon would require measuring every adult woman in the country.
+-   **Example**: Calculating the *true* average height of all adult women in a country would require measuring every adult woman in the country.
 
 ### Sample
 
 A **sample** is a subset of the population, selected for practical reasons, from which we infer characteristics of the entire population.
 
--   **Example**: Studying the height of 1,000 randomly selected adult women from Yaounde, instead of all women in Cameroon.
+-   **Example**: Studying the height of 1,000 randomly selected adult women from a part of the country.
 
 ::: callout-tip
 ### **Population vs. Sample**
 
-+-------------------------------------------+------------------------------------------+
-| **Population**                            | **Sample**                               |
-+===========================================+==========================================+
-| Includes all members of a specified group | Subset of the population                 |
-+-------------------------------------------+------------------------------------------+
-| Often impractical to study entirely       | Practical and feasible to study          |
-+-------------------------------------------+------------------------------------------+
-| Example: All residents in Yaounde         | Example: 1,000 randomly chosen residents |
-+-------------------------------------------+------------------------------------------+
++-------------------------------------------+---------------------------------------------------+
+| **Population**                            | **Sample**                                        |
++===========================================+===================================================+
+| Includes all members of a specified group | Subset of the population                          |
++-------------------------------------------+---------------------------------------------------+
+| Often impractical to study entirely       | Practical and feasible to study                   |
++-------------------------------------------+---------------------------------------------------+
+| Example: All residents in France          | Example: 1,000 randomly chosen residents in Paris |
++-------------------------------------------+---------------------------------------------------+
 :::
 
 We can almost never measure every single unit in a population, so we use sample data to **estimate** the true population parameters.
@@ -450,7 +450,34 @@ A **percent-stacked bar chart** visualizes them as proportions rather than count
 ggplot(yaounde) +
   geom_bar(aes(x = is_smoker, fill = sex),
     position = "fill"
+  ) +
+  geom_text(
+    aes(x = is_smoker, label = after_stat(count), group = sex),
+    stat = "count",
+    position = position_fill(vjust = 0.5),
+    color = "white"
+  )  +
+  geom_text(
+    aes(x = is_smoker, label = paste("n =", after_stat(count))),
+    stat = "count",
+    position = position_fill(vjust = 1.05)
+  ) +
+  labs(x = "Smoking Status", y = "Proportion", fill  = "Sex",
+    title = "Smoking Status by Sex"
+  ) +
+  scale_fill_manual(
+    values = c("Male" = "#1f77b4", "Female" = "#ff7f0f"))
+```
+
+```{r}
+ggplot(yaounde) +
+  geom_bar(aes(x = is_smoker, fill = sex)) +
+  geom_text(
+    aes(x = is_smoker, label = ..count.., group = sex),
+    stat = "count",
+    position = position_stack(vjust = 0.91)
   )
+
 ```
 
 **BAR CHART OF ORDINAL VARIABLE WITH ORDERED CATEGORIES**
@@ -522,7 +549,7 @@ ggplot(yaounde) +
 
 Use `ggplot()` to create the following charts:
 
-1.  Plot a bar chart showing the distribution of `age_category_3`, colored by `is_smoker`.
+1.  Plot a bar chart showing the distribution of `age_category_3`, colored by `igg_result`.
 
 ```{r include = F}
 "YOUR ANSWER HERE"
@@ -534,7 +561,7 @@ Use `ggplot()` to create the following charts:
 "YOUR ANSWER HERE"
 ```
 
-3.  Reorder the `age_category_3` factor so that the categories appear in the logical order (youngest to oldest) and then plot again.
+3.  Reorder the `age_category_3` factor so that the categories appear in the reverse chronological order (oldest to youngest) and then plot again.
 
 ```{r include = F}
 "YOUR ANSWER HERE"
@@ -717,6 +744,7 @@ ggplot(yao_adults, aes(height_cm,
   fill = sex
 )) +
   geom_density(alpha = 0.1)
+
 ```
 :::
 
@@ -953,21 +981,21 @@ Complete each sentence with the most appropriate term:
 
 R data classes correspond to different variable types:
 
-+---------------+-------------------+--------------------------------------+
-| Variable Type | R Data Class      | Example Variables in Yaounde Dataset |
-+===============+===================+======================================+
-| Continuous    | Numeric           | `height_cm`, `weight_kg`             |
-+---------------+-------------------+--------------------------------------+
-| Discrete      | Integer, Numeric  | `age`, `n_days_miss_work`            |
-+---------------+-------------------+--------------------------------------+
-| Ordinal       | Factor (ordered)  | `highest_education`                  |
-+---------------+-------------------+--------------------------------------+
-| Nominal       | Factor, Character | `sex`, `neighborhood`                |
-+---------------+-------------------+--------------------------------------+
-| Logical       | Logical           | `is_pregnant`, `is_medicated`        |
-+---------------+-------------------+--------------------------------------+
-| Date          | Date              | `date_surveyed`                      |
-+---------------+-------------------+--------------------------------------+
++----------------+-------------------+--------------------------------------+
+| Variable Type  | R Data Class      | Example Variables in Yaounde Dataset |
++================+===================+======================================+
+| Continuous     | Numeric           | `height_cm`, `weight_kg`             |
++----------------+-------------------+--------------------------------------+
+| Discrete       | Integer, Numeric  | `age`, `n_days_miss_work`            |
++----------------+-------------------+--------------------------------------+
+| Ordinal        | Factor (ordered)  | `highest_education`                  |
++----------------+-------------------+--------------------------------------+
+| Nominal        | Factor, Character | `sex`, `neighborhood`                |
++----------------+-------------------+--------------------------------------+
+| Logical        | Logical           | `is_pregnant`, `is_medicated`        |
++----------------+-------------------+--------------------------------------+
+| Date           | Date              | `date_surveyed`                      |
++----------------+-------------------+--------------------------------------+
 
 **Frequency Tables**
 
@@ -1003,49 +1031,54 @@ yaounde %>%
 
 Use `ggplot()` to create the following charts:
 
-1.  Plot a bar chart showing the distribution of `age_category_3`, colored by `is_smoker`.
+1.  Plot a bar chart showing the distribution of `age_category_3`, colored by `igg_result`.
 
 ```{r}
 ggplot(yaounde) +
-  geom_bar(aes(x = age_category_3, fill = is_smoker))
+  geom_bar(aes(x = age_category_3, fill = igg_result))
 ```
 
 2.  Create a percent-stacked bar chart showing the same variables.
 
 ```{r}
 ggplot(yaounde) +
-  geom_bar(aes(x = age_category_3, fill = is_smoker),
+  geom_bar(aes(x = age_category, fill = igg_result),
     position = "fill"
   )
 ```
 
-3.  Reorder the `age_category_3` factor so that the categories appear in the logical order and then plot again.
-
-```{r}
-# Reorder categories from youngest to oldest
-yaounde <- yaounde %>%
-  mutate(
-    age_category_3_ordered =
-      factor(age_category_3,
-        levels = c(
-          "Child",
-          "Adult",
-          "Senior"
-        )
-      )
-  )
-```
+3.  Add text labels to show the count of individuals in age group, using `geom_text()`. Customize the look of the plot as desired (titles, labels, and colors)
 
 ```{r}
 # Plot again with the ordered variable
 ggplot(yaounde) +
   geom_bar(
     aes(
-      x = age_category_3_ordered,
-      fill = is_smoker
+      x = age_category,
+      fill = igg_result
     ),
     position = "fill"
-  )
+  ) +
+  geom_text(
+    aes(x = age_category, label = after_stat(count), group = igg_result),
+    stat = "count",
+    position = position_fill(vjust = 0.5),
+    color = "white"
+  )  +
+  geom_text(
+    aes(x = age_category, label = paste("n =", after_stat(count))),
+    stat = "count",
+    position = position_fill(vjust = 1.05)
+  ) +
+  labs(x = "Age Group", y = "Proportion", fill  = "COVID Status",
+    title = "COVID Status across Age Groups",
+    subtitle = "Survey of urban residents in Yaounde, Cameroon (Oct-Nov 2020)",
+    caption = "Data source: Nwosu et. al. (2021) Nature Communications"
+  ) +
+  scale_fill_manual(
+    values = c("Negative" = "indianred", "Positive" = "dodgerblue")) +
+  theme_minimal() + 
+  scale_y_continuous(expand = c(0,0.05))
 ```
 
 **Histograms**
@@ -1075,7 +1108,7 @@ Make notes on these key questions:
 -   Plot a kernel density plot showing the distribution of weight for each sex in `yaounde`.
 
 ```{r}
-ggplot(yaounde, aes(weight_kg,
+ggplot(yao_adults, aes(weight_kg,
   colour = sex,
   fill = sex
 )) +

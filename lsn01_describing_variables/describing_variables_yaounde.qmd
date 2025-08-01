@@ -14,6 +14,99 @@ pacman::p_load(tidyverse,
                visdat)
 ```
 
+------------------------------------------------------------------------
+
+# Introduction {.unnumbered}
+
+In this lesson, we will:
+
+1.  Introduce the key **branches of statistics** and their uses.
+
+2.  Explore the fundamental concepts of **descriptive analysis**, focusing on:
+
+    -   **Types of Variables**: Numerical (continuous, discrete) and Categorical (ordinal, nominal)
+
+    -   **Graphical Summaries** for each type.
+
+    -   **Numerical Summaries** for categorial variables.
+
+# Learning Objectives {.unnumbered}
+
+By the end of this lesson, you will be able to:
+
+1.  Understand the key branches of statistics: **descriptive** and **inferential**.
+2.  Explain the aims and methods of **descriptive statistics**.
+3.  Identify **numerical and categorical variables** and their subtypes.
+4.  Create appropriate **graphical summaries** for each variable type in R, using {ggplot2} and {inspectdf}.
+5.  Create **numerical summaries** for categorical variables.
+6.  Visually assess **skew and symmetry** in data distributions.
+
+------------------------------------------------------------------------
+
+# What is Statistics?
+
+> "The science of collecting, summarising, presenting and interpreting data, and of using them to estimate the magnitude of associations and test hypotheses."
+>
+> \- *Kirkwood & Sterne, 2003*
+
+![](images/white_square.jpg)
+
+## Two Key Branches of Statistics
+
+**Descriptive statistics** involves the organization, summarization, and display of data (e.g., tables, charts, numerical summary statistics).
+
+**Inferential statistics** involves using *sample data* to draw conclusions about a *population*.
+
+![](images/white_square.jpg)
+
+![](images/stats_branches.png)
+
+![](images/white_square.jpg)
+
+# Population and Samples
+
+Before diving deeper, let's briefly cover the concepts of populations and samples.
+
+![](images/pop_vs_sample_g4g.jpg)
+
+![](images/white_square.jpg)
+
+### Population
+
+A **population** refers to the entire set of individuals or items that we are interested in studying.
+
+-   **Example**: Calculating the *true* average height of all adult women in a country would require measuring every adult woman in the country.
+
+![](images/white_square.jpg)
+
+### Sample
+
+A **sample** is a subset of the population, selected for practical reasons, from which we infer characteristics of the entire population.
+
+-   **Example**: Studying the height of 1,000 randomly selected adult women from a part of the country.
+
+![](images/white_square.jpg)
+
+::: callout-tip
+### **Population vs. Sample**
+
+| **Population** | **Sample** |
+|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Includes all members of a specified group | Subset of the population |
+| Often impractical to study entirely | Practical and feasible to study |
+| Example: All residents in France | Example: 1,000 randomly chosen residents in Paris |
+:::
+
+![](images/white_square.jpg)
+
+We can almost never measure every single unit in a population, so we use sample data to **estimate** the true population parameters.
+
+![](images/clipboard-2161365980.png)
+
+![](images/white_square.jpg)
+
+------------------------------------------------------------------------
+
 ![](images/white_square.jpg)
 
 # The Yaounde COVID-19 dataset

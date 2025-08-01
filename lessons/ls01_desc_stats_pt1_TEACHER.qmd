@@ -850,14 +850,21 @@ If I measure age (in years) in a sample of 10,000 women, what type of variable w
 
 R data classes correspond to different variable types:
 
++---------------+-------------------+--------------------------------------+
 | Variable Type | R Data Class      | Example Variables in Yaounde Dataset |
-|---------------|-------------------|--------------------------------------|
++===============+===================+======================================+
 | Continuous    | Numeric           | `height_cm`, `weight_kg`             |
++---------------+-------------------+--------------------------------------+
 | Discrete      | Integer, Numeric  | `age`, `n_days_miss_work`            |
++---------------+-------------------+--------------------------------------+
 | Ordinal       | Factor (ordered)  | `highest_education`                  |
++---------------+-------------------+--------------------------------------+
 | Nominal       | Factor, Character | `sex`, `neighborhood`                |
++---------------+-------------------+--------------------------------------+
 | Logical       | Logical           | `is_pregnant`, `is_medicated`        |
++---------------+-------------------+--------------------------------------+
 | Date          | Date              | `date_surveyed`                      |
++---------------+-------------------+--------------------------------------+
 
 **Frequency Tables**
 

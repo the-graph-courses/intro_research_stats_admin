@@ -1,0 +1,347 @@
+---
+title: 'Understanding Statistical Significance'
+format:
+  html:
+    embed-resources: true
+---
+
+```{r, echo = F, message = F, warning = F}
+# Load packages
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(rlang, tidyverse, knitr, here, reactable, gt, flextable)
+
+# Source functions
+source(here("global/functions/lesson_functions.R"))
+
+# Knitr options
+knitr::opts_chunk$set(
+  warning = F, message = F,
+  class.source = "tgc-code-block", error = T
+)
+
+# Set ggplot theme
+theme_set(theme_minimal())
+```
+
+------------------------------------------------------------------------
+
+# Introduction {.unnumbered}
+
+In this lesson, we will learn about P-values, alpha levels, Type I/II errors, effect size. (How do we interpret p-values, confidence intervals, and the concept of “significant difference”?)
+
+# Learning Objectives {.unnumbered}
+
+By the end of this lesson, you will be able to:
+- Explain statistical significance
+- Interpret p-values and calculate them in R
+- Interpret effect sizes and calculate them in R
+- Describe type I and type II errors
+
+# What is Statistical Significance?
+
+If you’re familiar with scientific studies, you’ve probably heard about “statistically significant results.” Most often, this means that the researchers found a p-value of less than 0.05. We will start this lesson with defining statistical significance, and working throught an intuitive example of what p-values mean.
+
+## Defining "significant"
+
+One problem with the word **"significant"** is that it means different things in everyday language than it does in statistics.
+
+In everyday language, *significant* can mean *big* or *important*.\
+For example, you might say, *“My earnings are significantly more this year than they were last year.”* In that case, *significant* means the difference is quite **big**.\
+Or you might say, *“There’s been a significant increase in sea temperature.”* Here, *significant* means the change is **important**, even if it's not very large.
+
+So, in everyday use, *significant* often means either **big** or **important**.
+
+But in **statistics**, *significant* means something quite different. Something can be **statistically significant** even if it’s **small** or **unimportant** in practical terms.
+
+> **A statistically significant result means that we have evidence that the effect observed in the sample also exists in the population.**
+
+## Understanding p-values
+
+In statistics, we usually use a **p-value** to decide whether a result is statistically significant. The p-value helps us figure out whether the effect we see in our **sample** is likely to reflect something real in the **population**, or whether it might have happened just by **chance**.
+
+By convention, if the p-value is **less than 0.05**, we often say the result is statistically significant. That means we have evidence that the effect probably exists in the population—not just in our sample.
+
+In this case, we would **reject the null hypothesis**, which is the assumption that there is *no effect*. So:
+
+-   **Low p-value** → **Reject the null hypothesis** → **Statistically significant result**
+
+But it’s really important to think about **sample size** when interpreting statistical significance.
+
+-   If you have a **very large sample**, almost any small effect can turn out to be statistically significant. That’s because a large sample gives us a very accurate estimate of what’s happening in the population. But just because an effect is statistically significant doesn’t mean it’s **important** or **meaningful** in the real world.
+
+-   On the other hand, if your **sample is very small**, it's hard to get a statistically significant result—**unless** the effect is very large. Small samples are more prone to random variation, so they don’t provide strong evidence unless the signal is really strong.
+
+::: callout-tip
+## Choosing the Right Words
+
+It's helpful to be careful and precise when describing results:
+
+-   Don’t say something is "important" just because it's statistically significant.
+
+-   Make sure to **distinguish between statistical significance and practical significance**.
+
+For example, you might write:\
+*“The difference in scores was statistically significant (p \< 0.05), but the actual effect size was very small, so the practical impact may be limited.”*
+:::
+
+## Understanding Alpha Levels (𝛼)
+
+The **alpha level** (usually written as **𝛼**) is the **threshold** we use to decide whether a p-value is low enough to call a result **statistically significant**.
+
+-   The most common alpha level is **0.05**.\
+    This means we are willing to accept a **5% chance** of making a **Type I error**.
+
+So, when we say a result is significant at the 0.05 level, we’re saying:
+
+> “There’s less than a 5% probability that this result happened just by chance, assuming the null hypothesis is true.”
+
+You can choose different alpha levels depending on the situation:
+
+-   **0.01** (1%) if you want to be **more cautious** (e.g., in medical research)
+-   **0.10** (10%) if you're okay with a **greater risk of error** (e.g., in exploratory studies)
+
+------------------------------------------------------------------------
+
+## Type I and Type II Errors
+
+When we do a hypothesis test, we’re making a decision based on data. But decisions can be wrong! There are two main types of mistakes:
+
+### 🔴 Type I Error (False Positive)
+
+-   You **reject the null hypothesis**, even though it’s actually **true**.
+-   In other words: you think there’s an effect, but there **isn’t** one.
+-   This is controlled by your **alpha level (𝛼)**.\
+    So if 𝛼 = 0.05, you’re accepting a **5% chance** of a Type I error.
+
+### 🔵 Type II Error (False Negative)
+
+-   You **fail to reject the null hypothesis**, even though it’s actually **false**.
+-   In other words: there **is** an effect, but you didn’t detect it.
+
+The **probability** of making a Type II error is called **beta (β)**, and **1 − β** is called **statistical power**. Power is the chance of correctly detecting a real effect.
+
+------------------------------------------------------------------------
+
+## Effect Size: How Big Is the Effect?
+
+Even if a result is **statistically significant**, we still need to ask:
+
+> **Is the effect large enough to matter?**
+
+That’s where **effect size** comes in. It tells us **how big** or **meaningful** the difference or relationship is—not just whether it's statistically significant.
+
+### Common examples:
+
+-   **Cohen’s d**: Used for comparing means between two groups.
+    -   0.2 = small\
+    -   0.5 = medium\
+    -   0.8+ = large
+-   **Correlation coefficient (r)**: Measures the strength of a relationship between two variables.
+    -   0.1 = small\
+    -   0.3 = medium\
+    -   0.5+ = large
+
+So, a result with **p \< 0.05** and a **tiny effect size** might not be useful in practice.\
+And a result with a **large effect size**, but **not statistically significant**, might still be worth paying attention to—especially if the sample size was small.
+
+------------------------------------------------------------------------
+
+## Putting It All Together
+
+When you're interpreting results, here’s a simple checklist:
+
+| Question | What to Look At |
+|---------------------------------|---------------------------------------|
+| Is there a statistically significant result? | Check the **p-value** (\< 0.05?) |
+| Is the effect practically meaningful? | Check the **effect size** |
+| Could the result be a false positive? | Consider **alpha level** and **Type I error** risk |
+| Could you be missing a real effect? | Consider **power** and **Type II error** risk |
+| Is the sample size large enough? | Affects both **power** and **significance** |
+
+# Packages
+
+This lesson will require the following packages to be installed and loaded:
+
+```{r warning = F, message = F}
+# Load packages
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(
+  tidyverse,
+  here,
+  janitor,
+  inspectdf,
+  effectsize
+)
+```
+
+
+------------------------------------------------------------------------
+
+# The Diabetes in China dataset
+
+In this lesson, we analyse data from a population-based cohort study of diabetes in Chinese adults. The researchers investigated the association between BMI and diabetes, and how this might be impacted by age. The full dataset can be obtained from [Zenodo](https://zenodo.org/record/4997196), and the paper can be viewed [here](https://bmjopen.bmj.com/content/8/9/e021768).
+
+```{r message = F}
+# Import data to RStudio
+diabetes_china <- read_csv(here("data/diabetes_china_chen.csv"))
+```
+
+```{r render = .reactable_5_rows, echo = F}
+head(diabetes_china)
+```
+## Example: Association Between Blood Pressure and BMI Category
+
+We’re investigating whether there is a statistically significant difference in systolic blood pressure (SBP) between people with low vs. high BMI. 
+
+```{r}
+diabetes_china <- diabetes_china %>% 
+  mutate(bmi_cat = case_when(
+    bmi < 25 ~ 1,
+    bmi >= 25 ~ 2))
+```
+
+
+BMI has been categorized into two groups:
+
+- `1` for BMI < 25 (normal weight)
+
+- `2` for BMI ≥ 25 (overweight/obese)
+
+### Step 1: Run a t-test
+
+```{r}
+# Perform Welch's two-sample t-test
+t_test_result <- t.test(data = diabetes_china, sbp_mm_hg ~ bmi_cat)
+t_test_result
+```
+
+
+
+### Interpretation
+
+- **p-value < 0.05** → The result is **statistically significant**.
+- The average systolic blood pressure in group 1 (BMI < 25) is **116.07 mm Hg**, and in group 2 (BMI ≥ 25) it is **126.49 mm Hg**.
+- The **difference** is approximately **10.4 mm Hg**.
+
+> **But is this difference *practically* meaningful?**
+
+---
+
+### Step 2: Calculate Effect Size (Cohen's d)
+
+Cohen's *d* helps us understand **how big** the difference is (not just whether it exists).
+
+```{r}
+# Calculate Cohen's d for the t-test
+cohen_d_result <- cohens_d(sbp_mm_hg ~ as.factor(bmi_cat), data = diabetes_china)
+cohen_d_result
+```
+
+
+### Interpretation of Cohen's d
+
+- The negative sign (-0.66) just reflects the order of the groups (group 1 < group 2 in BP); **the magnitude** is what's important.
+- A **Cohen's d of 0.66** is considered a **medium-to-large effect size**.
+
+| Cohen's d value | Interpretation        |
+|------------------|------------------------|
+| ~0.2             | Small effect           |
+| ~0.5             | Medium effect          |
+| ~0.8+            | Large effect           |
+| 0.66             | **Medium-to-large** 👍  |
+
+✅ This means the difference in systolic blood pressure between BMI groups is not only statistically significant (as shown by the p-value), but also **practically meaningful**.
+
+
+### Step 3: Visualize the Difference
+
+```{r}
+library(ggplot2)
+
+ggplot(diabetes_china, aes(x = as.factor(bmi_cat), y = sbp_mm_hg)) +
+  geom_boxplot(fill = "skyblue") +
+  labs(x = "BMI Category (1 = <25, 2 = ≥25)", y = "Systolic BP (mm Hg)",
+       title = "Systolic Blood Pressure by BMI Category") +
+  theme_minimal()
+```
+
+This boxplot helps visualize the distribution and the size of the difference.
+
+---
+
+### Summary
+
+| Statistic               | Value                     |
+|-------------------------|---------------------------|
+| p-value                 | < 2.2e-16 (significant)   |
+| Mean BP (BMI < 25)      | 116.07 mm Hg              |
+| Mean BP (BMI ≥ 25)      | 126.49 mm Hg              |
+| Difference              | ~10.4 mm Hg               |
+| Cohen's d               | ~0.66 (medium effect)     |
+
+✅ **Statistically significant**  
+✅ **Practically meaningful**
+
+
+------------------------------------------------------------------------
+
+# Practice with Whitehall dataset
+
+Question A1.5a: Recode BMI into a binary variable so that one group has a BMI below 25, and the other group has a BMI of 25 and above. Perform a t-test to compare the mean SBP in those with BMI\<25 and those with BMI≥. Answer the questions:
+
+Recode BMI into a binary variable so that one group has a BMI below 25, and the other group has a BMI of 25 and above. Perform a t-test to compare the mean SBP in those with BMI\<25 and those with BMI≥. Answer the questions:
+
+What is the mean SBP where BMI \<25 (LaTeX: \overline{x_1})? What is the mean SBP where BMI ≥25 (LaTeX: \overline{x_2})? What is the mean difference (LaTeX: (\overline{x_1}-\overline{x_2}))? What is the test statistic t ? What is 95% CI for the mean difference? What is the p-value for this t-test and what does it mean?
+
+```{r}
+diabetes_china <- diabetes_china %>% 
+  mutate(bmi_cat = case_when(
+    bmi < 25 ~ 1,
+    bmi >= 25 ~ 2))
+t.test(data = diabetes_china, sbp_mm_hg~bmi_cat)
+```
+
+Question A1.5b: 
+
+If a clinician has decided that a difference of at least 5 mmHg is considered a clinically worthwhile difference in blood pressure with regard to morbidity associated with high blood pressure, do you consider the result in A1.5a to be clinically significant?
+
+## Answer 1
+
+129.49mmHg 131.65mmHg Using basic arithmetic in R:131.6524-129.4905\[1\] 2.1619 The t-statistic is the ratio of the departure of the estimated value of a parameter from its hypothesized value to its standard error. It can be utilised to tell us about whether we should support or reject the null hypothesis.t = -4.0068 95 percent confidence interval: -3.22, -1.10That is to say, we are 95% confident that the difference in the mean systolic blood pressure between those with BMI \<25 and BMI 25 lies between 1.10 and 3.22 mmHg. The p-value is 6.267e-05 = 0.00006267. Remember that p-values provide us with the probability of getting the mean difference we saw here, or one greater, if the null hypothesis was actually true. In this case, that probability is extremely low.Here, our p-value tells us that there is very strong evidence against the null hypothesis (which would be that there is no difference in SBP between our two BMI groups).Therefore, we can say that there is a significant difference in the mean SBP measures in people who are overweight and those who are not.
+
+## Answer A1.5b: 
+
+No. Note here the difference between clinical and statistical significance. Whilst there is a statistically significant difference between the 2 mean SBP measures, with a mean difference of 2.16 mmHg, the result is not clinically significant.
+
+# Heading
+
+------------------------------------------------------------------------
+
+# Key Takeaways {.unnumbered}
+
+
+
+Continue exploring these concepts with real-world data to gain deeper insight into public health analyses.
+
+------------------------------------------------------------------------
+
+# Answer Key {.unlisted .unnumbered}
+
+# Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r .tgc_contributors_list(ids = c("joy", "kendavidn"))`
+
+# References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   Irizarry, Rafael A. 2019. *Introduction to Data Science: Statistics and Prediction Algorithms Through Case Studies*. <https://rafalab.dfci.harvard.edu/dsbook-part-2/>.
+-   Cannell, Brad, and Melvin Livingston. n.d. *R for Epidemiology*. <https://www.r4epi.com/>.
+-   GeeksforGeeks. 2025. "Introduction of Statistics and Its Types." <https://www.geeksforgeeks.org/introduction-of-statistics-and-its-types/>.
+-   Starmer, Josh. *StatQuest with Josh Starmer* \[YouTube Channel\]. <https://www.youtube.com/channel/UCtYLUTtgS3k1Fg4y5tAhLbw>.
+-   The GRAPH Courses. *FoSSA: Fundamentals of Statistical Software & Analysis*. <https://thegraphcourses.org/courses/fossa/>.
+-   University of Miami Libraries. *Introduction to Data Analysis and R*. <https://www.library.miami.edu/data-services/data-analysis.html>.
+
+`r .tgc_license()`

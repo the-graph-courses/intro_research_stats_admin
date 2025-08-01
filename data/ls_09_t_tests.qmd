@@ -1,0 +1,439 @@
+---
+title: 'T-tests for Comparing Means: Independent Samples, Paired Samples, and Effect Sizes'
+format:
+  html:
+    embed-resources: true
+---
+
+```{r, echo = F, message = F, warning = F}
+# Load packages
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(rlang, tidyverse, knitr, here, reactable, gt, flextable, effectsize)
+
+# Source functions
+source(here("global/functions/lesson_functions.R"))
+
+# Knitr options
+knitr::opts_chunk$set(
+  warning = F, message = F,
+  class.source = "tgc-code-block", error = T
+)
+
+# Set ggplot theme
+theme_set(theme_minimal())
+```
+
+------------------------------------------------------------------------
+
+# Introduction {.unnumbered}
+
+In this lesson, we learn how to use **t-tests** to compare the means of two groups. We’ll walk through **independent samples t-tests**, **paired samples t-tests**, and how to interpret **effect sizes** like **Cohen’s d**.
+
+# Learning Objectives {.unnumbered}
+
+By the end of this lesson, you will be able to:
+
+-   Understand what a t-test is and when to use it
+-   Distinguish between independent and paired t-tests
+-   Conduct t-tests in R using real data
+-   Interpret the results, including p-values and effect sizes
+
+------------------------------------------------------------------------
+
+# What is a t-test?
+
+A **t-test** is a statistical test used to compare the **means** of **two groups**. We use it when we want to know:
+
+> **Is the difference between two sample means likely to reflect a real difference in the population?**
+
+The t-test works by comparing the observed difference in sample means to what we'd expect by random chance.
+
+There are two main types of t-tests:
+
+| Test Type | Use When... |
+|---------------------------------|---------------------------------------|
+| **Independent Samples t-test** | You're comparing **two different groups** (e.g. men vs. women) |
+| **Paired Samples t-test** | You're comparing **the same group at two times** (e.g. before and after treatment) |
+
+### Where does the "t" come from?
+
+The "t" in t-test refers to the **t-distribution**, which is a probability distribution similar to the normal distribution, but with fatter tails. We use the t-distribution instead of the normal distribution when working with **small samples** or when **population standard deviation is unknown**.
+
+The basic t-statistic formula is:
+
+$$
+t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}
+$$
+
+Where:
+
+-   ( \bar{x}\_1, \bar{x}\_2 ): sample means of the two groups
+-   ( s_1\^2, s_2\^2 ): sample variances
+-   ( n_1, n_2 ): sample sizes
+
+------------------------------------------------------------------------
+
+# Packages
+
+Let’s load the packages needed for this lesson:
+
+```{r}
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(
+  tidyverse,
+  here,
+  janitor,
+  effectsize
+)
+```
+
+------------------------------------------------------------------------
+
+# The Diabetes in China Dataset
+
+As in the previous lesson, we will use the dataset from the Chinese diabetes cohort study. Let’s load and inspect the dataset:
+
+```{r}
+diabetes_china <- read_csv(here("data/diabetes_china_chen.csv"))
+```
+
+```{r render = .reactable_5_rows, echo = F}
+head(diabetes_china)
+```
+
+## Recap: BMI Categories
+
+We will categorize participants into two groups based on BMI:
+
+```{r}
+diabetes_china <- diabetes_china %>% 
+  mutate(bmi_cat = case_when(
+    bmi < 25 ~ 1,
+    bmi >= 25 ~ 2
+  ))
+```
+
+-   `1` = BMI \< 25 (Normal weight)
+-   `2` = BMI ≥ 25 (Overweight/obese)
+
+------------------------------------------------------------------------
+
+# Independent Samples t-test
+
+Let’s test whether people with BMI \< 25 have different **systolic blood pressure (SBP)** compared to those with BMI ≥ 25.
+
+```{r}
+t_test_independent <- t.test(sbp_mm_hg ~ bmi_cat, data = diabetes_china)
+t_test_independent
+```
+
+### Interpretation
+
+-   The p-value tells us whether the difference in mean SBP between the two BMI groups is **statistically significant**.
+
+-   The means of both groups and their confidence intervals will help us understand the direction and magnitude of the difference.
+
+-   If **p \< 0.05**, we conclude the difference is **statistically significant**.
+
+-   The **mean systolic blood pressure** (SBP) in the **BMI \< 25 group** was **116.07 mm Hg**, while in the **BMI ≥ 25 group** it was **126.49 mm Hg**.
+
+-   The **difference of \~10.4 mm Hg** is statistically significant, with a **p-value \< 2.2e-16**.
+
+-   The 95% confidence interval for the difference in means is **\[-10.57, -10.27\]**, which does **not** include 0 — another sign of a significant result.
+
+> ✅ The difference in SBP between BMI groups is **statistically significant**.
+
+------------------------------------------------------------------------
+
+# Paired Samples t-test
+
+Sometimes, we measure the **same people** twice. For example, let’s imagine we want to test whether **fpg_mmol_l** (fasting plasma glucose) changed over time, from baseline to final follow-up. We'll use the variables `fpg_mmol_l` (baseline) and `fpg_of_final_visit_mmol_l` (follow-up).
+
+```{r}
+# Remove rows with missing values in either time point
+paired_data <- diabetes_china %>% 
+  filter(!is.na(fpg_mmol_l), !is.na(fpg_of_final_visit_mmol_l))
+
+t_test_paired <- t.test(paired_data$fpg_mmol_l, paired_data$fpg_of_final_visit_mmol_l, paired = TRUE)
+t_test_paired
+```
+
+### Interpretation
+
+-   A paired t-test accounts for the **within-subject** variability.
+
+-   If **p \< 0.05**, we conclude that there was a significant change in fasting glucose over time.
+
+-   The **mean fasting plasma glucose (FPG)** decreased by **0.218 mmol/L** from baseline to follow-up.
+
+-   The paired t-test shows a **p-value \< 2.2e-16**, indicating the difference is **statistically significant**.
+
+-   The 95% confidence interval is **\[-0.221, -0.215\]**, meaning we can be confident the true mean decrease lies within this range.
+
+> ✅ FPG significantly decreased over time within individuals.
+
+------------------------------------------------------------------------
+
+# Effect Sizes: How Big is the Difference?
+
+Even if the t-test gives a statistically significant result, we want to know if the difference is **meaningful**. That’s what **effect sizes** tell us.
+
+### Cohen’s d
+
+Cohen's d quantifies the difference between two means in **standard deviation units**.
+
+For **independent samples**:
+
+```{r}
+cohen_d_independent <- cohens_d(sbp_mm_hg ~ as.factor(bmi_cat), data = diabetes_china)
+cohen_d_independent
+```
+
+For **paired samples**:
+
+```{r}
+cohen_d_paired <- cohens_d(paired_data$fpg_mmol_l, paired_data$fpg_of_final_visit_mmol_l, paired = TRUE)
+cohen_d_paired
+```
+
+### Interpretation of Cohen's d
+
+| Cohen’s d value | Interpretation |
+|-----------------|----------------|
+| \~0.2           | Small effect   |
+| \~0.5           | Medium effect  |
+| \~0.8+          | Large effect   |
+
+#### Independent Samples
+
+-   **Cohen’s d = -0.66**, which indicates a **medium-to-large effect size**.
+-   This tells us the **difference in SBP between BMI groups** is not just statistically significant — it is also **practically meaningful**.
+
+#### Paired Samples
+
+-   **Cohen’s d = -0.32**, which is considered a **small-to-medium effect size**.
+-   The decrease in FPG is statistically reliable, but the **magnitude of change is modest** — it may or may not be meaningful in a clinical sense depending on the context.
+
+### Summary Table
+
+| Comparison | p-value | Cohen’s d | Interpretation |
+|--------------------|---------------|---------------|-----------------------|
+| SBP by BMI group (Independent) | \< 2.2e-16 | 0.66 | Statistically significant and **meaningful** |
+| FPG baseline vs. follow-up (Paired) | \< 2.2e-16 | 0.32 | Statistically significant, **small effect** |
+
+✅ **Statistically significant** differences in both cases\
+✅ **Effect size** suggests the SBP difference is practically important, while the FPG change is smaller
+
+# Visualizing the Results
+
+### SBP by BMI Category
+
+```{r}
+ggplot(diabetes_china, aes(x = as.factor(bmi_cat), y = sbp_mm_hg)) +
+  geom_boxplot(fill = "skyblue") +
+  labs(x = "BMI Category (1 = <25, 2 = ≥25)", y = "Systolic BP (mm Hg)",
+       title = "Systolic Blood Pressure by BMI Category") +
+  theme_minimal()
+```
+
+### Fasting Glucose Before and After (Paired)
+
+```{r eval =FALSE}
+paired_data_long <- paired_data %>%
+  pivot_longer(cols = c(fpg_mmol_l, fpg_of_final_visit_mmol_l),
+               names_to = "time", values_to = "fpg") %>%
+  mutate(time = recode(time,
+                       "fpg_mmol_l" = "Baseline",
+                       "fpg_of_final_visit_mmol_l" = "Follow-up"))
+
+ggplot(paired_data_long, aes(x = time, y = fpg, group = id)) +
+  geom_line(alpha = 0.1) +
+  geom_boxplot(aes(group = time), width = 0.2, color = "darkblue") +
+  labs(x = "", y = "FPG (mmol/L)",
+       title = "Fasting Plasma Glucose: Baseline vs. Follow-up") +
+  theme_minimal()
+```
+
+------------------------------------------------------------------------
+
+# Summary Table
+
+| Comparison | p-value | Cohen’s d | Interpretation |
+|------------------|-----------------|-----------------|----------------------|
+| SBP by BMI group (Independent) | *(insert here)* | *(insert here)* | *(statistical + practical meaning)* |
+| FPG baseline vs. follow-up (Paired) | *(insert here)* | *(insert here)* | *(statistical + practical meaning)* |
+
+✅ Use p-values to check for **statistical significance**\
+✅ Use effect size to assess **practical significance**
+
+------------------------------------------------------------------------
+
+# Assumptions of the t-test
+
+For your t-test results to be **valid**, certain assumptions must be met. These depend on whether you are using an **independent samples** t-test or a **paired samples** t-test.
+
+## 1. Independent Samples t-test Assumptions
+
+| Assumption | What It Means | How to Check It in R |
+|-----------------|----------------------------------|---------------------|
+| **Independence of observations** | Each observation should be from a different person or unit | Based on study design (not testable in code) |
+| **Normality** | The outcome variable should be approximately normally distributed **in each group** | Use `ggplot` or `shapiro.test()` per group |
+| **Equal variances** (optional) | The variance in each group is roughly equal (only required for **Student's t-test**) | Use `var.test()` or `leveneTest()` |
+
+Note: The **Welch t-test** (which is the default in `t.test()`) does **not require equal variances**, so it's generally safer.
+
+## Checking for normality
+
+Before running a t-test, one assumption we often check is **normality**—whether the data (or differences, in the case of paired tests) are roughly normally distributed. This matters most when sample sizes are **small** (e.g., \< 30 per group).
+
+### 🧪 Checking normality with histograms or density plots
+
+```{r}
+# Density plots of SBP by BMI category
+ggplot(diabetes_china, aes(x = sbp_mm_hg, fill = as.factor(bmi_cat))) +
+  geom_density(alpha = 0.5) +
+  labs(x = "Systolic Blood Pressure", fill = "BMI Category") +
+  theme_minimal()
+```
+
+### 🧪 Shapiro-Wilk test for normality
+
+The **Shapiro-Wilk test** is a formal test for normality. It works by comparing the shape of your data's distribution to a perfect normal distribution.
+
+-   **Null hypothesis (H₀)**: The data **are normally distributed**\
+-   **Alternative hypothesis (H₁)**: The data **are not normally distributed**
+
+If the p-value is **less than 0.05**, we reject the null and conclude the data **deviate from normality**.
+
+> ⚠️ However, for **large samples**, even tiny deviations from normality will result in a significant p-value—so this test may say the data aren't normal even when the departure is trivial. In those cases, it's more helpful to **look at plots** (histograms, Q-Q plots, or density curves).
+
+The `shapiro.test()` function in R has a sample size limit of 5000, which makes it unsuitable for testing normality in very large datasets like yours (210,000+ rows).
+
+We can test a random subset of your data (e.g., 3000–5000 rows per group), which is often enough to assess normality.
+
+```{r}
+# Take random samples of each BMI group (max 5000 rows)
+set.seed(123)  # for reproducibility
+group1_sample <- diabetes_china %>%
+  filter(bmi_cat == 1, !is.na(sbp_mm_hg)) %>%
+  slice_sample(n = 5000)
+
+group2_sample <- diabetes_china %>%
+  filter(bmi_cat == 2, !is.na(sbp_mm_hg)) %>%
+  slice_sample(n = 5000)
+
+# Shapiro-Wilk tests on the samples
+shapiro.test(group1_sample$sbp_mm_hg)
+shapiro.test(group2_sample$sbp_mm_hg)
+```
+
+Both groups have **p-values \< 0.05**, which means the Shapiro-Wilk test finds **evidence against normality** in both BMI groups' systolic blood pressure data.
+
+However, since your sample size is **very large (N \> 100,000)**, this result is **expected**. Even slight deviations from a perfect bell curve will produce a significant result. That doesn't necessarily mean the data are unsuitable for a t-test.
+
+> ✅ **Conclusion**: The formal test suggests non-normality, but with such a large sample, the **t-test is robust** to these violations. You can safely proceed with the t-test, especially since you're using the **Welch version**, which is also robust to unequal variances.
+
+Still, it's a good idea to include a **density plot or Q-Q plot** to visually assess whether the distribution looks "normal enough."
+
+> ⚠️ For large samples (like this one), the Shapiro test will almost always give **p \< 0.05**, suggesting non-normality — even when it doesn't matter much. Visual inspection (plots) is often more useful here.
+
+------------------------------------------------------------------------
+
+## 2. Paired Samples t-test Assumptions
+
+| Assumption | What It Means | How to Check It in R |
+|-----------------|------------------------------------|--------------------|
+| **Dependent observations** | You are comparing two **related** measurements (e.g. same individual at two times) | Confirm with study design |
+| **Normality of differences** | The **differences between paired values** should be normally distributed | Check the distribution of differences |
+
+### 🧪 Check normality of differences
+
+Take a random sample (e.g. 5000 rows) from the paired differences:
+
+```{r}
+set.seed(123)  # For reproducibility
+
+# Sample 5000 rows for Shapiro-Wilk test
+fpg_sample <- paired_data %>%
+  drop_na(fpg_diff) %>%
+  slice_sample(n = 5000)
+
+shapiro.test(fpg_sample$fpg_diff)
+```
+
+#### Interpretation:
+
+-   The **W statistic** (0.883) is quite far from 1, which indicates **deviation from normality**.
+
+-   The **p-value is \< 2.2e-16**, which is much smaller than the common threshold of 0.05.
+
+-   Therefore, we **reject the null hypothesis** that the differences are normally distributed.
+
+>  ⚠️ **Conclusion:** The distribution of differences in fasting glucose **is not normal** based on this test.
+
+#### But should we worry?
+
+-   **Probably not**. You have **over 200,000 observations**, and in large samples, **even very minor skew or kurtosis** will lead to a "significant" Shapiro test.
+
+-   More important is whether the distribution is **severely non-normal**, which you can assess visually using the density plot or histogram.
+
+-   The t-test is **robust to violations of normality** when sample size is large (Central Limit Theorem).
+
+### ✅ Final Recommendation:
+
+> Although the Shapiro-Wilk test indicates non-normality, given the **very large sample size**, the **paired t-test is still valid**.\
+> If the visual inspection shows no extreme skew or outliers, you can safely proceed with your t-test results.
+
+------------------------------------------------------------------------
+
+## What if assumptions are violated?
+
+-   If the **normality assumption** is violated but your sample size is **large**, the t-test is generally **robust** (still valid).
+-   If sample size is **small and data are skewed**, consider using a **non-parametric test**:
+    -   **Independent samples** → Use `wilcox.test(x ~ group)`
+    -   **Paired samples** → Use `wilcox.test(x, y, paired = TRUE)`
+
+```{r}
+# Example: non-parametric alternative to paired t-test
+wilcox.test(paired_data$fpg_mmol_l, paired_data$fpg_of_final_visit_mmol_l, paired = TRUE)
+```
+
+> ✅ Best practice: always **check your assumptions**, but don't panic about small violations — especially with large samples.
+
+------------------------------------------------------------------------
+
+# Final Tips
+
+-   Use **independent t-tests** when comparing **two different groups**
+-   Use **paired t-tests** when comparing **the same group over time**
+-   Always report both the **p-value** and the **effect size**
+-   Visualize your data to help interpret results
+
+------------------------------------------------------------------------
+
+# Key Takeaways {.unnumbered}
+
+Continue exploring these concepts with real-world data to gain deeper insight into public health analyses.
+
+------------------------------------------------------------------------
+
+# Answer Key {.unlisted .unnumbered}
+
+# Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r .tgc_contributors_list(ids = c("joy", "kendavidn"))`
+
+# References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   Irizarry, Rafael A. 2019. *Introduction to Data Science: Statistics and Prediction Algorithms Through Case Studies*. <https://rafalab.dfci.harvard.edu/dsbook-part-2/>.
+-   Cannell, Brad, and Melvin Livingston. n.d. *R for Epidemiology*. <https://www.r4epi.com/>.
+-   GeeksforGeeks. 2025. "Introduction of Statistics and Its Types." <https://www.geeksforgeeks.org/introduction-of-statistics-and-its-types/>.
+-   Starmer, Josh. *StatQuest with Josh Starmer* \[YouTube Channel\]. <https://www.youtube.com/channel/UCtYLUTtgS3k1Fg4y5tAhLbw>.
+-   The GRAPH Courses. *FoSSA: Fundamentals of Statistical Software & Analysis*. <https://thegraphcourses.org/courses/fossa/>.
+-   University of Miami Libraries. *Introduction to Data Analysis and R*. <https://www.library.miami.edu/data-services/data-analysis.html>.
+
+`r .tgc_license()`

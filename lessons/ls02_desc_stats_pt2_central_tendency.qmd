@@ -89,11 +89,31 @@ HIGHLIGHT/CIRCLE THE CONTINUOUS NUMERICAL RECTANGE.
 
 ```{r message = F}
 # Import data to RStudio
-yaounde <- read_csv(here("data/yaounde_data.csv"))
+yaounde_raw <- read_csv(here("data/yaounde_data.csv"))
 ```
 
 ```{r render = .reactable_5_rows, echo = F}
-yaounde
+yaounde_raw
+```
+
+```{r}
+yaounde <- yaounde_raw %>%  
+  mutate(across(starts_with("is_drug"), as.logical),
+         across(starts_with("n_"), as.integer),
+         age_category_3 = factor(age_category_3,
+                                 levels = c("Child", "Adult", "Senior")), 
+         is_smoker = factor(is_smoker,
+                            levels = c("Non-smoker", "Ex-smoker", "Smoker")),
+         highest_education = factor(highest_education,
+                                    levels = c("No formal instruction", 
+                                               "Primary",
+                                               "Secondary",
+                                               "University",
+                                               "Doctorate",
+                                               "No response"))
+         )
+
+
 ```
 
 ```{r render = .reactable_5_rows}
@@ -192,7 +212,8 @@ A mode is the most frequent value or item of the data set. There is no mode for 
 Base R does not have a built-in function for calculating the mode, so we can use the `Mode()` function from the `{DescTools}` package.
 
 ```{r}
-Mode(yaounde$height_cm)
+mode_height <- Mode(yaounde$height_cm)
+mode_height
 ```
 
 ::: callout-warning
@@ -218,7 +239,7 @@ The same applies to the `median()` and `Mode()` functions.
 
 **Calculating Measures of Central Tendency in R**
 
-Use `mean()`, `median()`, and `Mode()` from `{DescTools}` to compute the following:
+Use `mean()`, `median()`, and `Mode()` to compute the following:
 
 1.  Mean of `weight_kg`.
 
@@ -232,7 +253,7 @@ Use `mean()`, `median()`, and `Mode()` from `{DescTools}` to compute the followi
 "YOUR ANSWER HERE"
 ```
 
-3.  Mode of `height_cm` and `n_bedridden_days`.
+3.  Mode of `age` and `respiration_frequency`.
 
 ```{r include = F}
 "YOUR ANSWER HERE"
@@ -252,27 +273,66 @@ Mean, median, and mode are measures of central tendency in statistics.
 
 # Graphing measures of central tendency
 
+Base plot of height distribution
+
 ```{r}
-# Simple histogram showing the distribution of height_cm
-ggplot(
+# Histogram and density curve showing distribution of height_cm
+base_histogram <- ggplot(
   data = yaounde,
   mapping = aes(x = height_cm)
 ) +
   geom_histogram(
     color = "white",
-    fill = "steelblue", binwidth = 5
+    fill = "steelblue", binwidth = 5,
+    mapping = aes(y = after_stat(density))
+  ) +
+    geom_density(
+    color = "indianred2",
+    alpha = 0.25,
+    linewidth = 1,
+    bw = 3
   ) +
   scale_x_continuous(
     breaks = scales::pretty_breaks(n = 12),
     expand = c(0, 0)
   ) +
-  scale_y_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0))
+```
+
+```{r}
+# Add vertical lines to mark the mean, median, and mode
+mmm_histogram <- base_histogram +
   geom_vline(aes(xintercept = median(height_cm)),
     linetype = "dashed", linewidth = 1
   )  +
   geom_vline(aes(xintercept = mean(height_cm)),
     linetype = "dotted", linewidth = 1, color = "red"
+  ) +
+  geom_vline(aes(xintercept = Mode(height_cm)),
+             linewidth = 1, color = "darkgreen"
   )
+```
+
+![](images/clipboard-2950650358.webp)
+
+### Violin plot stratified by age and sex
+
+```{r}
+# Comparing distributions across sub categories
+
+ggplot(yaounde, aes(x = age_category_3, y = height_cm,
+    fill = age_category_3,
+    shape = sex)) +
+  geom_violin() +
+  stat_summary(
+    fun = "mean",
+    geom = "point",
+    size = 2,
+    #shape = 23,
+    fill = "white"
+  ) +
+  facet_wrap(~sex) +
+  theme_light()
 ```
 
 What if we filter out the children and plot the histogram again?
@@ -294,24 +354,6 @@ yao_adults_height <- ggplot(
 
 yao_adults_height +
   geom_histogram(
-    color = "white",
-    fill = "steelblue",
-    binwidth = 5
-  )  +
-  geom_vline(aes(xintercept = median(height_cm)),
-    linetype = "dashed", linewidth = 1
-  )  +
-  geom_vline(aes(xintercept = mean(height_cm)),
-    linetype = "dotted", linewidth = 1, color = "red"
-  )
-```
-
--   We can also represent continuous distributions with a smoothed curve, which is a useful alternative to the histogram.
--   We can use a curve to approximate the histogram by plotting it on top of the bars.
-
-```{r}
-yao_adults_height +
-  geom_histogram(
     bins = 50,
     color = "white",
     fill = "dodgerblue",
@@ -323,43 +365,45 @@ yao_adults_height +
     linewidth = 1,
     bw = 3
   ) +
-  geom_vline(aes(xintercept = mean(height_cm)),
-    linetype = "dashed", linewidth = 1
-  ) +
   geom_vline(aes(xintercept = median(height_cm)),
+    linetype = "dashed", linewidth = 1
+  )  +
+  geom_vline(aes(xintercept = mean(height_cm)),
     linetype = "dotted", linewidth = 1, color = "red"
+  ) +
+  geom_vline(aes(xintercept = Mode(height_cm)),
+             linewidth = 1, color = "darkgreen"
   )
 ```
 
-```{r}
-# Comparing distributions across sub categories
-ggplot(yaounde, aes(x = age_category_3, y = height_cm,
-    fill = age_category_3,
-    shape = sex)) +
-  geom_boxplot() +
-  stat_summary(
-    fun = "mean",
-    geom = "point",
-    size = 2,
-    #shape = 23,
-    fill = "white"
-  ) +
-  facet_wrap(~sex)
 
-# Density curves mirrored on the sides
-ggplot(yaounde, aes(x = age_category_3, y = height_cm,
-    fill = age_category_3,
-    shape = sex)) +
-  geom_violin() +
-  stat_summary(
-    fun = "mean",
-    geom = "point",
-    size = 2,
-    #shape = 23,
-    fill = "white"
-  ) +
-  facet_wrap(~sex)
-```
+::: callout-note
+## Practice: Graphing Mean, Median, and Mode
+
+A. Create a new data frame called `yao_male_adults` which filters `yaounde` to keep only the rows where `sex` is "Male" and `age_category_3` is "Adult".
+
+B. Calculate the mean, median, and mode of `height_cm` in `yao_male_adults`.
+
+C. Use {ggplot2} code to plot a histogram/density curve of `height_cm` with veritical lines for mean, median, and mode.
+:::
+
+
+::: callout-note
+## Practice: Identifying Skew
+
+
+A. Using the `yaounde` data frame, plot a simple histogram or density curve of the **`age`** variable.
+
+
+B. Visually assess the shape of the distribution. Is it left-skewed, right skewed, or not skewed?
+
+C. Create a boxplot showing the distribution of `age` for each `sex`. Add points to mark the mean and mode using `stat_summary()`.
+
+
+D. Based on the positions of the mean, median, and mode, which sex has the more skewed distribution?
+:::
+
+
 
 # Symmetry and Skew
 
@@ -408,15 +452,13 @@ TRANSFORMATIONS – NOT RELEVANT for this course rn, but quick side note that yo
 
 Continue exploring these concepts with real-world data to gain deeper insight into public health analyses.
 
-SOMETHING HERE ABOUT INVESTIGATING DATA BEFORE DOING ANALYSIS. PLOTTING AND SUMMARY STATISTICS SHOULD COME FIRST.
-
 ------------------------------------------------------------------------
 
 # Answer Key {.unlisted .unnumbered}
 
 **Caculating Measures of Central Tendency in R**
 
-Use `mean()`, `median()`, and `Mode()` from `{DescTools}` to compute the following:
+Use `mean()`, `median()`, and `Mode()` to compute the following:
 
 1.  Mean of `weight_kg`.
 
@@ -430,61 +472,122 @@ mean(yaounde$weight_kg)
 mean(yaounde$n_days_miss_work, na.rm = TRUE)
 ```
 
-3.  Mode of `height_cm` and `n_bedridden_days`.
+3.  Mode of `age` and `respiration_frequency`.
 
 ```{r}
-Mode(yaounde$height_cm)
+Mode(yaounde$age)
 
-Mode(yaounde$n_bedridden_days, na.rm = T)
+Mode(yaounde$respiration_frequency, na.rm = T)
 ```
 
-# Appendix: R functions used in this lesson {.unlisted .unnumbered}
+**Graphing Mean, Median, and Mode**
 
--   **Data Import & Setup**
-    -   **`read_csv()`**\
-        Reads CSV files into a data frame (from the **readr** package).
-    -   **`here()`**\
-        Constructs file paths relative to the project's root (from the **here** package).
--   **Data Exploration & Inspection**
-    -   **`glimpse()`**\
-        Displays the structure of a data frame in a compact format (from **dplyr**/**tibble**).
-    -   **`data()`**\
-        Loads built-in or package datasets.
-    -   **`head()`**\
-        Shows the first few rows of a data frame.
--   **Data Manipulation & Summary**
-    -   **`%>%`**\
-        The pipe operator for chaining operations (from **magrittr** or **dplyr**).
-    -   **`tabyl()`**\
-        Creates frequency tables, showing counts (and can compute percentages) for categorical variables (from the **janitor** package).
-    -   **`adorn_percentages()`**\
-        Adds percentage calculations to frequency tables (from the **janitor** package).
--   **Descriptive Statistics**
-    -   **`mean()`**\
-        Computes the arithmetic mean.
-    -   **`median()`**\
-        Computes the median.
-    -   **`Mode()`**\
-        Calculates the mode (from the **DescTools** package).
--   **Data Visualization (using ggplot2)**
-    -   **`ggplot()`**\
-        Initializes a ggplot object.
-    -   **`aes()`**\
-        Sets up aesthetic mappings in ggplot2 plots.
-    -   **`geom_bar()`**\
-        Creates bar charts.
-    -   **`geom_histogram()`**\
-        Creates histograms.
-    -   **`geom_density()`**\
-        Creates kernel density plots.
-    -   **`geom_boxplot()`**\
-        Creates boxplots.
-    -   **`geom_jitter()`**\
-        Adds jittered points to a plot to show individual observations.
-    -   **`stat_summary()`**\
-        Adds summary statistics (e.g., mean markers) as a layer in a plot.
-    -   **`reorder()`**\
-        Reorders factor levels based on another variable (a base R function often used within aesthetic mappings).
+A. Create a new data frame called `yao_male_adults` which filters `yaounde` to keep only the rows where `sex` is "Male" and `age_category_3` is "Adult".
+
+```{r}
+yao_male_adults <- yaounde %>% 
+  filter(age_category_3 == "Adult", 
+         sex == "Male") 
+
+yao_male_adults
+```
+
+B. Calculate the mean, median, and mode of `height_cm` in `yao_male_adults`.
+
+```{r}
+mean(yao_male_adults$height_cm)
+median(yao_male_adults$height_cm)
+Mode(yao_male_adults$height_cm)
+```
+
+C. Use {ggplot2} code to plot a histogram/density curve of `height_cm` with veritical lines for mean, median, and mode.
+
+```{r}
+ggplot(
+  data = yao_male_adults,
+  mapping = aes(x = height_cm)
+) +
+  scale_x_continuous(
+    breaks = scales::pretty_breaks(n = 12),
+    expand = c(0, 0)
+  ) +
+  scale_y_continuous(expand = c(0, 0)) +
+  geom_histogram(
+    bins = 50,
+    color = "white",
+    fill = "dodgerblue",
+    mapping = aes(y = after_stat(density))
+  ) +
+  geom_density(
+    color = "indianred2",
+    alpha = 0.25,
+    linewidth = 1,
+    bw = 3
+  ) +
+  geom_vline(aes(xintercept = median(height_cm)),
+    linetype = "dashed", linewidth = 1
+  )  +
+  geom_vline(aes(xintercept = mean(height_cm)),
+    linetype = "dotted", linewidth = 1, color = "red"
+  ) +
+  geom_vline(aes(xintercept = Mode(height_cm)),
+             linewidth = 1, color = "darkgreen"
+  )
+```
+
+**Identifying Skew**
+
+
+A. Using the `yaounde` data frame, plot a simple histogram or density curve of the **`age`** variable.
+
+```{r}
+ggplot(
+  data = yaounde,
+  mapping = aes(x = age)
+) +
+  geom_histogram(
+    color = "white",
+    fill = "steelblue", binwidth = 5,
+    mapping = aes(y = after_stat(density))
+  ) +
+    geom_density(
+    color = "indianred2",
+    alpha = 0.25,
+    linewidth = 1,
+    bw = 3
+  ) +
+  scale_x_continuous(
+    breaks = scales::pretty_breaks(n = 12),
+    expand = c(0, 0)
+  ) +
+  scale_y_continuous(expand = c(0, 0))
+```
+
+B. Visually assess the shape of the distribution. Is it left-skewed, right skewed, or not skewed?
+
+C. Create a boxplot showing the distribution of `age` for each `sex`. Add points to mark the mean and mode using `stat_summary()`.
+
+```{r}
+
+ggplot(
+  data = yaounde,
+  mapping = aes(x = weight_kg, y = sex, fill = sex)
+) + geom_boxplot() +
+  stat_summary(
+    fun = "Mode",
+    geom = "point",
+    size = 2, color = "white")+
+  stat_summary(
+    fun = "mean",
+    geom = "point",
+    size = 2,
+    shape = 24, fill = "white")
+```
+
+D. Based on the positions of the mean, median, and mode, which sex has the more skewed distribution?
+
+![](images/skewness_boxplot.png)
+
 
 # Contributors {.unlisted .unnumbered}
 
