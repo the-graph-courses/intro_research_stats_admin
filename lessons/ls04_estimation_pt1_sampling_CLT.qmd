@@ -69,7 +69,7 @@ A **population** is the full set we wish to understand. Its true **parameters** 
 -   *Example:* The true mean blood pressure of *all* adults in China is a population parameter.
 
 | Population Parameter (Greek) | Measure | **Sample Statistic (Latin)** |
-|:--:|:--:|:--:|
+|:----------------------:|:----------------------:|:----------------------:|
 | $\mu$ (mu) | Mean | $\bar{x}$ (x bar) |
 | $\sigma^2$ (sigma squared) | Variance | $s^2$ |
 | $\sigma$ (sigma) | Standard Deviation | $s$ |
@@ -81,7 +81,7 @@ Because complete enumeration is impractical, we almost always substitute statist
 ## Population Parameters vs. Sample Statistics
 
 | **Population Parameter** | **Sample Statistic** |
-|----|----|
+|------------------------------------|------------------------------------|
 | Describes entire population (usually unknown) | Computed from sample data (known) |
 | Denoted by Greek symbols like $\mu$ (population mean) and $\sigma$ (population standard deviation) | Denoted by Latin symbols like $\bar{x}$ (sample mean) and $s$ (sample standard deviation) |
 | Estimated by sample statistics | Calculated from sample data and used to estimate population parameters |

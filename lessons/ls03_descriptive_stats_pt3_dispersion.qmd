@@ -176,6 +176,14 @@ ggplot(yao_male_adults, aes(height_cm)) +
   scale_x_continuous(breaks = seq(70, 200, 10))
 ```
 
+```{r}
+ggplot(yaounde, aes(height_cm,
+  colour = age_category_3,
+  fill = age_category_3
+)) +
+  geom_density(alpha = 0.1)
+```
+
 Measures of Dispersion allow us to **mathematically** quantify and measure the level of dispersion.
 
 ::: callout-tip
@@ -201,6 +209,22 @@ Earlier, we also created boxplots to visualize the maximum and minimum values of
 |                                                                                           |                                    |
 | Mode                                                                                      | Standard Deviation                 |
 +-------------------------------------------------------------------------------------------+------------------------------------+
+
+#### The Normal Distribution and Standard Deviation
+
+The standard deviation is an especially useful measure of variability when the distribution is normal or approximately normal because the proportion of the distribution within a given number of standard deviations from the mean can be calculated.
+
+For a normal distribution,
+
+-   Approximately 68% of the data is within one standard deviation of the mean.
+
+-   Approximately 95% of the data is within two standard deviations of the mean.
+
+-   More than 99% of the data is within three standard deviations of the mean.
+
+This is known as the **Empirical Rule or the 68-95-99 Rule,** as shown in Figure.
+
+![](images/sd_percentages.png){width="480"}
 
 # Range
 
@@ -378,19 +402,13 @@ Additionally, the standard deviation is frequently used in statistical analysis 
 
 These percentages aid our understanding of data dispersion in a probability distribution. Therefore, while variance provides numerical insight into data spread, the standard deviation conveys these insights in a more comprehensible and applicable manner.
 
-+-----------------------------------------------------------------------+--------------------------------------------------------------+
-| **Variance**                                                          | **Deviation (Standard Deviation)**                           |
-+:=====================================================================:+:============================================================:+
-| The measure of spread in a dataset.                                   | Measure of average distance from the mean.                   |
-+-----------------------------------------------------------------------+--------------------------------------------------------------+
-| Average of squared differences from the mean.                         | The square root of the variance.                             |
-+-----------------------------------------------------------------------+--------------------------------------------------------------+
-| $\sigma^2$ (sigma squared)                                            | $\sigma$ (sigma)                                             |
-+-----------------------------------------------------------------------+--------------------------------------------------------------+
+| **Variance** | **Deviation (Standard Deviation)** |
+|:--:|:--:|
+| The measure of spread in a dataset. | Measure of average distance from the mean. |
+| Average of squared differences from the mean. | The square root of the variance. |
+| $\sigma^2$ (sigma squared) | $\sigma$ (sigma) |
 | Indicates the average squared deviation of data points from the mean. | Indicates the average distance of data points from the mean. |
-+-----------------------------------------------------------------------+--------------------------------------------------------------+
-| Harder to interpret directly (due to squared units)                   | Easier to interpret; shows how spread out the data is        |
-+-----------------------------------------------------------------------+--------------------------------------------------------------+
+| Harder to interpret directly (due to squared units) | Easier to interpret; shows how spread out the data is |
 
 ::: callout-note
 ## Practice
@@ -429,6 +447,112 @@ ggplot(yao_male_adults, aes(x = height_cm)) +
   annotate("text", x = mean_value + 2*sd_value, y = 0.02, label = paste("Mean + SD =", round(mean_value + sd_value, 2)), color = "forestgreen", vjust = -1) +
   annotate("text", x = mean_value - 2*sd_value, y = 0.02, label = paste("Mean - SD =", round(mean_value - sd_value, 2)), color = "green", vjust = -1) +
   annotate("text", x = 185, y = 0.05, label = paste("Variance =", round(variance_value, 2)), color = "blue", vjust = -1)
+```
+
+### SD graph adapted from r4epi
+
+```{r warning=F}
+mean      <-  mean(yaounde$height_cm)
+sd        <-  sd(yaounde$height_cm)
+limits    <- c(mean - 4 * sd, mean + 4 * sd)
+my_breaks <- purrr::map_dbl(seq(-4, 4, 1), ~ mean + . * sd)
+peak      <- dnorm(mean, mean = mean, sd = sd)
+
+shaded <- function(x, n_sds) {
+  y <- dnorm(x, mean = mean, sd = sd)
+  y[x < (mean - n_sds * sd) | x > (mean + n_sds * sd)] <- NA
+  y
+}
+
+y_labels <- function(x) {
+  out <- dnorm(x, mean = mean, sd = sd)
+  out
+}
+
+ggplot(tibble(x = c(limits[1], limits[2])), aes(x = x)) + 
+  stat_function(fun = dnorm, args = list(mean = mean, sd = sd)) +
+  geom_segment(aes(x = mean, y = 0, xend = mean, yend = peak), color = "red", linetype = "dashed", linewidth = 1) +
+  scale_x_continuous("Heights (cm)", 
+                     breaks = round(my_breaks),
+                     expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0.001, 0)) +
+  # Add shaded area for 68%
+  stat_function(fun = shaded, args = list(n_sds = 3), geom = "area", fill = "#005493", alpha = 0.2) +
+  geom_text(aes(x = my_breaks[c(4, 6)], y = y_labels(my_breaks[c(4, 6)]), label = "1 SD \n 68%"), nudge_y = 0.005) +
+  # Add shaded area for 95%
+  stat_function(fun = shaded, args = list(n_sds = 2), geom = "area", fill = "#005493", alpha = 0.2) +
+  geom_text(aes(x = my_breaks[c(3, 7)], y = y_labels(my_breaks[c(3, 7)]), label = "2 SD \n 95%"), nudge_y = 0.003) +
+  # Add shaded area for 99%
+  stat_function(fun = shaded, args = list(n_sds = 1), geom = "area", fill = "#005493", alpha = 0.2) +
+  geom_text(aes(x = my_breaks[c(2, 8)], y = y_labels(my_breaks[c(2, 8)]), label = "3 SD \n 99%"), nudge_y = 0.002) +
+  # Change theme
+  theme_minimal() +
+  theme(
+    axis.line.y = element_blank(), axis.text.y = element_blank(), 
+    axis.ticks.y = element_blank(), axis.title.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank()
+  )
+
+rm(mean, sd, limits, my_breaks, peak, shaded, y_labels)
+```
+
+```{r}
+# actual data
+
+
+# Calculate summary stats
+mean_val <- mean(yao_male_adults$height_cm, na.rm = TRUE)
+sd_val   <- sd(yao_male_adults$height_cm, na.rm = TRUE)
+
+# Compute density
+dens <- density(yao_male_adults$height_cm, na.rm = TRUE)
+density_df <- data.frame(x = dens$x, y = dens$y)
+
+
+# Add column to determine which SD region each x belongs to
+density_df <- density_df %>%
+  mutate(
+    sd_region = case_when(
+      x >= mean_val - (1 * sd_val) & x <= mean_val + 1 * sd_val ~ "1 SD (68%)",
+      x >= mean_val - 2 * sd_val & x <= mean_val + 2 * sd_val ~ "2 SD (95%)",
+      x >= mean_val - 3 * sd_val & x <= mean_val + 3 * sd_val ~ "3 SD (99%)",
+      TRUE ~ NA_character_
+    )
+  )
+
+# Plot
+ggplot(density_df) +
+  stat_density(aes(y = density_df$y), geom = "area", data = filter(density_df, sd_region == "3 SD (99%)"), fill = "#005493", alpha = 0.2) +
+  geom_area(data = filter(density_df, sd_region == "2 SD (95%)"), fill = "#005493", alpha = 0.2) +
+  geom_area(data = filter(density_df, sd_region == "1 SD (68%)"), fill = "#005493", alpha = 0.2) +
+  geom_line(color = "black") +
+  geom_vline(xintercept = mean_val, linetype = "dashed", color = "red", linewidth = 1) +
+  geom_text(data = tibble(
+      x = mean_val + c(-1, 1) * sd_val,
+      y = approx(density_df$x, density_df$y, xout = mean_val + c(-1, 1) * sd_val)$y,
+      label = "1 SD\n68%"
+    ), aes(x = x, y = y, label = label), nudge_y = 0.005) +
+  geom_text(data = tibble(
+      x = mean_val + c(-2, 2) * sd_val,
+      y = approx(density_df$x, density_df$y, xout = mean_val + c(-2, 2) * sd_val)$y,
+      label = "2 SD\n95%"
+    ), aes(x = x, y = y, label = label), nudge_y = 0.005) +
+  geom_text(data = tibble(
+      x = mean_val + c(-3, 3) * sd_val,
+      y = approx(density_df$x, density_df$y, xout = mean_val + c(-3, 3) * sd_val)$y,
+      label = "3 SD\n99%"
+    ), aes(x = x, y = y, label = label), nudge_y = 0.005) +
+  scale_x_continuous("Heights (cm)", breaks = round(mean_val + (-3:3) * sd_val)) +
+  scale_y_continuous(expand = c(0.001, 0)) +
+  theme_minimal() +
+  theme(
+    axis.line.y = element_blank(), axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(), axis.title.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank()
+  )
+
 ```
 
 # The Normal Distribution

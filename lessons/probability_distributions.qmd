@@ -1,0 +1,277 @@
+---
+title: "Introduction to Probability Distributions"
+format:
+  html:
+    embed-resources: true
+---
+
+```{r, echo = F, message = F, warning = F}
+# Load packages
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(rlang, tidyverse, knitr, here, reactable)
+
+# Source functions
+source(here("global/functions/lesson_functions.R"))
+
+# Knitr options
+knitr::opts_chunk$set(
+  warning = F, message = F,
+  class.source = "tgc-code-block", error = T
+)
+
+# Set ggplot theme
+theme_set(theme_minimal())
+```
+
+# **Introduction**
+
+Statistical analysis is fundamentally concerned with drawing meaningful conclusions from data. In this lesson, you will be introduced to **probability distributions** – a key pillar of inferential statistics. Probability distributions are theoretical distributions base on **mathematical formulas**.
+
+![](images/stats_overview_g4g.png){width="723"}
+
+So far in the course, we've focused on frequency distributions of the variables in our datasets. These are known as **empirical distributions**, a direct reflection of the collected data from the sample.
+
+In contrast, **theoretical distributions** are idealized models, defined by mathematical parameters. They help us the likelihood of different outcomes in our data.
+
+In this lesson we will cover four common distributions that serve as the foundational pillars of modern statistical inference: the Normal, Binomial, Bernoulli, and Poisson distributions:
+
+Let's dive in!
+
+# **Learning Objectives**
+
+By the end of this less you should be able to:
+
+-   Understand the theory and application of four probability distributions: Normal, Bernoulli, Binomial, and Poisson
+
+-   Discuss the key limitations and assumptions of each distribution
+
+-   Chose the right transformations when parametric assumptions are not met
+
+# Common distributions in Public Health
+
+There are many different probability distributions, but we will focus on these four:
+
+1.  The **Normal distribution** is the cornerstone for continuous measurements that cluster around a central value.
+
+2.  The **Bernoulli distribution**, the simplest of discrete distributions, models the outcome of a single trial with only two possibilities.
+
+3.  The **Binomial distribution** is essential for analyzing the number of successes in a fixed series of independent trials with binary outcomes.
+
+4.  The **Poisson distribution** models the rate at which discrete events occur over a continuous interval of time or space.
+
+Each distribution models a distinct type of data-generating process.
+
+![](images/misc_images/pdfs01.jpg)
+
+**Table 1: Summary of Key Probability Distributions**
+
+|  |  |  |  |  |  |
+|----|----|----|----|----|----|
+| **Distribution Name** | **Type** | **Key Parameter(s)** | **Mean (Expected Value)** | **Variance** | **Core Application/Phenomenon Modeled** |
+| Normal | Continuous | Mean (μ), Standard Deviation (σ) | μ | σ2 | Continuous measurements, sampling distributions of statistics (e.g., means), errors in measurement. |
+| Binomial | Discrete | Number of trials (n), Probability of success (p) | np | np(1−p) | Number of successes in a fixed number of independent binary trials (e.g., coin flips, quality control). |
+| Poisson | Discrete | Average rate of events (λ) | λ | λ | Number of events occurring in a fixed interval of time or space (e.g., customer arrivals, incident rates). |
+| Bernoulli | Discrete | Probability of success (p) | p | p(1−p) | Outcome of a single trial with two possible results (e.g., success/failure, yes/no). |
+
+------------------------------------------------------------------------
+
+# Continuous Distributions
+
+## Gaussian (Normal) Distribution
+
+The **Normal distribution**, also referred to as the **Gaussian distribution** or the "**bell curve**," is a continuous probability distribution characterized by its symmetric, unimodal shape. It is completely defined by two parameters: the population mean, denoted by $\mu$, which fixes the center of the distribution, and the population standard deviation, denoted by $\sigma$, which dictates its spread or dispersion.
+
+Several key characteristics define the Normal distribution:
+
+-   **Symmetry:** The curve is perfectly symmetric around its mean. Consequently, the mean, median, and mode are all identical and located at the peak of the distribution.3
+
+-   **Total Area:** The total area under the curve is equal to 1.0, representing the entirety of all possible outcomes.3
+
+-   **The Empirical Rule:** This rule, also known as the 68-95-99.7 rule, provides a practical framework for interpreting the standard deviation. For any normal distribution, approximately 68% of the observations fall within one standard deviation of the mean (μ±σ), about 95% fall within two standard deviations (μ±2σ), and roughly 99.7% fall within three standard deviations (μ±3σ).4 This rule is invaluable for quickly estimating probabilities and identifying potential outliers.
+
+### **The Standard Normal Distribution and the Power of Z-scores**
+
+A special case of paramount importance is the Standard Normal Distribution, which has a mean of μ=0 and a standard deviation of σ=1, denoted as Z∼N(0,1).5 Its significance lies in its ability to serve as a universal reference for any normal distribution.
+
+This is achieved through a process called standardization. Any observation x from a normal distribution N(μ,σ2) can be transformed into a standardized score, or z-score, using the formula:
+
+Z=σX−μ​
+
+A z-score quantifies the number of standard deviations a particular observation lies away from the mean. A positive z-score indicates the observation is above the mean, while a negative z-score indicates it is below. This transformation is exceptionally powerful because it allows for the comparison of values from different normal distributions. For instance, a student's score of 90 on a math test (mean 80, SD 5) yields a z-score of +2.0, while a score of 95 on an English test (mean 90, SD 10) yields a z-score of +0.5. The z-scores reveal that the student's performance was relatively better in math than in English, a conclusion not apparent from the raw scores alone. Furthermore, standardization enables the use of a single reference table of probabilities for the standard normal distribution to find the probability of any event for any normal distribution, greatly simplifying calculations.
+
+### **Applications and Real-World Phenomena**
+
+The Normal distribution serves as an excellent mathematical model for a wide variety of real-world phenomena, particularly those that are the result of many small, independent, additive factors.
+
+-   **Biological and Anthropometric Data:** Many biological measurements, such as the heights and weights of individuals in a population, blood pressure, and cholesterol levels, tend to follow a normal distribution.
+
+-   **Psychological Measurement:** Standardized test scores, such as IQ scores or SAT results, are often designed and scaled to be normally distributed.
+
+    **Measurement Error:** In scientific and industrial settings, errors in measurement are frequently assumed to be normally distributed around a true value.
+
+# Discrete Distributions
+
+## Modeling Binary Outcomes: The Bernoulli and Binomial Distributions
+
+### **The Bernoulli Distribution**
+
+A Bernoulli trial is a random experiment that can result in one of only two possible, mutually exclusive outcomes. These outcomes are conventionally labeled "success" (represented by the value 1) and "failure" (represented by the value 0). The Bernoulli distribution is the discrete probability distribution governing the outcome of a single such trial.
+
+It is defined by a single parameter, p, which represents the probability of a success. The probability of a failure is consequently q=1−p.15 The probability mass function (PMF), which gives the probability for each outcome, can be written concisely as:
+
+P(X=x)=px(1−p)1−xfor x∈{0,1}
+
+### **The Binomial Distribution: Aggregating Independent Bernoulli Trials**
+
+The Binomial distribution arises as a natural extension of the Bernoulli trial. It models the total number of successes, x, in a fixed number of independent and identical Bernoulli trials, n. For a random variable to follow a Binomial distribution, four conditions must be met:
+
+1.  **Fixed number of trials:** The experiment consists of a fixed number of repetitions, n.
+
+2.  **Independent trials:** The outcome of any one trial does not influence the outcome of any other trial.
+
+3.  **Two possible outcomes:** Each trial must have only two possible outcomes, labeled success and failure.
+
+4.  **Constant probability of success:** The probability of success, p, must be the same for every trial.
+
+The distribution is defined by two parameters: n (the number of trials) and p (the probability of success on a single trial), denoted as X∼B(n,p).
+
+In **Medicine and Public Health**, the Binomial distributions is used for calculating the probability that a certain number of patients in a clinical trial will respond to a new drug, or modeling the number of individuals who experience side effects.
+
+## Poisson Distribution**: Modeling Rates and Rare Events**
+
+The Poisson distribution provides a mathematical model for the number of times an event occurs within a fixed continuum, such as an interval of time, area, or volume. It is particularly adept at modeling events that are rare and occur randomly and independently. Its unique properties, especially the relationship between its mean and variance, make it a powerful yet specific tool for analyzing count data.
+
+### **Defining Properties of the Poisson Process**
+
+The Poisson distribution describes the probability of a given number of events, k, occurring in a fixed interval. Its applicability rests on a set of assumptions that define a "Poisson process":
+
+1.  **Independence:** The occurrence of one event does not affect the probability of another event occurring. Events are statistically independent.
+
+2.  **Constant Rate:** The average rate at which events occur is constant for the duration of the interval. The probability of an event occurring is proportional to the length of the interval.
+
+3.  **Non-simultaneity:** Two events cannot occur at the exact same instant in time or space.
+
+The distribution is defined by a single parameter, lambda (λ), which represents the average number of events (the mean rate) within the specified interval. For example, if a call center receives an average of 10 calls per hour, then for a one-hour interval,
+
+λ=10.
+
+In **Biology and Epidemiology** the Poisson distribution is used to model rare events, such as the number of genetic mutations in a given stretch of DNA, the number of radioactive decay events per second, or the incidence of a rare disease in a large population over a year.
+
+## **Managing Distributional Assumptions**
+
+The theoretical elegance of probability distributions provides the foundation for statistical inference, but applying these models to real-world data requires a series of practical steps to ensure their validity. Parametric tests, such as the t-test and ANOVA, derive their power from assumptions about the data's distribution, most notably normality. When these assumptions are violated, the reliability of the test results is compromised. This section details the process of assessing distributional fit, applying data transformations to meet assumptions, and correctly interpreting the results after these manipulations.
+
+### **Assessing Goodness-of-Fit**
+
+Before employing a parametric statistical test, it is imperative to verify that its underlying assumptions are reasonably met. For the assumption of normality, this assessment can be conducted using both graphical methods and formal statistical tests.
+
+-   **Graphical Methods:** Visual inspection is often the most practical and insightful approach, as it is less susceptible to the sample size issues that affect formal tests.
+
+<!-- -->
+
+-   **Histograms:** A simple histogram of the variable can be overlaid with an ideal normal curve. This provides a quick visual check for symmetry and bell-shape.
+
+-   **Q-Q (Quantile-Quantile) Plots:** This is a more powerful graphical tool. It plots the observed quantiles of the data against the theoretical quantiles expected from a perfect normal distribution. If the data are normally distributed, the points will fall closely along a straight diagonal line. Systematic deviations from this line indicate departures from normality, such as skewness (an S-shaped curve) or heavy tails (points deviating from the line at the extremes).
+
+<!-- -->
+
+-   **Formal Statistical Tests:** These provide a quantitative assessment by testing the null hypothesis that the data were sampled from a normal distribution. A small p-value (typically p\<0.05) leads to the rejection of this null hypothesis, suggesting the data are not normal.
+
+<!-- -->
+
+-   **Shapiro-Wilk Test:** This test is widely regarded as one of the most powerful formal tests for normality, especially for smaller sample sizes.
+
+-   **Kolmogorov-Smirnov Test:** Another well-known test, though it is generally considered less powerful for testing normality than the Shapiro-Wilk test.
+
+A critical caveat applies to formal tests: with very large sample sizes, they can become overly sensitive, detecting statistically significant but practically irrelevant deviations from perfect normality. Conversely, with small sample sizes, they may lack the statistical power to detect a meaningful departure from the normal distribution. For these reasons, many practitioners prioritize graphical methods and use formal tests as a supplementary guide.
+
+### **Data Transformation Techniques for Meeting Parametric Assumptions**
+
+When data exhibit significant non-normality (e.g., skewness) or heteroscedasticity (unequal variances), applying a mathematical function to each data point can often remedy the issue, making the transformed data suitable for parametric analysis.
+
+#### **Foundational Methods**
+
+Several common transformations are effective for specific types of non-normality, particularly right-skew, which is common in biological and economic data.
+
+-   **Log Transformation (log(Y)):** This is one of the most common transformations, effective for data with positive, right-skewed distributions. Either the natural logarithm (ln) or base-10 logarithm (log10​) can be used. Since the logarithm of zero or a negative number is undefined, a small constant is often added to the data (e.g., log(Y+1)) if such values are present.
+
+-   **Square Root Transformation (Y​):** This is a milder transformation than the logarithm and is often used for count data that exhibits right-skew.
+
+-   **Reciprocal Transformation (1/Y):** This is a strong transformation that can be useful for severely right-skewed data. It also reverses the order of the data, which must be considered during interpretation.
+
+### **The Critical Step of Back-Transformation**
+
+After conducting statistical analysis on the transformed data—for example, calculating a mean, a confidence interval, or a regression coefficient—the results are expressed in the transformed units. These values are often difficult, if not impossible, to interpret directly.
+
+**Back-transformation** is the essential process of applying the inverse mathematical function to convert these statistical results back into the original, meaningful scale of measurement.
+
+-   For a **log₁₀ transformation**, the back-transformation is 10Y′.
+
+-   For a **natural log (ln) transformation**, the back-transformation is eY′.
+
+-   For a **square root transformation**, the back-transformation is (Y′)2.
+
+# Conclusion
+
+The Normal, Binomial, Poisson, and Bernoulli distributions are not merely abstract mathematical concepts; they are the essential tools with which statisticians and researchers model the world. This lesson has demonstrated their distinct yet complementary roles in the architecture of statistical inference.
+
+-   The Normal distribution, through the power of the Central Limit Theorem, underpins our ability to draw conclusions about population means.
+
+-   The Bernoulli and Binomial distributions provide a rigorous framework for analyzing binary outcomes and proportions, forming the basis of everything from quality control to modern predictive analytics.
+
+-   The Poisson distribution offers a precise model for the rate of random, independent events, enabling prediction and resource management in countless fields.
+
+# Contributors {.unlisted .unnumbered}
+
+The following team members contributed to this lesson:
+
+`r .tgc_contributors_list(ids = c("joy", "kendavidn"))`
+
+# References {.unlisted .unnumbered}
+
+Some material in this lesson was adapted from the following sources:
+
+-   Irizarry, Rafael A. 2019. *Introduction to Data Science: Statistics and Prediction Algorithms Through Case Studies*. <https://rafalab.dfci.harvard.edu/dsbook-part-2/>.
+-   Cannell, Brad, and Melvin Livingston. n.d. *R for Epidemiology*. <https://www.r4epi.com/>.
+-   GeeksforGeeks. 2025. "Introduction of Statistics and Its Types." <https://www.geeksforgeeks.org/introduction-of-statistics-and-its-types/>.
+-   Starmer, Josh. *StatQuest with Josh Starmer* \[YouTube Channel\]. <https://www.youtube.com/channel/UCtYLUTtgS3k1Fg4y5tAhLbw>.
+-   The GRAPH Courses. *FoSSA: Fundamentals of Statistical Software & Analysis*. <https://thegraphcourses.org/courses/fossa/>.
+-   University of Miami Libraries. *Introduction to Data Analysis and R*. <https://www.library.miami.edu/data-services/data-analysis.html>.
+-   Normal distribution - The University of Sydney, accessed August 31, 2025, <https://www.sydney.edu.au/content/dam/students/documents/mathematics-learning-centre/normal-distribution.pdf>
+-   The Normal Distribution, accessed August 31, 2025, <https://www.westga.edu/academics/research/vrc/assets/docs/the_normal_distribution_notes.pdf>
+-   The Normal Distribution - Utah State University, accessed August 31, 2025, <https://www.usu.edu/math/schneit/StatsStuff/Probability/probModels9>
+-   Understanding Normal Distribution: Key Concepts and Financial Uses - Investopedia, accessed August 31, 2025, <https://www.investopedia.com/terms/n/normaldistribution.asp>
+-   Normal Distribution (Bell Curve): Definition, Word Problems - Statistics How To, accessed August 31, 2025, <https://www.statisticshowto.com/probability-and-statistics/normal-distributions/>
+-   Standard Normal Distribution Explained with Real-World Examples - Codecademy, accessed August 31, 2025, <https://www.codecademy.com/article/standard-normal-distribution-explained-with-real-world-examples>
+-   Normal Distributions Explained – With Real-World Examples - YouTube, accessed August 31, 2025, <https://www.youtube.com/watch?v=xlxaa9YhT6A>
+-   The Assumption(s) of Normality, accessed August 31, 2025, <http://www2.psychology.uiowa.edu/faculty/mordkoff/GradStats/part%201/I.07%20normal.pdf>
+-   More about the basic assumptions of t-test: normality and sample size - PMC, accessed August 31, 2025, <https://pmc.ncbi.nlm.nih.gov/articles/PMC6676026/>
+-   Probability Examples In Daily Life \| Index Fund Advisors, Inc., accessed August 31, 2025, <https://www.ifa.com/galtonboard/probabilityexamplesinlife>
+-   What Is a Binomial Distribution? - Investopedia, accessed August 31, 2025, <https://www.investopedia.com/terms/b/binomialdistribution.asp>
+-   Test of Normality: Assessing Data Distribution - Datatab, accessed August 31, 2025, <https://datatab.net/tutorial/test-of-normality>
+-   Probability Playground: The Bernoulli Distribution, accessed August 31, 2025, <https://www.acsu.buffalo.edu/~adamcunn/probability/bernoulli.html>
+-   Bernoulli distribution - Wikipedia, accessed August 31, 2025, <https://en.wikipedia.org/wiki/Bernoulli_distribution>
+-   Bernoulli trial - Wikipedia, accessed August 31, 2025, <https://en.wikipedia.org/wiki/Bernoulli_trial>
+-   Special Distributions \| Bernoulli Distribution \| Geometric Distribution ..., accessed August 31, 2025, <https://www.probabilitycourse.com/chapter3/3_1_5_special_discrete_distr.php>
+-   1.3 - Discrete Distributions \| STAT 504 - STAT ONLINE, accessed August 31, 2025, <https://online.stat.psu.edu/stat504/lesson/1/1.3>
+-   Bernoulli Distribution: Definition and Examples - Statistics How To, accessed August 31, 2025, <https://www.statisticshowto.com/probability-and-statistics/statistics-definitions/probability-distribution/bernoulli-distribution/>
+-   Bernoulli Distribution: What Is It? \[With Examples\] - CareerFoundry, accessed August 31, 2025, <https://careerfoundry.com/en/blog/data-analytics/what-is-bernoulli-distribution/>
+-   Statistics: Part 5— Bernoulli and Binomial Distribution \| by Saurabh Singh - Medium, accessed August 31, 2025, [https://medium.com/\@saurabhzodex/statistics-part-5-bernoulli-and-binomial-distribution-365d85ab4dc5](https://medium.com/@saurabhzodex/statistics-part-5-bernoulli-and-binomial-distribution-365d85ab4dc5)
+-   Binomial distribution - Student Academic Success - Monash University, accessed August 31, 2025, <https://www.monash.edu/student-academic-success/mathematics/probability-and-distributions/binomial-distribution>
+-   Binomial Distribution: A Complete Guide with Examples - DataCamp, accessed August 31, 2025, <https://www.datacamp.com/tutorial/binomial-distribution>
+-   4.3 Binomial Distribution – Introductory Statistics - LOUIS Pressbooks, accessed August 31, 2025, <https://louis.pressbooks.pub/introductorystatistics/chapter/4-3-binomial-distribution/>
+-   Probability Playground: The Binomial Distribution, accessed August 31, 2025, <https://www.acsu.buffalo.edu/~adamcunn/probability/binomial.html>
+-   An intuitive real life example of a binomial distribution and how to simulate it in R - Medium, accessed August 31, 2025, <https://medium.com/data-science/an-intuitive-real-life-example-of-a-binomial-distribution-and-how-to-simulate-it-in-r-d72367fbc0fa>
+-   5 Real-Life Examples of the Binomial Distribution - Statology, accessed August 31, 2025, <https://www.statology.org/binomial-distribution-real-life-examples/>
+-   2.2 - Tests and CIs for a Binomial Parameter \| STAT 504, accessed August 31, 2025, <https://online.stat.psu.edu/stat504/lesson/2/2.2>
+-   Hypothesis Testing for Binomial Distribution - Real Statistics Using Excel, accessed August 31, 2025, <https://real-statistics.com/binomial-and-related-distributions/hypothesis-testing-binomial-distribution/>
+-   6\. Chi-Square Tests - Random Services, accessed August 31, 2025, <https://www.randomservices.org/random/hypothesis/ChiSquare.html>
+-   Poisson Distributions \| Definition, Formula & Examples - Scribbr, accessed August 31, 2025, <https://www.scribbr.com/statistics/poisson-distribution/>
+-   Poisson distribution - Wikipedia, accessed August 31, 2025, <https://en.wikipedia.org/wiki/Poisson_distribution>
+-   Poisson Distribution \| Brilliant Math & Science Wiki, accessed August 31, 2025, <https://brilliant.org/wiki/poisson-distribution/>
+-   5 Real-Life Examples of the Poisson Distribution - Statology, accessed August 31, 2025, <https://www.statology.org/poisson-distribution-real-life-examples/>
+-   Basic Concepts of the Poisson Process - Probability Course, accessed August 31, 2025, <https://www.probabilitycourse.com/chapter11/11_1_2_basic_concepts_of_the_poisson_process.php>
+-   Poisson Regression \| R Data Analysis Examples - OARC Stats - UCLA, accessed August 31, 2025, <https://stats.oarc.ucla.edu/r/dae/poisson-regression/>
+-   On Some Discrete Distributions and their Applications with Real Life Data, accessed August 31, 2025, <https://digitalcommons.wayne.edu/cgi/viewcontent.cgi?article=1518&context=jmasm>
+
+`r .tgc_license()`

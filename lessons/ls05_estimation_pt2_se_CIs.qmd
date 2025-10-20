@@ -80,7 +80,7 @@ Standard Error is used for **inference**:
 -   decreases with increasing sample size.
 
 | Measure | Primary Use | What It Quantifies | Extra Notes |
-|-----------------|-----------------|-----------------|----------------------|
+|----|----|----|----|
 | **Standard Deviation (SD)** | Description of data (descriptive statistics) | Variability / spread of individual observations around the mean | Same units as the original data; always non-negative |
 | **Standard Error (SE)** | Inference about a population (inferential statistics) | Precision / spread of a sample statistic across repeated samples | $$\text{SE} = \dfrac{\text{SD}}{\sqrt{n}}$$; decreases as sample size $n$ increases |
 

@@ -91,7 +91,7 @@ A **sample** is a subset of the population, selected for practical reasons, from
 ### **Population vs. Sample**
 
 | **Population** | **Sample** |
-|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|-------------------------|-----------------------------------------------|
 | Includes all members of a specified group | Subset of the population |
 | Often impractical to study entirely | Practical and feasible to study |
 | Example: All residents in France | Example: 1,000 randomly chosen residents in Paris |
@@ -113,7 +113,7 @@ We can almost never measure every single unit in a population, so we use sample 
 
 ```{r}
 # Import data to RStudio
-yaounde <- read_csv(here("data/yaounde_data.csv"))
+joy_data <- read_csv(here("data/yaounde_data.csv"))
 
 spec(yaounde)
 ```

@@ -37,7 +37,6 @@ pacman::p_load(
 
 ------------------------------------------------------------------------
 
-#  {.unnumbered}
 
 # Load Packages
 
@@ -50,7 +49,6 @@ pacman::p_load(tidyverse,
                visdat)
 ```
 
-![](images/white_square.jpg)
 
 # The Yaounde COVID-19 dataset
 
@@ -63,7 +61,6 @@ yaounde <- read_csv(here("data/yaounde_data.csv"))
 spec(yaounde)
 ```
 
-![](images/white_square.jpg){fig-align="center"}
 
 -   Let's spend some time browsing through this dataset.
 
@@ -80,7 +77,6 @@ head(yaounde)
 
 -   The results of the IgG and IgM antibody tests are in the columns `igg_result` and `igm_result`.
 
-![](images/white_square.jpg){fig-align="center"}
 
 ```{r}
 # View variable data classes
@@ -95,7 +91,6 @@ glimpse(yaounde)
 vis_dat(yaounde)
 ```
 
-![](images/white_square.jpg){fig-align="center"}
 
 ```{r}
 # INSPECT CATEGOTIRICAL VARIABLES
@@ -106,7 +101,6 @@ yao_cat_summary <- inspect_cat(yaounde)
 show_plot(yao_cat_summary)
 ```
 
-![](images/white_square.jpg){fig-align="center"}
 
 ```{r}
 # INSPECT NUMERIC VARIABLES
@@ -116,13 +110,7 @@ yao_num_summary <- inspect_num(yaounde)
 show_plot(yao_num_summary)
 ```
 
-![](images/white_square.jpg){fig-align="center"}
 
-SUMMARY, CLASS ETC. – ADD THOSE OTHER FUNCTIONS, WITH THE DOT GRAPHS.
-
-R DATA CLASSES VS VARIABLE TYPES
-
-INSPECT CAT AND INSPECT NUM
 
 ::: callout-tip
 ## What is a variable?

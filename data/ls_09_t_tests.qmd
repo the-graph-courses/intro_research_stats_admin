@@ -51,7 +51,7 @@ The t-test works by comparing the observed difference in sample means to what we
 There are two main types of t-tests:
 
 | Test Type | Use When... |
-|---------------------------------|---------------------------------------|
+|----|----|
 | **Independent Samples t-test** | You're comparing **two different groups** (e.g. men vs. women) |
 | **Paired Samples t-test** | You're comparing **the same group at two times** (e.g. before and after treatment) |
 
@@ -217,7 +217,7 @@ cohen_d_paired
 ### Summary Table
 
 | Comparison | p-value | Cohen’s d | Interpretation |
-|--------------------|---------------|---------------|-----------------------|
+|----|----|----|----|
 | SBP by BMI group (Independent) | \< 2.2e-16 | 0.66 | Statistically significant and **meaningful** |
 | FPG baseline vs. follow-up (Paired) | \< 2.2e-16 | 0.32 | Statistically significant, **small effect** |
 
@@ -259,7 +259,7 @@ ggplot(paired_data_long, aes(x = time, y = fpg, group = id)) +
 # Summary Table
 
 | Comparison | p-value | Cohen’s d | Interpretation |
-|------------------|-----------------|-----------------|----------------------|
+|----|----|----|----|
 | SBP by BMI group (Independent) | *(insert here)* | *(insert here)* | *(statistical + practical meaning)* |
 | FPG baseline vs. follow-up (Paired) | *(insert here)* | *(insert here)* | *(statistical + practical meaning)* |
 
@@ -275,7 +275,7 @@ For your t-test results to be **valid**, certain assumptions must be met. These 
 ## 1. Independent Samples t-test Assumptions
 
 | Assumption | What It Means | How to Check It in R |
-|-----------------|----------------------------------|---------------------|
+|----|----|----|
 | **Independence of observations** | Each observation should be from a different person or unit | Based on study design (not testable in code) |
 | **Normality** | The outcome variable should be approximately normally distributed **in each group** | Use `ggplot` or `shapiro.test()` per group |
 | **Equal variances** (optional) | The variance in each group is roughly equal (only required for **Student's t-test**) | Use `var.test()` or `leveneTest()` |
@@ -342,7 +342,7 @@ Still, it's a good idea to include a **density plot or Q-Q plot** to visually as
 ## 2. Paired Samples t-test Assumptions
 
 | Assumption | What It Means | How to Check It in R |
-|-----------------|------------------------------------|--------------------|
+|----|----|----|
 | **Dependent observations** | You are comparing two **related** measurements (e.g. same individual at two times) | Confirm with study design |
 | **Normality of differences** | The **differences between paired values** should be normally distributed | Check the distribution of differences |
 
@@ -369,7 +369,7 @@ shapiro.test(fpg_sample$fpg_diff)
 
 -   Therefore, we **reject the null hypothesis** that the differences are normally distributed.
 
->  ⚠️ **Conclusion:** The distribution of differences in fasting glucose **is not normal** based on this test.
+> ⚠️ **Conclusion:** The distribution of differences in fasting glucose **is not normal** based on this test.
 
 #### But should we worry?
 
