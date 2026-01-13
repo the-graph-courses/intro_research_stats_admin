@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-teal: #0d7377;
+            --light-teal: #14a3a8;
+            --yellow: #f0c808;
+            --black: #1a1a1a;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 4rem;
+        }
+        
+        .content {
+            text-align: center;
+            max-width: 800px;
+        }
+        
+        .demo-box {
+            background: linear-gradient(135deg, var(--dark-teal), var(--light-teal));
+            color: var(--white);
+            padding: 3rem 4rem;
+            border-radius: 20px;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 15px 50px rgba(13, 115, 119, 0.3);
+        }
+        
+        .demo-box h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-box p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+        }
+        
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .instruction {
+            background: var(--gray-light);
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--yellow);
+        }
+        
+        .instruction h3 {
+            font-size: 1.4rem;
+            color: var(--dark-teal);
+            margin-bottom: 1rem;
+        }
+        
+        .instruction p {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: var(--black);
+        }
+        
+        .key-insight {
+            margin-top: 2rem;
+            padding: 1.5rem 2rem;
+            background: var(--white);
+            border: 3px solid var(--yellow);
+            border-radius: 12px;
+        }
+        
+        .key-insight p {
+            font-size: 1.3rem;
+            color: var(--dark-teal);
+            font-weight: 600;
+        }
+        
+        .slide-number {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            font-size: 0.9rem;
+            color: var(--light-teal);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="demo-box">
+            <div class="icon">📐</div>
+            <h2>Let's Try It Manually!</h2>
+            <p>Switching to Desmos to fit a line by hand...</p>
+        </div>
+        
+        <div class="instruction">
+            <h3>What to Notice</h3>
+            <p>As you drag the line around, notice that you need <strong>exactly two numbers</strong> to position a straight line:</p>
+        </div>
+        
+        <div class="key-insight">
+            <p>Two numbers → One line</p>
+        </div>
+    </div>
+    
+    <div class="slide-number">07</div>
+</body>
+</html>
+

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Data</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-teal: #0d7377;
+            --light-teal: #14a3a8;
+            --yellow: #f0c808;
+            --black: #1a1a1a;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 4rem;
+        }
+        
+        .slide-header {
+            margin-bottom: 2.5rem;
+        }
+        
+        .slide-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--dark-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .title-underline {
+            width: 80px;
+            height: 4px;
+            background: var(--yellow);
+            border-radius: 2px;
+        }
+        
+        .content {
+            display: flex;
+            gap: 3rem;
+            align-items: flex-start;
+        }
+        
+        .table-container {
+            flex: 1;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .data-table thead {
+            background: var(--dark-teal);
+            color: var(--white);
+        }
+        
+        .data-table th {
+            padding: 1rem 1.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .data-table td {
+            padding: 0.9rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .data-table tbody tr:nth-child(even) {
+            background: var(--gray-light);
+        }
+        
+        .data-table tbody tr:hover {
+            background: rgba(20, 163, 168, 0.1);
+        }
+        
+        .weeks-col {
+            color: var(--dark-teal);
+            font-weight: 600;
+        }
+        
+        .weight-col {
+            color: var(--black);
+        }
+        
+        .description {
+            flex: 0.8;
+            padding: 2rem;
+            background: var(--gray-light);
+            border-radius: 12px;
+            border-left: 4px solid var(--light-teal);
+        }
+        
+        .description h3 {
+            font-size: 1.4rem;
+            color: var(--dark-teal);
+            margin-bottom: 1rem;
+        }
+        
+        .description p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--black);
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-highlight {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-teal);
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--black);
+            opacity: 0.7;
+        }
+        
+        .slide-number {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            font-size: 0.9rem;
+            color: var(--light-teal);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-header">
+        <h1 class="slide-title">Our Data: 8 Preemie Babies</h1>
+        <div class="title-underline"></div>
+    </div>
+    
+    <div class="content">
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Baby</th>
+                        <th>Weeks</th>
+                        <th>Weight (kg)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td class="weeks-col">32</td>
+                        <td class="weight-col">1.65</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td class="weeks-col">36</td>
+                        <td class="weight-col">2.67</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td class="weeks-col">33</td>
+                        <td class="weight-col">2.18</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td class="weeks-col">36</td>
+                        <td class="weight-col">3.83</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td class="weeks-col">35</td>
+                        <td class="weight-col">2.53</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td class="weeks-col">36</td>
+                        <td class="weight-col">2.64</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td class="weeks-col">32</td>
+                        <td class="weight-col">1.06</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td class="weeks-col">34</td>
+                        <td class="weight-col">3.06</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="description">
+            <h3>What do we see?</h3>
+            <p>Each row is one premature baby. We have their gestational age (in weeks) and their birthweight (in kg).</p>
+            <p>Can we use this data to understand the relationship?</p>
+            
+            <div class="stat-highlight">
+                <div class="stat">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">babies</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">32–36</div>
+                    <div class="stat-label">weeks range</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">1.06–3.83</div>
+                    <div class="stat-label">kg range</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="slide-number">04</div>
+</body>
+</html>
+

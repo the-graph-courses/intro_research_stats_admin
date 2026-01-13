@@ -1,0 +1,395 @@
+---
+title: "Confounding and Linear Regression: The FEV Dataset"
+author: "The GRAPH Courses"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# Introduction
+
+This lesson explores one of the most important concepts in epidemiology and statistics: **confounding**. We'll use the famous FEV (Forced Expiratory Volume) dataset, which provides a classic example of Simpson's Paradox—where a statistical relationship appears to reverse when controlling for a confounding variable.
+
+## Learning Objectives
+
+By the end of this lesson, you will be able to:
+
+1. Define confounding and identify potential confounders
+2. Recognize Simpson's Paradox in real data
+3. Use regression to adjust for confounding variables
+4. Understand the difference between crude and adjusted estimates
+5. Explore interaction (effect modification) between variables
+
+# The Dataset
+
+The FEV dataset comes from a study of 654 children and adolescents (ages 3-19) in East Boston, Massachusetts, during the mid-1970s. The data was collected to examine the relationship between smoking and lung function.
+
+**Source:** Rosner, B. (1999). *Fundamentals of Biostatistics*, 5th Ed. Pacific Grove, CA: Duxbury.
+
+```{r load-packages}
+# Load required packages
+library(ggplot2)
+library(dplyr)
+library(broom)
+```
+
+```{r load-data}
+# Load the FEV dataset
+fev <- read.csv("fev.csv")
+
+# View the structure
+str(fev)
+```
+
+## Variable Descriptions
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| `Age` | Numeric | Age in years (3-19) |
+| `FEV` | Numeric | Forced Expiratory Volume in liters (lung capacity measure) |
+| `Height` | Numeric | Height in inches |
+| `Sex` | Binary | 0 = Female, 1 = Male |
+| `Smoke` | Binary | 0 = Non-smoker, 1 = Current smoker |
+
+**What is FEV?** Forced Expiratory Volume is the amount of air a person can forcefully exhale in one second. It's a key measure of lung function—higher values generally indicate healthier lungs.
+
+```{r recode-factors}
+# Create labeled factor versions for clearer plots
+fev <- fev %>%
+  mutate(
+    Sex_label = factor(Sex, levels = c(0, 1), labels = c("Female", "Male")),
+    Smoke_label = factor(Smoke, levels = c(0, 1), labels = c("Non-smoker", "Smoker"))
+  )
+
+# Quick summary
+summary(fev)
+```
+
+# Part 1: The Paradox - Descriptive Statistics
+
+Let's start with a simple question: **Is smoking associated with lung function?**
+
+Based on what we know about smoking and health, we'd expect smokers to have *worse* (lower) lung function. Let's check the data:
+
+```{r smoking-means}
+# Calculate mean FEV by smoking status
+fev %>%
+  group_by(Smoke_label) %>%
+  summarise(
+    n = n(),
+    mean_FEV = round(mean(FEV), 3),
+    sd_FEV = round(sd(FEV), 3)
+  )
+```
+
+## 🤔 Wait, What?
+
+**Smokers have HIGHER average FEV than non-smokers!**
+
+This is completely counterintuitive. Does smoking somehow *improve* lung function? Of course not!
+
+Let's visualize this surprising finding:
+
+```{r boxplot-crude}
+ggplot(fev, aes(x = Smoke_label, y = FEV, fill = Smoke_label)) +
+  geom_boxplot(alpha = 0.7) +
+  scale_fill_manual(values = c("steelblue", "coral")) +
+  labs(
+    title = "FEV by Smoking Status (Unadjusted)",
+    subtitle = "Paradoxically, smokers appear to have BETTER lung function",
+    x = "Smoking Status",
+    y = "FEV (liters)"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+This is a textbook example of **Simpson's Paradox**—a phenomenon where a trend that appears in groups of data reverses when the groups are combined.
+
+# Part 2: Investigating the Paradox
+
+To understand this paradox, we need to ask: **Who smokes in this dataset?**
+
+Remember, these are children aged 3-19. Young children don't smoke—it's primarily the older teenagers.
+
+```{r age-by-smoking}
+# Age distribution by smoking status
+fev %>%
+  group_by(Smoke_label) %>%
+  summarise(
+    n = n(),
+    mean_age = round(mean(Age), 1),
+    min_age = min(Age),
+    max_age = max(Age)
+  )
+```
+
+**Key insight:** Smokers are much older on average (about 13-14 years) compared to non-smokers (about 9 years).
+
+And who has bigger lungs? Older, bigger children!
+
+```{r age-fev-relationship}
+# Correlation between age and FEV
+cor(fev$Age, fev$FEV)
+```
+
+**Age is strongly positively correlated with FEV** (r ≈ 0.76). This makes sense—lungs grow as children grow.
+
+## The Confounding Mechanism
+
+Let's visualize the relationships:
+
+```{r scatterplot-age-fev-smoke}
+ggplot(fev, aes(x = Age, y = FEV, color = Smoke_label)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_color_manual(values = c("steelblue", "coral")) +
+  labs(
+    title = "FEV vs Age, by Smoking Status",
+    subtitle = "Smokers cluster among older children (upper right)",
+    x = "Age (years)",
+    y = "FEV (liters)",
+    color = "Smoking Status"
+  ) +
+  theme_minimal()
+```
+
+Now the picture is clearer:
+
+1. **Smokers are concentrated among older children** (upper right of the plot)
+2. **Older children have larger FEV** (regardless of smoking)
+3. **At any given age**, smokers tend to have LOWER FEV than non-smokers
+
+**Age is a confounder**—it's associated with both the exposure (smoking) and the outcome (FEV).
+
+# Part 3: Understanding Confounding
+
+## What is Confounding?
+
+A **confounder** is a variable that:
+
+1. Is associated with the exposure (smoking status)
+2. Is independently associated with the outcome (FEV)
+3. Is NOT on the causal pathway between exposure and outcome
+
+In our case:
+
+```
+       Age
+      /   \
+     ↓     ↓
+  Smoke → FEV
+```
+
+Age influences both who smokes AND lung size, creating a spurious positive association between smoking and FEV.
+
+## Why Regression Helps
+
+**Linear regression** allows us to estimate the effect of one variable while **holding other variables constant**. By including Age in our model, we can ask:
+
+> "Among children of the **same age**, what is the association between smoking and FEV?"
+
+# Part 4: Building Regression Models
+
+## Model 1: Crude (Unadjusted) Model
+
+First, let's fit a simple regression with only smoking as a predictor:
+
+```{r model-crude}
+# Crude model: FEV ~ Smoke
+model_crude <- lm(FEV ~ Smoke, data = fev)
+summary(model_crude)
+```
+
+**Interpretation:**
+
+- The coefficient for `Smoke` is **positive** (~0.71)
+- This suggests smokers have 0.71 liters higher FEV than non-smokers
+- This is statistically significant (p < 0.001)
+- But this is **misleading** due to confounding!
+
+## Model 2: Age-Adjusted Model
+
+Now let's control for age:
+
+```{r model-age-adjusted}
+# Age-adjusted model: FEV ~ Smoke + Age
+model_age <- lm(FEV ~ Smoke + Age, data = fev)
+summary(model_age)
+```
+
+**The coefficient for Smoke has FLIPPED to negative!**
+
+**Interpretation:**
+
+- After controlling for age, smoking is associated with **-0.21 liters** lower FEV
+- Comparing children of the **same age**, smokers have worse lung function
+- This is the **correct** interpretation!
+
+## Model 3: Fully Adjusted Model
+
+Let's add Height and Sex for better precision:
+
+```{r model-full}
+# Fully adjusted model
+model_full <- lm(FEV ~ Smoke + Age + Height + Sex, data = fev)
+summary(model_full)
+```
+
+**Key findings from the full model:**
+
+```{r extract-coefficients}
+# Nice table of coefficients
+tidy(model_full, conf.int = TRUE) %>%
+  mutate(across(where(is.numeric), ~round(., 4)))
+```
+
+**Interpretation:**
+
+1. **Smoke (-0.087)**: After adjusting for age, height, and sex, smokers have about 0.09 liters lower FEV. However, note this is not statistically significant at α = 0.05.
+
+2. **Age (0.066)**: Each additional year of age is associated with 0.066 liters higher FEV, holding other variables constant.
+
+3. **Height (0.104)**: Each additional inch in height is associated with 0.104 liters higher FEV—the strongest predictor.
+
+4. **Sex (0.157)**: Males have 0.157 liters higher FEV than females of the same age and height.
+
+## Comparing the Models
+
+```{r model-comparison}
+# Compare smoking coefficients across models
+comparison <- data.frame(
+  Model = c("Crude", "Age-adjusted", "Fully adjusted"),
+  Smoke_coefficient = c(
+    coef(model_crude)["Smoke"],
+    coef(model_age)["Smoke"],
+    coef(model_full)["Smoke"]
+  ),
+  R_squared = c(
+    summary(model_crude)$r.squared,
+    summary(model_age)$r.squared,
+    summary(model_full)$r.squared
+  )
+)
+
+comparison %>%
+  mutate(across(where(is.numeric), ~round(., 3)))
+```
+
+The smoking coefficient changes dramatically:
+
+- **+0.71** in crude model (confounded—wrong direction!)
+- **-0.21** in age-adjusted model (correct direction)
+- **-0.09** in fully adjusted model (attenuated due to Height absorbing some variance)
+
+This is a textbook demonstration of **negative confounding**—where confounding bias makes an effect appear in the opposite direction.
+
+# Part 5: Interaction (Effect Modification)
+
+## Does the smoking effect differ by age?
+
+Perhaps the harmful effect of smoking accumulates over time—older smokers might show more damage. Let's test for interaction:
+
+```{r model-interaction-age}
+# Interaction model: Smoke * Age
+model_interact_age <- lm(FEV ~ Smoke * Age + Height + Sex, data = fev)
+summary(model_interact_age)
+```
+
+**Interpretation of interaction:**
+
+- The `Smoke:Age` interaction term tells us if the effect of smoking changes with age
+- A negative interaction would suggest the gap between smokers and non-smokers widens with age
+
+## Visualizing the Interaction
+
+```{r interaction-plot}
+# Create predictions for visualization
+age_range <- seq(min(fev$Age), max(fev$Age), by = 0.5)
+pred_data <- expand.grid(
+  Age = age_range,
+  Smoke = c(0, 1),
+  Height = mean(fev$Height),
+  Sex = 0.5  # Average between males and females
+)
+
+pred_data$predicted_FEV <- predict(model_interact_age, newdata = pred_data)
+pred_data$Smoke_label <- factor(pred_data$Smoke, levels = c(0, 1), 
+                                 labels = c("Non-smoker", "Smoker"))
+
+ggplot(pred_data, aes(x = Age, y = predicted_FEV, color = Smoke_label)) +
+  geom_line(linewidth = 1.2) +
+  scale_color_manual(values = c("steelblue", "coral")) +
+  labs(
+    title = "Predicted FEV by Age and Smoking Status",
+    subtitle = "Interaction model: Does the smoking effect change with age?",
+    x = "Age (years)",
+    y = "Predicted FEV (liters)",
+    color = "Smoking Status"
+  ) +
+  theme_minimal()
+```
+
+## Does the smoking effect differ by sex?
+
+```{r model-interaction-sex}
+# Interaction model: Smoke * Sex
+model_interact_sex <- lm(FEV ~ Smoke * Sex + Age + Height, data = fev)
+summary(model_interact_sex)
+```
+
+# Part 6: Model Diagnostics
+
+Let's verify our main model meets the assumptions of linear regression:
+
+```{r diagnostics, fig.height=8, fig.width=8}
+par(mfrow = c(2, 2))
+plot(model_full)
+```
+
+**Assessment:**
+
+1. **Residuals vs Fitted**: Reasonable scatter, slight curve suggests possible non-linearity
+2. **Q-Q Plot**: Residuals approximately normal
+3. **Scale-Location**: Fairly constant variance
+4. **Residuals vs Leverage**: No extreme influential points
+
+# Summary
+
+## Key Takeaways
+
+1. **Simpson's Paradox is real**: Raw comparisons showed smokers with *better* lung function—a completely misleading result.
+
+2. **Confounding can reverse apparent effects**: Age was a confounder that created a spurious positive association between smoking and FEV.
+
+3. **Regression adjusts for confounding**: By including Age in the model, we revealed that smoking is actually associated with *lower* FEV.
+
+4. **The importance of thinking causally**: Before running any analysis, we should draw out our hypothesized causal relationships (DAGs) and identify potential confounders.
+
+## Clinical/Public Health Implications
+
+- Never trust unadjusted comparisons in observational data
+- Always consider what variables might confound your exposure-outcome relationship
+- Statistical adjustment via regression is a powerful tool, but it requires careful thought about the causal structure
+
+# Exercises
+
+1. **Subgroup Analysis**: Split the data into children under 10 and adolescents 10+. Does the crude association between smoking and FEV differ between groups? Why?
+
+2. **Prediction**: Using the full model, what FEV would you predict for a 15-year-old male who smokes and is 66 inches tall?
+
+3. **Model Selection**: Use `AIC()` to compare the model with and without the interaction term. Which model is preferred?
+
+4. **Methods Section Practice**: Write a 2-paragraph methods section describing the statistical analysis you would use to examine the relationship between smoking and FEV while controlling for confounders.
+
+# References
+
+Kahn, M. (2003). Data Sleuth. *STATS*, 37, 24.
+
+Rosner, B. (1999). *Fundamentals of Biostatistics*, 5th Ed. Pacific Grove, CA: Duxbury.
+
+Tager, I. B., Weiss, S. T., Rosner, B., & Speizer, F. E. (1979). Effect of parental cigarette smoking on the pulmonary function of children. *American Journal of Epidemiology*, 110(1), 15-26.
+

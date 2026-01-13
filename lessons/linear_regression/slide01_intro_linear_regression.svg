@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&amp;display=swap');
+      .title { font-family: 'Source Sans Pro', sans-serif; font-size: 48px; font-weight: 700; fill: #006D77; }
+      .subtitle { font-family: 'Source Sans Pro', sans-serif; font-size: 28px; font-weight: 400; fill: #333333; }
+      .accent-bar { fill: #FFD166; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="960" height="540" fill="#FFFFFF"/>
+  
+  <!-- Accent bar at top -->
+  <rect x="0" y="0" width="960" height="8" class="accent-bar"/>
+  
+  <!-- Decorative teal shape -->
+  <circle cx="850" cy="450" r="180" fill="#83C5BE" opacity="0.15"/>
+  <circle cx="110" cy="90" r="60" fill="#006D77" opacity="0.1"/>
+  
+  <!-- Title -->
+  <text x="480" y="200" text-anchor="middle" class="title">Linear Regression</text>
+  
+  <!-- Subtitle -->
+  <text x="480" y="280" text-anchor="middle" class="subtitle">Understanding Relationships Between Variables</text>
+  
+  <!-- Simple line illustration -->
+  <g transform="translate(380, 340)">
+    <line x1="0" y1="100" x2="200" y2="20" stroke="#006D77" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="30" cy="75" r="8" fill="#FFD166"/>
+    <circle cx="70" cy="85" r="8" fill="#FFD166"/>
+    <circle cx="100" cy="55" r="8" fill="#FFD166"/>
+    <circle cx="140" cy="45" r="8" fill="#FFD166"/>
+    <circle cx="170" cy="30" r="8" fill="#FFD166"/>
+  </g>
+  
+  <!-- Bottom accent -->
+  <rect x="0" y="532" width="960" height="8" fill="#006D77"/>
+</svg>
+

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&amp;display=swap');
+      .title { font-family: 'Source Sans Pro', sans-serif; font-size: 42px; font-weight: 700; fill: #006D77; }
+      .big { font-family: 'Source Sans Pro', sans-serif; font-size: 32px; font-weight: 700; fill: #333333; }
+      .body { font-family: 'Source Sans Pro', sans-serif; font-size: 24px; font-weight: 400; fill: #333333; }
+      .highlight { font-family: 'Source Sans Pro', sans-serif; font-size: 24px; font-weight: 600; fill: #006D77; }
+      .star { font-size: 48px; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="960" height="540" fill="#FFFFFF"/>
+  
+  <!-- Accent bar at top -->
+  <rect x="0" y="0" width="960" height="8" fill="#FFD166"/>
+  
+  <!-- Title with star -->
+  <text x="80" y="70" class="title">The Payoff: Interpreting the Slope</text>
+  <text x="770" y="80" class="star">⭐</text>
+  <rect x="80" y="90" width="500" height="4" fill="#83C5BE"/>
+  
+  <!-- Main message box -->
+  <rect x="80" y="130" width="800" height="140" fill="#006D77" rx="12"/>
+  
+  <text x="480" y="175" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 28px; font-weight: 400; fill: #FFFFFF;">The slope answers our research question</text>
+  <text x="480" y="215" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 28px; font-weight: 700; fill: #FFD166;">directly!</text>
+  
+  <!-- Key interpretation -->
+  <g transform="translate(80, 300)">
+    <rect x="0" y="0" width="800" height="100" fill="#83C5BE" opacity="0.15" rx="8"/>
+    
+    <text x="400" y="40" text-anchor="middle" class="body">For every</text>
+    <text x="400" y="75" text-anchor="middle" class="big">1-unit increase in X, Y changes by [slope] units</text>
+  </g>
+  
+  <!-- Additional note -->
+  <text x="480" y="450" text-anchor="middle" class="body">This is the</text>
+  <text x="610" y="450" class="highlight">rate of change</text>
+  <text x="780" y="450" class="body">—</text>
+  
+  <text x="480" y="490" text-anchor="middle" class="body">the steeper the slope, the stronger the relationship</text>
+  
+  <!-- Bottom accent -->
+  <rect x="0" y="532" width="960" height="8" fill="#006D77"/>
+</svg>
+

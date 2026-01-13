@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-teal: #0d7377;
+            --light-teal: #14a3a8;
+            --yellow: #f0c808;
+            --black: #1a1a1a;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 4rem;
+        }
+        
+        .slide-header {
+            margin-bottom: 2.5rem;
+        }
+        
+        .slide-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--dark-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .title-underline {
+            width: 80px;
+            height: 4px;
+            background: var(--yellow);
+            border-radius: 2px;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            max-width: 900px;
+        }
+        
+        .summary-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--gray-light);
+            border-radius: 12px;
+            border-left: 4px solid var(--light-teal);
+        }
+        
+        .summary-number {
+            width: 40px;
+            height: 40px;
+            background: var(--dark-teal);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .summary-text {
+            flex: 1;
+        }
+        
+        .summary-text h3 {
+            font-size: 1.3rem;
+            color: var(--dark-teal);
+            margin-bottom: 0.3rem;
+        }
+        
+        .summary-text p {
+            font-size: 1.1rem;
+            color: var(--black);
+            opacity: 0.85;
+            line-height: 1.5;
+        }
+        
+        .final-equation {
+            background: linear-gradient(135deg, var(--dark-teal), var(--light-teal));
+            color: var(--white);
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .final-equation .label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+            margin-bottom: 0.75rem;
+        }
+        
+        .final-equation .equation {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+        
+        .slide-number {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            font-size: 0.9rem;
+            color: var(--light-teal);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-header">
+        <h1 class="slide-title">What We've Learned</h1>
+        <div class="title-underline"></div>
+    </div>
+    
+    <div class="content">
+        <div class="summary-item">
+            <div class="summary-number">1</div>
+            <div class="summary-text">
+                <h3>Linear regression summarizes relationships</h3>
+                <p>A line through the data captures how two continuous variables relate</p>
+            </div>
+        </div>
+        
+        <div class="summary-item">
+            <div class="summary-number">2</div>
+            <div class="summary-text">
+                <h3>Two numbers define a line</h3>
+                <p>The slope (steepness) and intercept (starting point)</p>
+            </div>
+        </div>
+        
+        <div class="summary-item">
+            <div class="summary-number">3</div>
+            <div class="summary-text">
+                <h3>The slope answers our question</h3>
+                <p>"For each 1-unit increase in X, Y changes by [slope] units, on average"</p>
+            </div>
+        </div>
+        
+        <div class="final-equation">
+            <div class="label">Our Example</div>
+            <div class="equation">+1 week → +0.39 kg birthweight</div>
+        </div>
+    </div>
+    
+    <div class="slide-number">17</div>
+</body>
+</html>
+

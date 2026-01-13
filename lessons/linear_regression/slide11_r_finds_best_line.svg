@@ -1,0 +1,66 @@
+<svg width="960" height="540" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <defs>
+  <style>@import url(&#x27;https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&amp;display=swap&#x27;);
+      @import url(&#x27;https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&amp;display=swap&#x27;);
+      .title { font-family: &#x27;Source Sans Pro&#x27;, sans-serif; font-size: 42px; font-weight: 700; fill: #006D77; }
+      .body { font-family: &#x27;Source Sans Pro&#x27;, sans-serif; font-size: 22px; font-weight: 400; fill: #333333; }
+      .code { font-family: &#x27;Fira Code&#x27;, monospace; font-size: 18px; fill: #333333; }
+      .code-comment { font-family: &#x27;Fira Code&#x27;, monospace; font-size: 16px; fill: #888888; }
+      .label { font-family: &#x27;Source Sans Pro&#x27;, sans-serif; font-size: 18px; font-weight: 600; fill: #006D77; }</style>
+ </defs>
+ <!-- Background -->
+ <!-- Accent bar at top -->
+ <!-- Title -->
+ <!-- Code block -->
+ <!-- Results box -->
+ <!-- Bottom note -->
+ <!-- Bottom accent -->
+ <g class="layer">
+  <title>Layer 1</title>
+  <rect fill="#FFFFFF" height="540" id="svg_1" width="960"/>
+  <rect fill="#FFD166" height="8" id="svg_2" width="960" x="0" y="0"/>
+  <text class="title" id="svg_3" x="80" y="60">R Finds the Best Line For Us</text>
+  <rect fill="#83C5BE" height="4" id="svg_4" width="400" x="80" y="75"/>
+  <g id="svg_5" transform="translate(80, 100)">
+   <rect fill="#1E1E1E" height="160" id="svg_6" rx="8" width="800" x="0" y="0"/>
+   <!-- Code -->
+   <text class="code-comment" fill="#6A9955" id="svg_7" x="20" y="35"># Fit a linear regression model</text>
+   <text class="code" fill="#9CDCFE" id="svg_8" x="20" y="65">model</text>
+   <text class="code" fill="#FFFFFF" id="svg_9" x="75" y="65">&lt;-</text>
+   <text class="code" fill="#DCDCAA" id="svg_10" x="115" y="65">lm</text>
+   <text class="code" fill="#FFFFFF" id="svg_11" x="140" y="65">(</text>
+   <text class="code" fill="#9CDCFE" id="svg_12" x="150" y="65">weight_kg</text>
+   <text class="code" fill="#FFFFFF" id="svg_13" x="250" y="65">~</text>
+   <text class="code" fill="#9CDCFE" id="svg_14" x="275" y="65">weeks</text>
+   <text class="code" fill="#FFFFFF" id="svg_15" x="330" y="65">,</text>
+   <text class="code" fill="#9CDCFE" id="svg_16" x="345" y="65">data</text>
+   <text class="code" fill="#FFFFFF" id="svg_17" x="385" y="65">=</text>
+   <text class="code" fill="#9CDCFE" id="svg_18" x="405" y="65">babies</text>
+   <text class="code" fill="#FFFFFF" id="svg_19" x="460" y="65">)</text>
+   <text class="code-comment" fill="#6A9955" id="svg_20" x="20" y="105"># View the results</text>
+   <text class="code" fill="#DCDCAA" id="svg_21" x="20" y="135">summary</text>
+   <text class="code" fill="#FFFFFF" id="svg_22" x="95" y="135">(</text>
+   <text class="code" fill="#9CDCFE" id="svg_23" x="105" y="135">model</text>
+   <text class="code" fill="#FFFFFF" id="svg_24" x="160" y="135">)</text>
+  </g>
+  <g id="svg_25" transform="translate(80, 280)">
+   <text class="label" id="svg_26" x="0" y="0">R gives us:</text>
+   <rect fill="#83C5BE" height="100" id="svg_27" opacity="0.15" rx="8" width="380" x="0" y="20"/>
+   <text class="body" id="svg_28" text-anchor="middle" x="190" y="55">Intercept = -10.78</text>
+   <text class="body" id="svg_29" text-anchor="middle" x="190" y="95">Slope = 0.386</text>
+   <!-- Arrow -->
+   <path d="m400,70l50,0" fill="none" id="svg_30" marker-end="url(#arrowhead)" stroke="#006D77" stroke-width="3"/>
+   <defs>
+    <marker id="arrowhead" markerHeight="7" markerWidth="10" orient="auto" refX="9" refY="3.5">
+     <polygon fill="#006D77" id="svg_31" points="0 0, 10 3.5, 0 7"/>
+    </marker>
+   </defs>
+   <rect fill="#FFD166" height="100" id="svg_32" opacity="0.2" rx="8" width="380" x="470" y="20"/>
+   <text fill="#333333" font-family="&#x27;Source Sans Pro&#x27;, sans-serif" font-size="20px" font-weight="600" id="svg_33" text-anchor="middle" x="660" y="55">weight = -10.78 + 0.386 × weeks</text>
+   <text class="body" id="svg_34" text-anchor="middle" x="660" y="95">Our prediction equation!</text>
+  </g>
+  <rect fill="#006D77" height="70" id="svg_35" opacity="0.08" rx="8" width="800" x="80" y="420"/>
+  <text class="body" id="svg_36" text-anchor="middle" x="480" y="465">This line minimizes squared prediction errors automatically</text>
+  <rect fill="#006D77" height="8" id="svg_37" width="960" x="0" y="532"/>
+ </g>
+</svg>

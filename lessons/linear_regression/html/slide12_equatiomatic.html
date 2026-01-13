@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The equatiomatic Package</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-teal: #0d7377;
+            --light-teal: #14a3a8;
+            --yellow: #f0c808;
+            --black: #1a1a1a;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 4rem;
+        }
+        
+        .slide-header {
+            margin-bottom: 2rem;
+        }
+        
+        .slide-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--dark-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .title-underline {
+            width: 80px;
+            height: 4px;
+            background: var(--yellow);
+            border-radius: 2px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--light-teal);
+            margin-top: 0.5rem;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .intro-text {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            max-width: 800px;
+        }
+        
+        .code-section {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .code-block {
+            flex: 1;
+            background: #1e1e1e;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .code-header {
+            background: #333;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.85rem;
+            color: #999;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        .code-content {
+            padding: 1.25rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #d4d4d4;
+        }
+        
+        .code-content .comment {
+            color: #6a9955;
+        }
+        
+        .code-content .function {
+            color: #dcdcaa;
+        }
+        
+        .code-content .string {
+            color: #ce9178;
+        }
+        
+        .code-content .keyword {
+            color: #569cd6;
+        }
+        
+        .output-section {
+            flex: 1;
+        }
+        
+        .output-block {
+            background: var(--gray-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--light-teal);
+        }
+        
+        .output-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--light-teal);
+            margin-bottom: 1rem;
+        }
+        
+        .equation-output {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            color: var(--black);
+            background: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .equation-output-coef {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--black);
+            background: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+        }
+        
+        .tip-box {
+            background: linear-gradient(135deg, var(--dark-teal), var(--light-teal));
+            color: var(--white);
+            padding: 1.25rem 2rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            max-width: 700px;
+        }
+        
+        .tip-icon {
+            font-size: 1.5rem;
+        }
+        
+        .tip-text {
+            font-size: 1.1rem;
+        }
+        
+        .slide-number {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            font-size: 0.9rem;
+            color: var(--light-teal);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-header">
+        <h1 class="slide-title">The "Pretty" Way: equatiomatic</h1>
+        <div class="title-underline"></div>
+        <p class="subtitle">Let R write your equations for you</p>
+    </div>
+    
+    <div class="content">
+        <p class="intro-text">
+            The <strong>equatiomatic</strong> package generates beautiful LaTeX or Markdown equations from your model—perfect for reports!
+        </p>
+        
+        <div class="code-section">
+            <div class="code-block">
+                <div class="code-header">R</div>
+                <div class="code-content">
+                    <span class="comment"># Install if needed</span><br>
+                    <span class="function">install.packages</span>(<span class="string">"equatiomatic"</span>)<br><br>
+                    <span class="keyword">library</span>(equatiomatic)<br><br>
+                    <span class="comment"># Get the symbolic equation</span><br>
+                    <span class="function">extract_eq</span>(model)<br><br>
+                    <span class="comment"># Get equation with actual coefficients</span><br>
+                    <span class="function">extract_eq</span>(model, use_coefs = <span class="keyword">TRUE</span>)
+                </div>
+            </div>
+            
+            <div class="output-section">
+                <div class="output-block">
+                    <div class="output-label">Output: Symbolic</div>
+                    <div class="equation-output">
+                        weight = α + β₁(weeks) + ε
+                    </div>
+                    
+                    <div class="output-label">Output: With Coefficients</div>
+                    <div class="equation-output-coef">
+                        weight = -10.78 + 0.39(weeks)
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tip-box">
+            <span class="tip-icon">💡</span>
+            <span class="tip-text">The output is LaTeX code—paste it into your Quarto/RMarkdown document for beautifully formatted equations!</span>
+        </div>
+    </div>
+    
+    <div class="slide-number">12</div>
+</body>
+</html>
+

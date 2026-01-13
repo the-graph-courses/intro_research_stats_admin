@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&amp;display=swap');
+      .title { font-family: 'Source Sans Pro', sans-serif; font-size: 42px; font-weight: 700; fill: #006D77; }
+      .subtitle { font-family: 'Source Sans Pro', sans-serif; font-size: 28px; font-weight: 600; fill: #333333; }
+      .body { font-family: 'Source Sans Pro', sans-serif; font-size: 24px; font-weight: 400; fill: #333333; }
+      .highlight { font-family: 'Source Sans Pro', sans-serif; font-size: 24px; font-weight: 600; fill: #006D77; }
+      .demo-text { font-family: 'Source Sans Pro', sans-serif; font-size: 32px; font-weight: 700; fill: #FFFFFF; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="960" height="540" fill="#FFFFFF"/>
+  
+  <!-- Accent bar at top -->
+  <rect x="0" y="0" width="960" height="8" fill="#FFD166"/>
+  
+  <!-- Title -->
+  <text x="480" y="80" text-anchor="middle" class="title">Let's Try It Manually!</text>
+  <rect x="290" y="95" width="380" height="4" fill="#83C5BE"/>
+  
+  <!-- Demo box -->
+  <rect x="180" y="150" width="600" height="120" fill="#006D77" rx="12"/>
+  <text x="480" y="200" text-anchor="middle" class="demo-text">🖥️  DESMOS DEMO</text>
+  <text x="480" y="245" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 20px; fill: #83C5BE;">Interactive demonstration</text>
+  
+  <!-- Content -->
+  <text x="480" y="330" text-anchor="middle" class="subtitle">What did we discover?</text>
+  
+  <g transform="translate(180, 360)">
+    <rect x="0" y="0" width="600" height="90" fill="#83C5BE" opacity="0.15" rx="8"/>
+    <text x="300" y="35" text-anchor="middle" class="body">To position a straight line, we need</text>
+    <text x="300" y="70" text-anchor="middle" class="highlight">exactly TWO numbers!</text>
+  </g>
+  
+  <!-- Two cards -->
+  <g transform="translate(220, 470)">
+    <rect x="0" y="0" width="200" height="50" fill="#FFD166" rx="6"/>
+    <text x="100" y="32" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 22px; font-weight: 600; fill: #333333;">Slope</text>
+  </g>
+  
+  <g transform="translate(540, 470)">
+    <rect x="0" y="0" width="200" height="50" fill="#FFD166" rx="6"/>
+    <text x="100" y="32" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 22px; font-weight: 600; fill: #333333;">Intercept</text>
+  </g>
+  
+  <!-- Bottom accent -->
+  <rect x="0" y="532" width="960" height="8" fill="#006D77"/>
+</svg>
+

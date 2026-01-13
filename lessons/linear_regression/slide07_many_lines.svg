@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&amp;display=swap');
+      .title { font-family: 'Source Sans Pro', sans-serif; font-size: 42px; font-weight: 700; fill: #006D77; }
+      .body { font-family: 'Source Sans Pro', sans-serif; font-size: 24px; font-weight: 400; fill: #333333; }
+      .tick-label { font-family: 'Source Sans Pro', sans-serif; font-size: 14px; font-weight: 400; fill: #666666; }
+      .question { font-family: 'Source Sans Pro', sans-serif; font-size: 28px; font-weight: 600; fill: #006D77; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="960" height="540" fill="#FFFFFF"/>
+  
+  <!-- Accent bar at top -->
+  <rect x="0" y="0" width="960" height="8" fill="#FFD166"/>
+  
+  <!-- Title -->
+  <text x="80" y="60" class="title">Many Possible Lines</text>
+  <rect x="80" y="75" width="280" height="4" fill="#83C5BE"/>
+  
+  <!-- Plot area -->
+  <g transform="translate(150, 110)">
+    <!-- Plot background -->
+    <rect x="0" y="0" width="400" height="280" fill="#FAFAFA" stroke="#DDDDDD" stroke-width="1"/>
+    
+    <!-- Many different lines (various slopes and intercepts) -->
+    <line x1="0" y1="200" x2="400" y2="150" stroke="#AAAAAA" stroke-width="2" opacity="0.5"/>
+    <line x1="0" y1="250" x2="400" y2="80" stroke="#AAAAAA" stroke-width="2" opacity="0.5"/>
+    <line x1="0" y1="280" x2="400" y2="60" stroke="#AAAAAA" stroke-width="2" opacity="0.5"/>
+    <line x1="0" y1="180" x2="400" y2="120" stroke="#AAAAAA" stroke-width="2" opacity="0.5"/>
+    <line x1="0" y1="220" x2="400" y2="40" stroke="#AAAAAA" stroke-width="2" opacity="0.5"/>
+    
+    <!-- The "best" line highlighted -->
+    <line x1="0" y1="231" x2="400" y2="96" stroke="#006D77" stroke-width="4" stroke-linecap="round"/>
+    
+    <!-- Data points -->
+    <circle cx="80" cy="199" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    <circle cx="400" cy="128" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    <circle cx="160" cy="162" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    <circle cx="400" cy="47" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    <circle cx="320" cy="138" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    <circle cx="400" cy="130" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    <circle cx="80" cy="241" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    <circle cx="240" cy="101" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    
+    <!-- Axes -->
+    <line x1="0" y1="280" x2="400" y2="280" stroke="#333333" stroke-width="2"/>
+    <line x1="0" y1="0" x2="0" y2="280" stroke="#333333" stroke-width="2"/>
+  </g>
+  
+  <!-- Text content -->
+  <g transform="translate(620, 150)">
+    <text x="0" y="0" class="body">We could draw</text>
+    <text x="0" y="35" class="body">infinitely many lines</text>
+    <text x="0" y="70" class="body">through this data...</text>
+    
+    <text x="0" y="140" class="question">Which one is</text>
+    <text x="0" y="175" class="question">"best"?</text>
+    
+    <text x="0" y="240" class="body">Let's try it out</text>
+    <text x="0" y="275" class="body">manually first!</text>
+  </g>
+  
+  <!-- Bottom accent -->
+  <rect x="0" y="532" width="960" height="8" fill="#006D77"/>
+</svg>
+

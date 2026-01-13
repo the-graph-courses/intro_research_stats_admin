@@ -1,0 +1,51 @@
+<svg width="960" height="540" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <defs>
+  <style>@import url(&#x27;https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&amp;display=swap&#x27;);
+      .title { font-family: &#x27;Source Sans Pro&#x27;, sans-serif; font-size: 42px; font-weight: 700; fill: #006D77; }
+      .body { font-family: &#x27;Source Sans Pro&#x27;, sans-serif; font-size: 22px; font-weight: 400; fill: #333333; }
+      .label { font-family: &#x27;Source Sans Pro&#x27;, sans-serif; font-size: 24px; font-weight: 700; fill: #006D77; }
+      .annotation { font-family: &#x27;Source Sans Pro&#x27;, sans-serif; font-size: 18px; font-weight: 400; fill: #666666; }
+      .math { font-family: &#x27;Source Sans Pro&#x27;, sans-serif; font-size: 20px; font-weight: 600; fill: #333333; }</style>
+ </defs>
+ <!-- Background -->
+ <!-- Accent bar at top -->
+ <!-- Title -->
+ <!-- Left side: Slope explanation with visual -->
+ <!-- Right side: Intercept explanation with visual -->
+ <!-- Bottom equation -->
+ <!-- Summary -->
+ <!-- Bottom accent -->
+ <g class="layer">
+  <title>Layer 1</title>
+  <rect fill="#FFFFFF" height="540" id="svg_1" width="960">y value when x = 0</rect>
+  <rect fill="#FFD166" height="8" id="svg_2" width="960" x="0" y="0"/>
+  <text class="title" id="svg_3" x="80" y="60">Slope &amp; Intercept</text>
+  <rect fill="#83C5BE" height="4" id="svg_4" width="260" x="80" y="75"/>
+  <g id="svg_5" transform="translate(60, 110)">
+   <rect fill="#83C5BE" height="200" id="svg_6" opacity="0.1" rx="8" width="400" x="0" y="0"/>
+   <text class="label" id="svg_7" text-anchor="middle" x="200" y="35">SLOPE</text>
+   <text class="body" id="svg_8" text-anchor="middle" x="200" y="65">How steep is the line?</text>
+   <!-- Mini graph showing slope -->
+   <g id="svg_9" transform="translate(100, 85)">
+    <line id="svg_10" stroke="#CCCCCC" x1="0" x2="200" y1="100" y2="100"/>
+    <line id="svg_11" stroke="#CCCCCC" x1="0" x2="0" y1="0" y2="100"/>
+    <!-- Line -->
+    <line id="svg_12" stroke="#006D77" stroke-width="3" x1="20" x2="180" y1="80" y2="20"/>
+    <!-- Rise/Run annotation -->
+    <line id="svg_13" stroke="#FFD166" stroke-dasharray="4" stroke-width="2" x1="100" x2="100" y1="50" y2="80"/>
+    <line id="svg_14" stroke="#FFD166" stroke-dasharray="4" stroke-width="2" x1="100" x2="20" y1="80" y2="80"/>
+    <text class="annotation" id="svg_15" text-anchor="middle" x="60" y="95">run</text>
+    <text class="annotation" id="svg_16" text-anchor="start" x="115" y="68">rise</text>
+   </g>
+   <text class="math" id="svg_17" text-anchor="middle" transform="translate(0 20) matrix(1 0 0 1 0 0)" x="200" y="195">slope = rise / run</text>
+  </g>
+  <g id="svg_18" transform="translate(500, 110)">y value when x = 0</g>
+  <g id="svg_29" transform="translate(80, 340)">
+   <rect fill="#006D77" height="100" id="svg_30" opacity="0.08" rx="8" width="800" x="0" y="0"/>
+   <text class="label" id="svg_31" text-anchor="middle" x="400" y="40">The Equation of a Line</text>
+   <text fill="#006D77" font-family="&#x27;Source Sans Pro&#x27;, sans-serif" font-size="32px" font-weight="600" id="svg_32" text-anchor="middle" x="400" y="80">y = intercept + slope × x</text>
+  </g>
+  <text class="body" id="svg_33" text-anchor="middle" x="480" y="490">These two numbers completely define any straight line!</text>
+  <rect fill="#006D77" height="8" id="svg_34" width="960" x="0" y="532"/>
+ </g>
+</svg>

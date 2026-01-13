@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Many Possible Lines</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-teal: #0d7377;
+            --light-teal: #14a3a8;
+            --yellow: #f0c808;
+            --black: #1a1a1a;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 4rem;
+        }
+        
+        .slide-header {
+            margin-bottom: 2rem;
+        }
+        
+        .slide-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--dark-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .title-underline {
+            width: 80px;
+            height: 4px;
+            background: var(--yellow);
+            border-radius: 2px;
+        }
+        
+        .content {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .chart-container {
+            flex: 1.2;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.08);
+            padding: 2rem;
+        }
+        
+        #multiline {
+            width: 100%;
+            height: 400px;
+        }
+        
+        .explanation {
+            flex: 0.8;
+        }
+        
+        .explanation h3 {
+            font-size: 1.6rem;
+            color: var(--dark-teal);
+            margin-bottom: 1.5rem;
+        }
+        
+        .explanation p {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: var(--black);
+            margin-bottom: 1.5rem;
+        }
+        
+        .question-box {
+            background: linear-gradient(135deg, var(--dark-teal), var(--light-teal));
+            color: var(--white);
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .slide-number {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            font-size: 0.9rem;
+            color: var(--light-teal);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-header">
+        <h1 class="slide-title">Many Possible Lines</h1>
+        <div class="title-underline"></div>
+    </div>
+    
+    <div class="content">
+        <div class="chart-container">
+            <svg id="multiline"></svg>
+        </div>
+        
+        <div class="explanation">
+            <h3>Which line is "best"?</h3>
+            <p>We could draw infinitely many lines through this cloud of points.</p>
+            <p>Some clearly fit better than others. But how do we find the <strong>optimal</strong> line?</p>
+            <div class="question-box">
+                We need a method to choose!
+            </div>
+        </div>
+    </div>
+    
+    <div class="slide-number">09</div>
+    
+    <script>
+        const dataPoints = [
+            { weeks: 32, weight_kg: 1.65 },
+            { weeks: 36, weight_kg: 2.67 },
+            { weeks: 33, weight_kg: 2.18 },
+            { weeks: 36, weight_kg: 3.83 },
+            { weeks: 35, weight_kg: 2.53 },
+            { weeks: 36, weight_kg: 2.64 },
+            { weeks: 32, weight_kg: 1.06 },
+            { weeks: 34, weight_kg: 3.06 }
+        ];
+        
+        // Different possible lines (intercept, slope)
+        const possibleLines = [
+            { intercept: -8, slope: 0.3, color: '#ccc', width: 1.5 },
+            { intercept: -12, slope: 0.42, color: '#ccc', width: 1.5 },
+            { intercept: -6, slope: 0.25, color: '#ccc', width: 1.5 },
+            { intercept: -10.7788, slope: 0.3863, color: '#0d7377', width: 3 } // The best fit
+        ];
+        
+        const svg = document.getElementById('multiline');
+        const width = 600;
+        const height = 400;
+        const margin = { top: 20, right: 30, bottom: 50, left: 60 };
+        const plotWidth = width - margin.left - margin.right;
+        const plotHeight = height - margin.top - margin.bottom;
+        
+        svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+        
+        const xMin = 31, xMax = 37;
+        const yMin = 0.5, yMax = 4.2;
+        
+        const xScale = (x) => margin.left + ((x - xMin) / (xMax - xMin)) * plotWidth;
+        const yScale = (y) => margin.top + plotHeight - ((y - yMin) / (yMax - yMin)) * plotHeight;
+        
+        // Grid
+        for (let x = 32; x <= 36; x++) {
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', xScale(x));
+            line.setAttribute('x2', xScale(x));
+            line.setAttribute('y1', margin.top);
+            line.setAttribute('y2', margin.top + plotHeight);
+            line.setAttribute('stroke', '#f0f0f0');
+            svg.appendChild(line);
+        }
+        
+        for (let y = 1; y <= 4; y++) {
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', margin.left);
+            line.setAttribute('x2', margin.left + plotWidth);
+            line.setAttribute('y1', yScale(y));
+            line.setAttribute('y2', yScale(y));
+            line.setAttribute('stroke', '#f0f0f0');
+            svg.appendChild(line);
+        }
+        
+        // Axes
+        const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        xAxis.setAttribute('x1', margin.left);
+        xAxis.setAttribute('x2', margin.left + plotWidth);
+        xAxis.setAttribute('y1', margin.top + plotHeight);
+        xAxis.setAttribute('y2', margin.top + plotHeight);
+        xAxis.setAttribute('stroke', '#1a1a1a');
+        xAxis.setAttribute('stroke-width', '2');
+        svg.appendChild(xAxis);
+        
+        const yAxisLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        yAxisLine.setAttribute('x1', margin.left);
+        yAxisLine.setAttribute('x2', margin.left);
+        yAxisLine.setAttribute('y1', margin.top);
+        yAxisLine.setAttribute('y2', margin.top + plotHeight);
+        yAxisLine.setAttribute('stroke', '#1a1a1a');
+        yAxisLine.setAttribute('stroke-width', '2');
+        svg.appendChild(yAxisLine);
+        
+        // Axis labels
+        for (let x = 32; x <= 36; x++) {
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', xScale(x));
+            text.setAttribute('y', margin.top + plotHeight + 25);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('font-size', '13');
+            text.textContent = x;
+            svg.appendChild(text);
+        }
+        
+        const xTitle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        xTitle.setAttribute('x', margin.left + plotWidth / 2);
+        xTitle.setAttribute('y', margin.top + plotHeight + 45);
+        xTitle.setAttribute('text-anchor', 'middle');
+        xTitle.setAttribute('font-size', '14');
+        xTitle.setAttribute('font-weight', '600');
+        xTitle.setAttribute('fill', '#0d7377');
+        xTitle.textContent = 'Gestational Weeks';
+        svg.appendChild(xTitle);
+        
+        for (let y = 1; y <= 4; y++) {
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', margin.left - 12);
+            text.setAttribute('y', yScale(y) + 4);
+            text.setAttribute('text-anchor', 'end');
+            text.setAttribute('font-size', '13');
+            text.textContent = y;
+            svg.appendChild(text);
+        }
+        
+        const yTitle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        yTitle.setAttribute('x', -(margin.top + plotHeight / 2));
+        yTitle.setAttribute('y', 18);
+        yTitle.setAttribute('text-anchor', 'middle');
+        yTitle.setAttribute('font-size', '14');
+        yTitle.setAttribute('font-weight', '600');
+        yTitle.setAttribute('fill', '#0d7377');
+        yTitle.setAttribute('transform', 'rotate(-90)');
+        yTitle.textContent = 'Birthweight (kg)';
+        svg.appendChild(yTitle);
+        
+        // Draw lines
+        possibleLines.forEach((lineData, index) => {
+            const y1 = lineData.intercept + lineData.slope * xMin;
+            const y2 = lineData.intercept + lineData.slope * xMax;
+            
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', xScale(xMin));
+            line.setAttribute('x2', xScale(xMax));
+            line.setAttribute('y1', yScale(y1));
+            line.setAttribute('y2', yScale(y2));
+            line.setAttribute('stroke', lineData.color);
+            line.setAttribute('stroke-width', lineData.width);
+            
+            if (index === possibleLines.length - 1) {
+                line.setAttribute('stroke-dasharray', '0');
+            } else {
+                line.setAttribute('stroke-dasharray', '8,4');
+            }
+            
+            svg.appendChild(line);
+        });
+        
+        // Data points (on top)
+        dataPoints.forEach((point) => {
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', xScale(point.weeks));
+            circle.setAttribute('cy', yScale(point.weight_kg));
+            circle.setAttribute('r', '8');
+            circle.setAttribute('fill', '#14a3a8');
+            circle.setAttribute('stroke', '#0d7377');
+            circle.setAttribute('stroke-width', '2');
+            svg.appendChild(circle);
+        });
+    </script>
+</body>
+</html>
+

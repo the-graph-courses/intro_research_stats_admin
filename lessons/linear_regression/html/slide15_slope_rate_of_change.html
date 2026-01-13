@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slope as Rate of Change</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-teal: #0d7377;
+            --light-teal: #14a3a8;
+            --yellow: #f0c808;
+            --black: #1a1a1a;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 4rem;
+        }
+        
+        .slide-header {
+            margin-bottom: 2.5rem;
+        }
+        
+        .slide-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--dark-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .title-underline {
+            width: 80px;
+            height: 4px;
+            background: var(--yellow);
+            border-radius: 2px;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+        
+        .main-point {
+            font-size: 1.6rem;
+            line-height: 1.6;
+            max-width: 800px;
+        }
+        
+        .main-point .highlight {
+            color: var(--dark-teal);
+            font-weight: 600;
+        }
+        
+        .comparison {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .comparison-chart {
+            flex: 1;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            padding: 1.5rem;
+        }
+        
+        .comparison-chart h3 {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--dark-teal);
+            margin-bottom: 1rem;
+        }
+        
+        .comparison-chart svg {
+            width: 100%;
+            height: 220px;
+        }
+        
+        .takeaway {
+            background: var(--gray-light);
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            border-left: 5px solid var(--dark-teal);
+            max-width: 700px;
+        }
+        
+        .takeaway p {
+            font-size: 1.25rem;
+            line-height: 1.5;
+        }
+        
+        .takeaway strong {
+            color: var(--dark-teal);
+        }
+        
+        .slide-number {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            font-size: 0.9rem;
+            color: var(--light-teal);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-header">
+        <h1 class="slide-title">The Slope Is a Rate of Change</h1>
+        <div class="title-underline"></div>
+    </div>
+    
+    <div class="content">
+        <p class="main-point">
+            The <span class="highlight">steeper the slope</span>, the <span class="highlight">stronger the relationship</span>. 
+            A steeper line means Y changes more dramatically as X changes.
+        </p>
+        
+        <div class="comparison">
+            <div class="comparison-chart">
+                <h3>Steep Slope (Strong Effect)</h3>
+                <svg id="steep"></svg>
+            </div>
+            <div class="comparison-chart">
+                <h3>Gentle Slope (Weak Effect)</h3>
+                <svg id="gentle"></svg>
+            </div>
+        </div>
+        
+        <div class="takeaway">
+            <p><strong>Our slope of 0.39</strong> tells us the relationship is moderately strong—each extra week adds almost 400g of weight!</p>
+        </div>
+    </div>
+    
+    <div class="slide-number">15</div>
+    
+    <script>
+        function drawComparisonChart(svgId, slope, points) {
+            const svg = document.getElementById(svgId);
+            const width = 280;
+            const height = 220;
+            const margin = { top: 15, right: 15, bottom: 35, left: 40 };
+            const plotWidth = width - margin.left - margin.right;
+            const plotHeight = height - margin.top - margin.bottom;
+            
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+            
+            const xMin = 0, xMax = 10;
+            const yMin = 0, yMax = 10;
+            
+            const xScale = (x) => margin.left + ((x - xMin) / (xMax - xMin)) * plotWidth;
+            const yScale = (y) => margin.top + plotHeight - ((y - yMin) / (yMax - yMin)) * plotHeight;
+            
+            // Grid
+            for (let i = 0; i <= 10; i += 2) {
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', xScale(i));
+                line.setAttribute('x2', xScale(i));
+                line.setAttribute('y1', margin.top);
+                line.setAttribute('y2', margin.top + plotHeight);
+                line.setAttribute('stroke', '#f0f0f0');
+                svg.appendChild(line);
+                
+                const hLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                hLine.setAttribute('x1', margin.left);
+                hLine.setAttribute('x2', margin.left + plotWidth);
+                hLine.setAttribute('y1', yScale(i));
+                hLine.setAttribute('y2', yScale(i));
+                hLine.setAttribute('stroke', '#f0f0f0');
+                svg.appendChild(hLine);
+            }
+            
+            // Axes
+            const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            xAxis.setAttribute('x1', margin.left);
+            xAxis.setAttribute('x2', margin.left + plotWidth);
+            xAxis.setAttribute('y1', margin.top + plotHeight);
+            xAxis.setAttribute('y2', margin.top + plotHeight);
+            xAxis.setAttribute('stroke', '#1a1a1a');
+            xAxis.setAttribute('stroke-width', '2');
+            svg.appendChild(xAxis);
+            
+            const yAxisLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            yAxisLine.setAttribute('x1', margin.left);
+            yAxisLine.setAttribute('x2', margin.left);
+            yAxisLine.setAttribute('y1', margin.top);
+            yAxisLine.setAttribute('y2', margin.top + plotHeight);
+            yAxisLine.setAttribute('stroke', '#1a1a1a');
+            yAxisLine.setAttribute('stroke-width', '2');
+            svg.appendChild(yAxisLine);
+            
+            // Axis labels
+            const xLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            xLabel.setAttribute('x', margin.left + plotWidth / 2);
+            xLabel.setAttribute('y', height - 8);
+            xLabel.setAttribute('text-anchor', 'middle');
+            xLabel.setAttribute('font-size', '12');
+            xLabel.setAttribute('fill', '#666');
+            xLabel.textContent = 'X';
+            svg.appendChild(xLabel);
+            
+            const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            yLabel.setAttribute('x', 12);
+            yLabel.setAttribute('y', margin.top + plotHeight / 2);
+            yLabel.setAttribute('text-anchor', 'middle');
+            yLabel.setAttribute('font-size', '12');
+            yLabel.setAttribute('fill', '#666');
+            yLabel.setAttribute('transform', `rotate(-90, 12, ${margin.top + plotHeight / 2})`);
+            yLabel.textContent = 'Y';
+            svg.appendChild(yLabel);
+            
+            // Regression line
+            const intercept = 1;
+            const y1 = intercept + slope * xMin;
+            const y2 = intercept + slope * xMax;
+            
+            const regLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            regLine.setAttribute('x1', xScale(xMin));
+            regLine.setAttribute('x2', xScale(xMax));
+            regLine.setAttribute('y1', yScale(Math.max(0, Math.min(10, y1))));
+            regLine.setAttribute('y2', yScale(Math.max(0, Math.min(10, y2))));
+            regLine.setAttribute('stroke', '#0d7377');
+            regLine.setAttribute('stroke-width', '3');
+            svg.appendChild(regLine);
+            
+            // Points
+            points.forEach(p => {
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', xScale(p.x));
+                circle.setAttribute('cy', yScale(p.y));
+                circle.setAttribute('r', '5');
+                circle.setAttribute('fill', '#14a3a8');
+                circle.setAttribute('stroke', '#0d7377');
+                circle.setAttribute('stroke-width', '1.5');
+                svg.appendChild(circle);
+            });
+        }
+        
+        // Steep slope points
+        const steepPoints = [
+            { x: 1, y: 2 }, { x: 2, y: 2.8 }, { x: 3, y: 3.5 },
+            { x: 4, y: 4.5 }, { x: 5, y: 5 }, { x: 6, y: 5.8 },
+            { x: 7, y: 6.5 }, { x: 8, y: 7.2 }, { x: 9, y: 8.5 }
+        ];
+        
+        // Gentle slope points
+        const gentlePoints = [
+            { x: 1, y: 2.5 }, { x: 2, y: 3 }, { x: 3, y: 2.8 },
+            { x: 4, y: 3.5 }, { x: 5, y: 3.2 }, { x: 6, y: 3.8 },
+            { x: 7, y: 3.5 }, { x: 8, y: 4 }, { x: 9, y: 3.8 }
+        ];
+        
+        drawComparisonChart('steep', 0.8, steepPoints);
+        drawComparisonChart('gentle', 0.15, gentlePoints);
+    </script>
+</body>
+</html>
+

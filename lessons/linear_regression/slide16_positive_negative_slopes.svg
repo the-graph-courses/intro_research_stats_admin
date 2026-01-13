@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&amp;display=swap');
+      .title { font-family: 'Source Sans Pro', sans-serif; font-size: 42px; font-weight: 700; fill: #006D77; }
+      .subtitle { font-family: 'Source Sans Pro', sans-serif; font-size: 24px; font-weight: 600; fill: #333333; }
+      .body { font-family: 'Source Sans Pro', sans-serif; font-size: 18px; font-weight: 400; fill: #333333; }
+      .positive { font-family: 'Source Sans Pro', sans-serif; font-size: 22px; font-weight: 700; fill: #2E7D32; }
+      .negative { font-family: 'Source Sans Pro', sans-serif; font-size: 22px; font-weight: 700; fill: #C62828; }
+      .zero { font-family: 'Source Sans Pro', sans-serif; font-size: 22px; font-weight: 700; fill: #666666; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="960" height="540" fill="#FFFFFF"/>
+  
+  <!-- Accent bar at top -->
+  <rect x="0" y="0" width="960" height="8" fill="#FFD166"/>
+  
+  <!-- Title -->
+  <text x="80" y="60" class="title">Positive vs Negative Slopes</text>
+  <rect x="80" y="75" width="400" height="4" fill="#83C5BE"/>
+  
+  <!-- Three boxes -->
+  <!-- Positive slope -->
+  <g transform="translate(60, 110)">
+    <rect x="0" y="0" width="270" height="380" fill="#E8F5E9" rx="10"/>
+    
+    <text x="135" y="40" text-anchor="middle" class="positive">Positive Slope</text>
+    
+    <!-- Mini plot -->
+    <g transform="translate(35, 60)">
+      <rect x="0" y="0" width="200" height="150" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1"/>
+      <line x1="0" y1="150" x2="200" y2="150" stroke="#333333" stroke-width="2"/>
+      <line x1="0" y1="0" x2="0" y2="150" stroke="#333333" stroke-width="2"/>
+      
+      <!-- Positive slope line -->
+      <line x1="20" y1="130" x2="180" y2="30" stroke="#2E7D32" stroke-width="4"/>
+      
+      <!-- Scatter points -->
+      <circle cx="40" cy="120" r="6" fill="#A5D6A7"/>
+      <circle cx="80" cy="95" r="6" fill="#A5D6A7"/>
+      <circle cx="120" cy="70" r="6" fill="#A5D6A7"/>
+      <circle cx="160" cy="45" r="6" fill="#A5D6A7"/>
+    </g>
+    
+    <text x="135" y="240" text-anchor="middle" class="body">As X increases,</text>
+    <text x="135" y="265" text-anchor="middle" class="body">Y increases</text>
+    
+    <rect x="20" y="290" width="230" height="70" fill="#FFFFFF" rx="6"/>
+    <text x="135" y="315" text-anchor="middle" class="body">Example: More weeks →</text>
+    <text x="135" y="340" text-anchor="middle" class="body">Higher birthweight</text>
+  </g>
+  
+  <!-- Negative slope -->
+  <g transform="translate(345, 110)">
+    <rect x="0" y="0" width="270" height="380" fill="#FFEBEE" rx="10"/>
+    
+    <text x="135" y="40" text-anchor="middle" class="negative">Negative Slope</text>
+    
+    <!-- Mini plot -->
+    <g transform="translate(35, 60)">
+      <rect x="0" y="0" width="200" height="150" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1"/>
+      <line x1="0" y1="150" x2="200" y2="150" stroke="#333333" stroke-width="2"/>
+      <line x1="0" y1="0" x2="0" y2="150" stroke="#333333" stroke-width="2"/>
+      
+      <!-- Negative slope line -->
+      <line x1="20" y1="30" x2="180" y2="130" stroke="#C62828" stroke-width="4"/>
+      
+      <!-- Scatter points -->
+      <circle cx="40" cy="45" r="6" fill="#EF9A9A"/>
+      <circle cx="80" cy="70" r="6" fill="#EF9A9A"/>
+      <circle cx="120" cy="95" r="6" fill="#EF9A9A"/>
+      <circle cx="160" cy="120" r="6" fill="#EF9A9A"/>
+    </g>
+    
+    <text x="135" y="240" text-anchor="middle" class="body">As X increases,</text>
+    <text x="135" y="265" text-anchor="middle" class="body">Y decreases</text>
+    
+    <rect x="20" y="290" width="230" height="70" fill="#FFFFFF" rx="6"/>
+    <text x="135" y="315" text-anchor="middle" class="body">Example: More exercise →</text>
+    <text x="135" y="340" text-anchor="middle" class="body">Lower blood pressure</text>
+  </g>
+  
+  <!-- Zero slope -->
+  <g transform="translate(630, 110)">
+    <rect x="0" y="0" width="270" height="380" fill="#F5F5F5" rx="10"/>
+    
+    <text x="135" y="40" text-anchor="middle" class="zero">Zero Slope</text>
+    
+    <!-- Mini plot -->
+    <g transform="translate(35, 60)">
+      <rect x="0" y="0" width="200" height="150" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="1"/>
+      <line x1="0" y1="150" x2="200" y2="150" stroke="#333333" stroke-width="2"/>
+      <line x1="0" y1="0" x2="0" y2="150" stroke="#333333" stroke-width="2"/>
+      
+      <!-- Zero slope line -->
+      <line x1="20" y1="75" x2="180" y2="75" stroke="#666666" stroke-width="4"/>
+      
+      <!-- Scatter points -->
+      <circle cx="40" cy="65" r="6" fill="#BDBDBD"/>
+      <circle cx="80" cy="85" r="6" fill="#BDBDBD"/>
+      <circle cx="120" cy="70" r="6" fill="#BDBDBD"/>
+      <circle cx="160" cy="80" r="6" fill="#BDBDBD"/>
+    </g>
+    
+    <text x="135" y="240" text-anchor="middle" class="body">As X changes,</text>
+    <text x="135" y="265" text-anchor="middle" class="body">Y stays the same</text>
+    
+    <rect x="20" y="290" width="230" height="70" fill="#FFFFFF" rx="6"/>
+    <text x="135" y="315" text-anchor="middle" class="body">No relationship</text>
+    <text x="135" y="340" text-anchor="middle" class="body">between X and Y</text>
+  </g>
+  
+  <!-- Bottom accent -->
+  <rect x="0" y="532" width="960" height="8" fill="#006D77"/>
+</svg>
+

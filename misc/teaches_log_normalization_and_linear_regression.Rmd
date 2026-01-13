@@ -1,0 +1,377 @@
+---
+title: "Linear Regression with Prostate Cancer Data"
+author: "The GRAPH Courses"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# Introduction
+
+In this lesson, we will analyze a classic dataset from prostate cancer research. Our goal is to understand what factors are associated with **prostate-specific antigen (PSA)** levels—a key biomarker used in prostate cancer diagnosis and monitoring.
+
+We'll progress from exploratory data analysis through to building and interpreting a linear regression model.
+
+## Learning Objectives
+
+By the end of this lesson, you will be able to:
+
+1. Summarize and visualize continuous and categorical variables
+2. Examine relationships between variables using correlation
+3. Understand the basic concepts of linear regression
+4. Fit and interpret a multiple linear regression model in R
+
+# The Dataset
+
+The `prostate` dataset comes from a study by Stamey et al. (1989), which examined the relationship between PSA and several clinical measures in 97 men about to receive a radical prostatectomy.
+
+```{r load-packages}
+# Load required packages
+library(genridge) # Contains the prostate dataset
+library(ggplot2) # For visualization
+library(dplyr) # For data manipulation
+library(corrplot) # For correlation visualization
+```
+
+```{r load-data}
+# Load the dataset
+data(prostate)
+
+# View the first few rows
+head(prostate)
+```
+
+## Variable Descriptions
+
+| Variable | Description |
+|----------|-------------|
+| `lcavol` | Log of cancer volume |
+| `lweight` | Log of prostate weight |
+| `age` | Age in years |
+| `lbph` | Log of benign prostatic hyperplasia amount |
+| `svi` | Seminal vesicle invasion (1 = yes, 0 = no) |
+| `lcp` | Log of capsular penetration |
+| `gleason` | Gleason score (a measure of cancer aggressiveness) |
+| `pgg45` | Percentage of Gleason scores 4 or 5 |
+| `lpsa` | **Log of PSA** (our outcome variable) |
+| `train` | Training/test set indicator |
+
+Note: Several variables are log-transformed (indicated by "l" prefix) to normalize their distributions.
+
+# Part 1: Descriptive Statistics
+
+Let's start by exploring our data. We'll remove the `train` variable since it's just a data split indicator.
+
+```{r prepare-data}
+# Remove the train indicator for our analysis
+prostate_clean <- prostate %>% select(-train)
+
+# Check dimensions
+dim(prostate_clean)
+```
+
+## Summary Statistics
+
+```{r summary-stats}
+# Get summary statistics for all variables
+summary(prostate_clean)
+```
+
+Let's also look at the structure:
+
+```{r structure}
+str(prostate_clean)
+```
+
+## Visualizing the Outcome Variable
+
+Our outcome of interest is `lpsa` (log PSA). Let's visualize its distribution:
+
+```{r outcome-distribution}
+ggplot(prostate_clean, aes(x = lpsa)) +
+    geom_histogram(bins = 20, fill = "steelblue", color = "white") +
+    labs(
+        title = "Distribution of Log PSA Levels",
+        x = "Log PSA",
+        y = "Count"
+    ) +
+    theme_minimal()
+```
+
+The distribution appears roughly normal, which is good for linear regression.
+
+## Visualizing Key Predictors
+
+Let's look at the distribution of some key predictors:
+
+```{r predictor-distributions}
+# Cancer volume
+p1 <- ggplot(prostate_clean, aes(x = lcavol)) +
+    geom_histogram(bins = 20, fill = "coral", color = "white") +
+    labs(title = "Log Cancer Volume", x = "lcavol") +
+    theme_minimal()
+
+# Age
+p2 <- ggplot(prostate_clean, aes(x = age)) +
+    geom_histogram(bins = 15, fill = "seagreen", color = "white") +
+    labs(title = "Age Distribution", x = "Age (years)") +
+    theme_minimal()
+
+# Display plots
+p1
+p2
+```
+
+## Examining a Binary Predictor
+
+`svi` (seminal vesicle invasion) is a binary variable. Let's see how it's distributed:
+
+```{r svi-distribution}
+prostate_clean %>%
+    count(svi) %>%
+    mutate(
+        svi_label = ifelse(svi == 1, "Yes", "No"),
+        percentage = round(n / sum(n) * 100, 1)
+    )
+```
+
+Most patients (about 79%) did not have seminal vesicle invasion.
+
+# Part 2: Exploring Relationships
+
+## Correlation Analysis
+
+Before building a regression model, let's examine the correlations between variables:
+
+```{r correlation-matrix}
+# Calculate correlation matrix
+cor_matrix <- cor(prostate_clean)
+
+# Display rounded correlation matrix
+round(cor_matrix, 2)
+```
+
+```{r correlation-plot}
+# Visualize the correlation matrix
+corrplot(cor_matrix,
+    method = "color", type = "upper",
+    tl.col = "black", tl.srt = 45,
+    addCoef.col = "black", number.cex = 0.7,
+    title = "Correlation Matrix of Prostate Variables",
+    mar = c(0, 0, 2, 0)
+)
+```
+
+**Key observations:**
+
+- `lcavol` (log cancer volume) has the strongest correlation with `lpsa` (r = 0.73)
+- `lcp` (log capsular penetration) also has a moderate positive correlation with `lpsa`
+- Some predictors are correlated with each other (e.g., `lcavol` and `lcp`)
+
+## Scatterplot: Cancer Volume vs PSA
+
+Let's visualize the relationship between our strongest predictor and the outcome:
+
+```{r scatter-lcavol-lpsa}
+ggplot(prostate_clean, aes(x = lcavol, y = lpsa)) +
+    geom_point(alpha = 0.7, color = "steelblue", size = 2) +
+    geom_smooth(method = "lm", se = TRUE, color = "darkred") +
+    labs(
+        title = "Relationship Between Cancer Volume and PSA",
+        x = "Log Cancer Volume",
+        y = "Log PSA"
+    ) +
+    theme_minimal()
+```
+
+There's a clear positive linear relationship: as cancer volume increases, so does PSA level.
+
+# Part 3: Understanding Linear Regression
+
+## What is Linear Regression?
+
+**Linear regression** is a statistical method for modeling the relationship between:
+
+- A **dependent variable** (outcome): what we want to predict or explain
+- One or more **independent variables** (predictors): factors that might influence the outcome
+
+The basic equation for simple linear regression is:
+
+$$Y = \beta_0 + \beta_1 X + \epsilon$$
+
+Where:
+
+- $Y$ = dependent variable (outcome)
+- $X$ = independent variable (predictor)
+- $\beta_0$ = intercept (value of Y when X = 0)
+- $\beta_1$ = slope (change in Y for one-unit change in X)
+- $\epsilon$ = error term (random variation)
+
+## Multiple Linear Regression
+
+When we have multiple predictors, the equation extends to:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_p X_p + \epsilon$$
+
+This allows us to:
+
+1. **Control for confounding**: See the effect of one variable while holding others constant
+2. **Improve prediction**: Use multiple sources of information
+3. **Understand relative importance**: Compare which factors matter most
+
+## Key Assumptions
+
+Linear regression assumes:
+
+1. **Linearity**: Relationships between predictors and outcome are linear
+2. **Independence**: Observations are independent of each other
+3. **Homoscedasticity**: Residuals have constant variance
+4. **Normality**: Residuals are approximately normally distributed
+
+# Part 4: Building the Regression Model
+
+## Simple Linear Regression
+
+Let's start with a simple model using only `lcavol` as a predictor:
+
+```{r simple-regression}
+# Fit simple linear regression
+simple_model <- lm(lpsa ~ lcavol, data = prostate_clean)
+
+# View the summary
+summary(simple_model)
+```
+
+### Interpreting the Output
+
+- **Intercept (1.507)**: When log cancer volume is 0, the predicted log PSA is 1.507
+- **lcavol coefficient (0.719)**: For each 1-unit increase in log cancer volume, log PSA increases by 0.719 units on average
+- **R-squared (0.539)**: Log cancer volume alone explains about 54% of the variation in log PSA
+- **p-value (<2e-16)**: The relationship is highly statistically significant
+
+## Multiple Linear Regression
+
+Now let's include all predictors:
+
+```{r multiple-regression}
+# Fit multiple linear regression with all predictors
+full_model <- lm(lpsa ~ ., data = prostate_clean)
+
+# View the summary
+summary(full_model)
+```
+
+### Interpreting the Results
+
+Looking at the coefficients:
+
+```{r coefficients-table}
+# Extract and display coefficients nicely
+coef_table <- summary(full_model)$coefficients
+coef_df <- data.frame(
+    Variable = rownames(coef_table),
+    Estimate = round(coef_table[, 1], 4),
+    Std_Error = round(coef_table[, 2], 4),
+    t_value = round(coef_table[, 3], 2),
+    p_value = round(coef_table[, 4], 4)
+)
+coef_df
+```
+
+**Key findings:**
+
+1. **`lcavol` (p < 0.001)**: Log cancer volume is the strongest predictor. Each unit increase in lcavol is associated with a 0.56 unit increase in lpsa, holding other variables constant.
+
+2. **`lweight` (p = 0.003)**: Log prostate weight is significantly associated with lpsa. Larger prostates tend to have higher PSA levels.
+
+3. **`svi` (p = 0.002)**: Seminal vesicle invasion is significantly associated with higher PSA. Patients with SVI have, on average, 0.76 higher log PSA than those without.
+
+4. **Non-significant predictors**: `age`, `lbph`, `lcp`, `gleason`, and `pgg45` are not statistically significant when controlling for other variables.
+
+## Model Fit Statistics
+
+```{r model-fit}
+# R-squared values
+cat("R-squared:", round(summary(full_model)$r.squared, 3), "\n")
+cat("Adjusted R-squared:", round(summary(full_model)$adj.r.squared, 3), "\n")
+```
+
+The model explains about 65% of the variance in log PSA levels.
+
+# Part 5: Model Diagnostics
+
+We should check whether our model meets the assumptions of linear regression.
+
+```{r diagnostics-plots, fig.height=8, fig.width=8}
+# Create diagnostic plots
+par(mfrow = c(2, 2))
+plot(full_model)
+```
+
+**Interpreting the diagnostic plots:**
+
+1. **Residuals vs Fitted**: Points should be randomly scattered around 0. Our plot looks reasonable—no obvious patterns.
+
+2. **Normal Q-Q**: Points should follow the diagonal line. Our residuals appear approximately normal.
+
+3. **Scale-Location**: Points should be randomly spread. We see fairly constant variance (homoscedasticity).
+
+4. **Residuals vs Leverage**: Helps identify influential points. No observations appear to have extreme influence.
+
+# Part 6: Comparing Models
+
+Let's compare our simple and full models:
+
+```{r compare-models}
+# Compare R-squared
+cat("Simple model R-squared:", round(summary(simple_model)$r.squared, 3), "\n")
+cat("Full model R-squared:", round(summary(full_model)$r.squared, 3), "\n")
+cat(
+    "\nImprovement:",
+    round((summary(full_model)$r.squared - summary(simple_model)$r.squared) * 100, 1),
+    "percentage points\n"
+)
+```
+
+Adding the additional predictors improved our model's explanatory power from 54% to 65%.
+
+## ANOVA Comparison
+
+```{r anova-comparison}
+# Formal comparison with ANOVA
+anova(simple_model, full_model)
+```
+
+The F-test shows that the additional predictors significantly improve the model (p < 0.001).
+
+# Summary
+
+In this lesson, we:
+
+1. **Explored the data** using summary statistics and visualizations
+2. **Examined correlations** between variables to understand relationships
+3. **Learned the basics of linear regression** and its assumptions
+4. **Built and interpreted regression models** to identify factors associated with PSA levels
+5. **Checked model diagnostics** to validate our results
+
+**Key clinical takeaways:**
+
+- **Cancer volume** is the strongest predictor of PSA levels
+- **Prostate weight** and **seminal vesicle invasion** are also significantly associated with PSA
+- Other clinical measures (age, Gleason score, etc.) don't add significant predictive value when the above factors are already in the model
+
+# Exercises
+
+1. Try fitting a model with only the significant predictors (`lcavol`, `lweight`, `svi`). How does its R-squared compare to the full model?
+
+2. Create a scatterplot of `lweight` vs `lpsa`. Does the relationship look linear?
+
+3. What would you predict for the log PSA of a patient with `lcavol = 2`, `lweight = 3.5`, and `svi = 1`?
+
+# References
+
+Stamey, T., Kabalin, J., McNeal, J., Johnstone, I., Freiha, F., Redwine, E. and Yang, N. (1989). Prostate specific antigen in the diagnosis and treatment of adenocarcinoma of the prostate II. Radical prostatectomy treated patients. *Journal of Urology*, 16: 1076–1083.
+

@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&amp;display=swap');
+      .title { font-family: 'Source Sans Pro', sans-serif; font-size: 42px; font-weight: 700; fill: #006D77; }
+      .axis-label { font-family: 'Source Sans Pro', sans-serif; font-size: 18px; font-weight: 600; fill: #333333; }
+      .tick-label { font-family: 'Source Sans Pro', sans-serif; font-size: 14px; font-weight: 400; fill: #666666; }
+      .note { font-family: 'Source Sans Pro', sans-serif; font-size: 20px; font-weight: 400; fill: #333333; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="960" height="540" fill="#FFFFFF"/>
+  
+  <!-- Accent bar at top -->
+  <rect x="0" y="0" width="960" height="8" fill="#FFD166"/>
+  
+  <!-- Title -->
+  <text x="80" y="60" class="title">Visualizing the Relationship</text>
+  <rect x="80" y="75" width="360" height="4" fill="#83C5BE"/>
+  
+  <!-- Plot area -->
+  <g transform="translate(200, 100)">
+    <!-- Plot background -->
+    <rect x="0" y="0" width="500" height="350" fill="#FAFAFA" stroke="#DDDDDD" stroke-width="1"/>
+    
+    <!-- Grid lines horizontal -->
+    <line x1="0" y1="70" x2="500" y2="70" stroke="#EEEEEE" stroke-width="1"/>
+    <line x1="0" y1="140" x2="500" y2="140" stroke="#EEEEEE" stroke-width="1"/>
+    <line x1="0" y1="210" x2="500" y2="210" stroke="#EEEEEE" stroke-width="1"/>
+    <line x1="0" y1="280" x2="500" y2="280" stroke="#EEEEEE" stroke-width="1"/>
+    
+    <!-- Grid lines vertical -->
+    <line x1="100" y1="0" x2="100" y2="350" stroke="#EEEEEE" stroke-width="1"/>
+    <line x1="200" y1="0" x2="200" y2="350" stroke="#EEEEEE" stroke-width="1"/>
+    <line x1="300" y1="0" x2="300" y2="350" stroke="#EEEEEE" stroke-width="1"/>
+    <line x1="400" y1="0" x2="400" y2="350" stroke="#EEEEEE" stroke-width="1"/>
+    
+    <!-- Axes -->
+    <line x1="0" y1="350" x2="500" y2="350" stroke="#333333" stroke-width="2"/>
+    <line x1="0" y1="0" x2="0" y2="350" stroke="#333333" stroke-width="2"/>
+    
+    <!-- X-axis ticks and labels (weeks 31-37) -->
+    <!-- Scale: x = (weeks - 31) * 100 -->
+    <text x="0" y="375" text-anchor="middle" class="tick-label">31</text>
+    <text x="100" y="375" text-anchor="middle" class="tick-label">32</text>
+    <text x="200" y="375" text-anchor="middle" class="tick-label">33</text>
+    <text x="300" y="375" text-anchor="middle" class="tick-label">34</text>
+    <text x="400" y="375" text-anchor="middle" class="tick-label">35</text>
+    <text x="500" y="375" text-anchor="middle" class="tick-label">36</text>
+    
+    <!-- Y-axis ticks and labels (kg 0.5-4.5) -->
+    <!-- Scale: y = 350 - (kg - 0.5) * 87.5 -->
+    <text x="-15" y="355" text-anchor="end" class="tick-label">0.5</text>
+    <text x="-15" y="267.5" text-anchor="end" class="tick-label">1.5</text>
+    <text x="-15" y="180" text-anchor="end" class="tick-label">2.5</text>
+    <text x="-15" y="92.5" text-anchor="end" class="tick-label">3.5</text>
+    <text x="-15" y="5" text-anchor="end" class="tick-label">4.5</text>
+    
+    <!-- X-axis label -->
+    <text x="250" y="410" text-anchor="middle" class="axis-label">Gestational Age (weeks)</text>
+    
+    <!-- Y-axis label -->
+    <text x="-60" y="175" text-anchor="middle" class="axis-label" transform="rotate(-90 -60 175)">Birthweight (kg)</text>
+    
+    <!-- Data points -->
+    <!-- Point 1: weeks=32, kg=1.65 → x=100, y=350-(1.65-0.5)*87.5=249.375 -->
+    <circle cx="100" cy="249" r="12" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    
+    <!-- Point 2: weeks=36, kg=2.67 → x=500, y=350-(2.67-0.5)*87.5=160.125 -->
+    <circle cx="500" cy="160" r="12" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    
+    <!-- Point 3: weeks=33, kg=2.18 → x=200, y=350-(2.18-0.5)*87.5=203.1 -->
+    <circle cx="200" cy="203" r="12" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    
+    <!-- Point 4: weeks=36, kg=3.83 → x=500, y=350-(3.83-0.5)*87.5=58.625 -->
+    <circle cx="500" cy="59" r="12" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    
+    <!-- Point 5: weeks=35, kg=2.53 → x=400, y=350-(2.53-0.5)*87.5=172.375 -->
+    <circle cx="400" cy="172" r="12" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    
+    <!-- Point 6: weeks=36, kg=2.64 → x=500, y=350-(2.64-0.5)*87.5=162.75 -->
+    <circle cx="500" cy="163" r="12" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    
+    <!-- Point 7: weeks=32, kg=1.06 → x=100, y=350-(1.06-0.5)*87.5=301 -->
+    <circle cx="100" cy="301" r="12" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    
+    <!-- Point 8: weeks=34, kg=3.06 → x=300, y=350-(3.06-0.5)*87.5=126.1 -->
+    <circle cx="300" cy="126" r="12" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+  </g>
+  
+  <!-- Note -->
+  <text x="750" y="150" text-anchor="middle" class="note">There seems</text>
+  <text x="750" y="175" text-anchor="middle" class="note">to be a pattern...</text>
+  
+  <!-- Bottom accent -->
+  <rect x="0" y="532" width="960" height="8" fill="#006D77"/>
+</svg>
+

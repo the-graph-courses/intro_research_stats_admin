@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Positive vs Negative Slopes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-teal: #0d7377;
+            --light-teal: #14a3a8;
+            --yellow: #f0c808;
+            --black: #1a1a1a;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --red: #d9534f;
+            --green: #5cb85c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 4rem;
+        }
+        
+        .slide-header {
+            margin-bottom: 2.5rem;
+        }
+        
+        .slide-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--dark-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .title-underline {
+            width: 80px;
+            height: 4px;
+            background: var(--yellow);
+            border-radius: 2px;
+        }
+        
+        .content {
+            display: flex;
+            gap: 3rem;
+        }
+        
+        .slope-card {
+            flex: 1;
+            background: var(--gray-light);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .slope-card.positive {
+            border-top: 5px solid var(--green);
+        }
+        
+        .slope-card.negative {
+            border-top: 5px solid var(--red);
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .card-header h3 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .positive .card-header h3 {
+            color: var(--green);
+        }
+        
+        .negative .card-header h3 {
+            color: var(--red);
+        }
+        
+        .card-header p {
+            font-size: 1.1rem;
+            color: var(--black);
+            opacity: 0.8;
+        }
+        
+        .chart-area {
+            background: var(--white);
+            padding: 1rem;
+        }
+        
+        .chart-area svg {
+            width: 100%;
+            height: 220px;
+        }
+        
+        .card-example {
+            padding: 1.5rem;
+            background: var(--white);
+            border-top: 1px solid #eee;
+        }
+        
+        .example-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--light-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .example-text {
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+        
+        .slide-number {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            font-size: 0.9rem;
+            color: var(--light-teal);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-header">
+        <h1 class="slide-title">Positive vs Negative Slopes</h1>
+        <div class="title-underline"></div>
+    </div>
+    
+    <div class="content">
+        <div class="slope-card positive">
+            <div class="card-header">
+                <h3>Positive Slope ↗</h3>
+                <p>As X increases, Y increases</p>
+            </div>
+            <div class="chart-area">
+                <svg id="pos-chart"></svg>
+            </div>
+            <div class="card-example">
+                <div class="example-label">Example</div>
+                <p class="example-text">More weeks of gestation → Higher birthweight</p>
+            </div>
+        </div>
+        
+        <div class="slope-card negative">
+            <div class="card-header">
+                <h3>Negative Slope ↘</h3>
+                <p>As X increases, Y decreases</p>
+            </div>
+            <div class="chart-area">
+                <svg id="neg-chart"></svg>
+            </div>
+            <div class="card-example">
+                <div class="example-label">Example</div>
+                <p class="example-text">More cigarettes smoked → Lower birthweight</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="slide-number">16</div>
+    
+    <script>
+        function drawSlopeChart(svgId, slope, color) {
+            const svg = document.getElementById(svgId);
+            const width = 300;
+            const height = 220;
+            const margin = { top: 20, right: 20, bottom: 30, left: 35 };
+            const plotWidth = width - margin.left - margin.right;
+            const plotHeight = height - margin.top - margin.bottom;
+            
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+            
+            const xMin = 0, xMax = 10;
+            const yMin = 0, yMax = 10;
+            
+            const xScale = (x) => margin.left + ((x - xMin) / (xMax - xMin)) * plotWidth;
+            const yScale = (y) => margin.top + plotHeight - ((y - yMin) / (yMax - yMin)) * plotHeight;
+            
+            // Grid
+            for (let i = 0; i <= 10; i += 2) {
+                const vLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                vLine.setAttribute('x1', xScale(i));
+                vLine.setAttribute('x2', xScale(i));
+                vLine.setAttribute('y1', margin.top);
+                vLine.setAttribute('y2', margin.top + plotHeight);
+                vLine.setAttribute('stroke', '#f0f0f0');
+                svg.appendChild(vLine);
+                
+                const hLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                hLine.setAttribute('x1', margin.left);
+                hLine.setAttribute('x2', margin.left + plotWidth);
+                hLine.setAttribute('y1', yScale(i));
+                hLine.setAttribute('y2', yScale(i));
+                hLine.setAttribute('stroke', '#f0f0f0');
+                svg.appendChild(hLine);
+            }
+            
+            // Axes
+            const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            xAxis.setAttribute('x1', margin.left);
+            xAxis.setAttribute('x2', margin.left + plotWidth);
+            xAxis.setAttribute('y1', margin.top + plotHeight);
+            xAxis.setAttribute('y2', margin.top + plotHeight);
+            xAxis.setAttribute('stroke', '#1a1a1a');
+            xAxis.setAttribute('stroke-width', '2');
+            svg.appendChild(xAxis);
+            
+            const yAxisLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            yAxisLine.setAttribute('x1', margin.left);
+            yAxisLine.setAttribute('x2', margin.left);
+            yAxisLine.setAttribute('y1', margin.top);
+            yAxisLine.setAttribute('y2', margin.top + plotHeight);
+            yAxisLine.setAttribute('stroke', '#1a1a1a');
+            yAxisLine.setAttribute('stroke-width', '2');
+            svg.appendChild(yAxisLine);
+            
+            // Axis labels
+            const xLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            xLabel.setAttribute('x', margin.left + plotWidth / 2);
+            xLabel.setAttribute('y', height - 5);
+            xLabel.setAttribute('text-anchor', 'middle');
+            xLabel.setAttribute('font-size', '13');
+            xLabel.setAttribute('fill', '#666');
+            xLabel.textContent = 'X';
+            svg.appendChild(xLabel);
+            
+            const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            yLabel.setAttribute('x', 12);
+            yLabel.setAttribute('y', margin.top + plotHeight / 2);
+            yLabel.setAttribute('text-anchor', 'middle');
+            yLabel.setAttribute('font-size', '13');
+            yLabel.setAttribute('fill', '#666');
+            yLabel.setAttribute('transform', `rotate(-90, 12, ${margin.top + plotHeight / 2})`);
+            yLabel.textContent = 'Y';
+            svg.appendChild(yLabel);
+            
+            // Regression line
+            const intercept = slope > 0 ? 1 : 9;
+            const y1 = intercept + slope * xMin;
+            const y2 = intercept + slope * xMax;
+            
+            const regLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            regLine.setAttribute('x1', xScale(xMin));
+            regLine.setAttribute('x2', xScale(xMax));
+            regLine.setAttribute('y1', yScale(Math.max(0, Math.min(10, y1))));
+            regLine.setAttribute('y2', yScale(Math.max(0, Math.min(10, y2))));
+            regLine.setAttribute('stroke', color);
+            regLine.setAttribute('stroke-width', '4');
+            svg.appendChild(regLine);
+            
+            // Arrow at end of line
+            const arrowX = xScale(8);
+            const arrowY = yScale(intercept + slope * 8);
+            
+            const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            arrow.setAttribute('cx', arrowX);
+            arrow.setAttribute('cy', arrowY);
+            arrow.setAttribute('r', '6');
+            arrow.setAttribute('fill', color);
+            svg.appendChild(arrow);
+        }
+        
+        drawSlopeChart('pos-chart', 0.7, '#5cb85c');
+        drawSlopeChart('neg-chart', -0.7, '#d9534f');
+    </script>
+</body>
+</html>
+

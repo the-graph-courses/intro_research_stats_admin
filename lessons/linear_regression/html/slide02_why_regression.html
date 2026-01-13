@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Linear Regression?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-teal: #0d7377;
+            --light-teal: #14a3a8;
+            --yellow: #f0c808;
+            --black: #1a1a1a;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 4rem;
+        }
+        
+        .slide-header {
+            margin-bottom: 3rem;
+        }
+        
+        .slide-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--dark-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .title-underline {
+            width: 80px;
+            height: 4px;
+            background: var(--yellow);
+            border-radius: 2px;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .main-question {
+            font-size: 2rem;
+            font-weight: 400;
+            color: var(--black);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        
+        .highlight {
+            color: var(--dark-teal);
+            font-weight: 600;
+        }
+        
+        .benefits {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .benefit-card {
+            background: var(--gray-light);
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--light-teal);
+        }
+        
+        .benefit-card h3 {
+            font-size: 1.3rem;
+            color: var(--dark-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .benefit-card p {
+            font-size: 1.1rem;
+            color: var(--black);
+            opacity: 0.8;
+        }
+        
+        .slide-number {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            font-size: 0.9rem;
+            color: var(--light-teal);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-header">
+        <h1 class="slide-title">Why Linear Regression?</h1>
+        <div class="title-underline"></div>
+    </div>
+    
+    <div class="content">
+        <p class="main-question">
+            Often, we want to understand the <span class="highlight">relationship between two quantities</span>
+        </p>
+        
+        <div class="benefits">
+            <div class="benefit-card">
+                <h3>Understand</h3>
+                <p>How does one variable change as another changes?</p>
+            </div>
+            <div class="benefit-card">
+                <h3>Quantify</h3>
+                <p>Put a number on the strength of the relationship</p>
+            </div>
+            <div class="benefit-card">
+                <h3>Predict</h3>
+                <p>Use what we know to estimate what we don't</p>
+            </div>
+            <div class="benefit-card">
+                <h3>Compare</h3>
+                <p>Is this relationship stronger than that one?</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="slide-number">02</div>
+</body>
+</html>
+

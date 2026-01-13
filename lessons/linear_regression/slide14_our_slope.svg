@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&amp;display=swap');
+      .title { font-family: 'Source Sans Pro', sans-serif; font-size: 38px; font-weight: 700; fill: #006D77; }
+      .body { font-family: 'Source Sans Pro', sans-serif; font-size: 22px; font-weight: 400; fill: #333333; }
+      .number { font-family: 'Source Sans Pro', sans-serif; font-size: 48px; font-weight: 700; fill: #006D77; }
+      .unit { font-family: 'Source Sans Pro', sans-serif; font-size: 24px; font-weight: 600; fill: #666666; }
+      .interpret { font-family: 'Source Sans Pro', sans-serif; font-size: 26px; font-weight: 600; fill: #333333; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="960" height="540" fill="#FFFFFF"/>
+  
+  <!-- Accent bar at top -->
+  <rect x="0" y="0" width="960" height="8" fill="#FFD166"/>
+  
+  <!-- Title -->
+  <text x="80" y="60" class="title">Our Slope: What Does 0.386 Mean?</text>
+  <rect x="80" y="75" width="460" height="4" fill="#83C5BE"/>
+  
+  <!-- The equation reminder -->
+  <rect x="80" y="100" width="350" height="50" fill="#006D77" opacity="0.08" rx="6"/>
+  <text x="255" y="133" text-anchor="middle" class="body">weight = -10.78 + 0.386 × weeks</text>
+  
+  <!-- Main interpretation box -->
+  <rect x="80" y="170" width="800" height="180" fill="#FFD166" opacity="0.15" rx="12"/>
+  
+  <text x="480" y="215" text-anchor="middle" class="body">For each additional</text>
+  <text x="480" y="255" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 32px; font-weight: 700; fill: #006D77;">1 week of gestation</text>
+  
+  <text x="480" y="305" text-anchor="middle" class="body">birthweight increases by approximately</text>
+  
+  <g transform="translate(480, 330)">
+    <text x="0" y="0" text-anchor="middle" class="number">0.39 kg</text>
+    <text x="0" y="35" text-anchor="middle" class="unit">(~390 grams)</text>
+  </g>
+  
+  <!-- Visual representation -->
+  <g transform="translate(100, 400)">
+    <rect x="0" y="0" width="760" height="90" fill="#83C5BE" opacity="0.1" rx="8"/>
+    
+    <!-- Week boxes -->
+    <rect x="80" y="20" width="100" height="50" fill="#006D77" rx="6"/>
+    <text x="130" y="52" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 18px; font-weight: 600; fill: #FFFFFF;">Week 33</text>
+    
+    <text x="220" y="50" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 28px; fill: #333333;">→</text>
+    
+    <rect x="260" y="20" width="100" height="50" fill="#006D77" rx="6"/>
+    <text x="310" y="52" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 18px; font-weight: 600; fill: #FFFFFF;">Week 34</text>
+    
+    <text x="400" y="50" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 28px; fill: #333333;">=</text>
+    
+    <rect x="440" y="20" width="250" height="50" fill="#FFD166" rx="6"/>
+    <text x="565" y="52" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 18px; font-weight: 600; fill: #333333;">+0.39 kg predicted weight</text>
+  </g>
+  
+  <!-- Bottom accent -->
+  <rect x="0" y="532" width="960" height="8" fill="#006D77"/>
+</svg>
+

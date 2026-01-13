@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&amp;display=swap');
+      .title { font-family: 'Source Sans Pro', sans-serif; font-size: 42px; font-weight: 700; fill: #006D77; }
+      .body { font-family: 'Source Sans Pro', sans-serif; font-size: 20px; font-weight: 400; fill: #333333; }
+      .label { font-family: 'Source Sans Pro', sans-serif; font-size: 18px; font-weight: 600; fill: #006D77; }
+      .axis-label { font-family: 'Source Sans Pro', sans-serif; font-size: 14px; font-weight: 400; fill: #666666; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="960" height="540" fill="#FFFFFF"/>
+  
+  <!-- Accent bar at top -->
+  <rect x="0" y="0" width="960" height="8" fill="#FFD166"/>
+  
+  <!-- Title -->
+  <text x="80" y="60" class="title">Visualizing the Slope</text>
+  <rect x="80" y="75" width="280" height="4" fill="#83C5BE"/>
+  
+  <!-- Plot -->
+  <g transform="translate(200, 110)">
+    <rect x="0" y="0" width="560" height="350" fill="#FAFAFA" stroke="#DDDDDD" stroke-width="1"/>
+    
+    <!-- Grid lines -->
+    <line x1="0" y1="87.5" x2="560" y2="87.5" stroke="#EEEEEE" stroke-width="1"/>
+    <line x1="0" y1="175" x2="560" y2="175" stroke="#EEEEEE" stroke-width="1"/>
+    <line x1="0" y1="262.5" x2="560" y2="262.5" stroke="#EEEEEE" stroke-width="1"/>
+    
+    <line x1="112" y1="0" x2="112" y2="350" stroke="#EEEEEE" stroke-width="1"/>
+    <line x1="224" y1="0" x2="224" y2="350" stroke="#EEEEEE" stroke-width="1"/>
+    <line x1="336" y1="0" x2="336" y2="350" stroke="#EEEEEE" stroke-width="1"/>
+    <line x1="448" y1="0" x2="448" y2="350" stroke="#EEEEEE" stroke-width="1"/>
+    
+    <!-- Axes -->
+    <line x1="0" y1="350" x2="560" y2="350" stroke="#333333" stroke-width="2"/>
+    <line x1="0" y1="0" x2="0" y2="350" stroke="#333333" stroke-width="2"/>
+    
+    <!-- X-axis labels -->
+    <text x="0" y="375" text-anchor="middle" class="axis-label">31</text>
+    <text x="112" y="375" text-anchor="middle" class="axis-label">32</text>
+    <text x="224" y="375" text-anchor="middle" class="axis-label">33</text>
+    <text x="336" y="375" text-anchor="middle" class="axis-label">34</text>
+    <text x="448" y="375" text-anchor="middle" class="axis-label">35</text>
+    <text x="560" y="375" text-anchor="middle" class="axis-label">36</text>
+    
+    <!-- Y-axis labels -->
+    <text x="-15" y="355" text-anchor="end" class="axis-label">0.5</text>
+    <text x="-15" y="267" text-anchor="end" class="axis-label">1.5</text>
+    <text x="-15" y="179" text-anchor="end" class="axis-label">2.5</text>
+    <text x="-15" y="91" text-anchor="end" class="axis-label">3.5</text>
+    <text x="-15" y="5" text-anchor="end" class="axis-label">4.5</text>
+    
+    <!-- Regression line -->
+    <line x1="0" y1="290" x2="560" y2="114" stroke="#006D77" stroke-width="4"/>
+    
+    <!-- Data points -->
+    <circle cx="112" cy="255" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    <circle cx="560" cy="165" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    <circle cx="224" cy="208" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    <circle cx="560" cy="60" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    <circle cx="448" cy="179" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    <circle cx="560" cy="168" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    <circle cx="112" cy="308" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    <circle cx="336" cy="134" r="10" fill="#FFD166" stroke="#006D77" stroke-width="2"/>
+    
+    <!-- Slope annotation: rise over run -->
+    <!-- Show from week 33 to 34 -->
+    <line x1="224" y1="246" x2="336" y2="246" stroke="#FF6B6B" stroke-width="3"/>
+    <line x1="336" y1="246" x2="336" y2="211" stroke="#FF6B6B" stroke-width="3"/>
+    
+    <!-- Labels for rise/run -->
+    <text x="280" y="268" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 16px; font-weight: 600; fill: #FF6B6B;">1 week</text>
+    <text x="360" y="232" text-anchor="start" style="font-family: 'Source Sans Pro', sans-serif; font-size: 16px; font-weight: 600; fill: #FF6B6B;">+0.39 kg</text>
+    
+    <!-- Points on line for annotation -->
+    <circle cx="224" cy="246" r="6" fill="#FF6B6B"/>
+    <circle cx="336" cy="211" r="6" fill="#FF6B6B"/>
+    
+    <!-- Axis titles -->
+    <text x="280" y="410" text-anchor="middle" class="label">Gestational Age (weeks)</text>
+    <text x="-60" y="175" text-anchor="middle" class="label" transform="rotate(-90 -60 175)">Birthweight (kg)</text>
+  </g>
+  
+  <!-- Bottom accent -->
+  <rect x="0" y="532" width="960" height="8" fill="#006D77"/>
+</svg>
+

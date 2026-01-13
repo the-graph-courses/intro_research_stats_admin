@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&amp;display=swap');
+      .title { font-family: 'Source Sans Pro', sans-serif; font-size: 42px; font-weight: 700; fill: #006D77; }
+      .body { font-family: 'Source Sans Pro', sans-serif; font-size: 24px; font-weight: 400; fill: #333333; }
+      .highlight { font-family: 'Source Sans Pro', sans-serif; font-size: 24px; font-weight: 600; fill: #006D77; }
+      .big { font-family: 'Source Sans Pro', sans-serif; font-size: 28px; font-weight: 600; fill: #333333; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="960" height="540" fill="#FFFFFF"/>
+  
+  <!-- Accent bar at top -->
+  <rect x="0" y="0" width="960" height="8" fill="#FFD166"/>
+  
+  <!-- Title -->
+  <text x="80" y="70" class="title">Key Takeaway: The Slope</text>
+  <rect x="80" y="90" width="360" height="4" fill="#83C5BE"/>
+  
+  <!-- Main content box -->
+  <rect x="80" y="120" width="800" height="180" fill="#006D77" rx="12"/>
+  
+  <text x="480" y="175" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 30px; font-weight: 400; fill: #FFFFFF;">The slope tells you:</text>
+  
+  <text x="480" y="225" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 26px; font-weight: 600; fill: #FFD166;">"For every 1-unit increase in X,</text>
+  <text x="480" y="265" text-anchor="middle" style="font-family: 'Source Sans Pro', sans-serif; font-size: 26px; font-weight: 600; fill: #FFD166;">Y changes by [slope] units, on average"</text>
+  
+  <!-- Our example recap -->
+  <rect x="80" y="330" width="800" height="100" fill="#83C5BE" opacity="0.15" rx="8"/>
+  
+  <text x="100" y="370" class="body">In our example:</text>
+  <text x="100" y="405" class="big">slope = 0.386 kg/week</text>
+  <text x="480" y="405" class="body">→</text>
+  <text x="510" y="405" class="highlight">Each extra week adds ~390g</text>
+  
+  <!-- What matters -->
+  <g transform="translate(80, 460)">
+    <circle cx="15" cy="8" r="8" fill="#FFD166"/>
+    <text x="40" y="16" class="body">The</text>
+    <text x="80" y="16" class="highlight">sign</text>
+    <text x="130" y="16" class="body">tells you the direction (positive = increase, negative = decrease)</text>
+  </g>
+  
+  <g transform="translate(80, 495)">
+    <circle cx="15" cy="8" r="8" fill="#FFD166"/>
+    <text x="40" y="16" class="body">The</text>
+    <text x="80" y="16" class="highlight">magnitude</text>
+    <text x="195" y="16" class="body">tells you the strength (steeper = stronger relationship)</text>
+  </g>
+  
+  <!-- Bottom accent -->
+  <rect x="0" y="532" width="960" height="8" fill="#006D77"/>
+</svg>
+

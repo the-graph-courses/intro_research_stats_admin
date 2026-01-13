@@ -1,0 +1,157 @@
+# Introductory Research Statistics Using R
+
+**Course Overview**
+
+This course introduces foundational concepts in statistics through the lens of public health data and practice, using the R programming language. Students will learn to analyze cross-sectional observational data, understand the linear modeling framework, and interpret real-world public health datasets. Prerequisites: Basic R programming and data wrangling skills.
+
+---
+
+## **Week 1: Descriptive Statistics & Visualization**
+
+**Lesson 1.1 | Introduction to Statistics & Describing Data:** Branches of statistics, data types, and the role of statistics in public health research.
+(*What questions can statistics help us answer in public health?*)
+
+**Lesson 1.2 | Visualizing Data Distributions:** Creating and interpreting histograms, density plots, box plots, and bar charts with `{ggplot2}`. Identifying distribution shapes.
+(*How do we visualize data according to its variable type and distribution?*)
+
+**Lesson 1.3 | Measures of Central Tendency:** Calculate and interpret mean, median, and mode. Identify skewness and assess symmetry.
+(*What is a typical value in our dataset?*)
+
+**Lesson 1.4 | Measures of Dispersion:** Calculate and interpret range, IQR, variance, and standard deviation. Introduction to z-scores.
+(*How spread out or variable are the data?*)
+
+---
+
+## **Week 2: From Samples to Populations**
+
+**Lesson 2.1 | Sampling Distributions & The Central Limit Theorem:** Sample statistics vs population parameters, sampling variation, simulation of sampling distributions, CLT.
+(*How would our estimates vary if we took repeated samples from the population?*)
+
+**Lesson 2.2 | Standard Error & Confidence Intervals:** Calculate and interpret standard error and confidence intervals for means and proportions.
+(*How uncertain are we about our population estimate?*)
+
+---
+
+## **Week 3: Study Design & Observational Data**
+
+**Lesson 3.1 | Cross-Sectional Studies in Public Health:** Study design types (cross-sectional vs cohort vs case-control vs RCT), strengths and limitations of cross-sectional data, association vs causation.
+(*What can and cannot be concluded from a snapshot of data collected at one time point?*)
+
+**Lesson 3.2 | Confounding & Bias in Observational Studies:** Definition of confounding, common biases (selection, measurement, recall), directed acyclic graphs (DAGs) for visualizing confounding relationships.
+(*What are the threats to validity when we cannot randomize?*)
+
+**Lesson 3.3 | Introduction to Causal Thinking:** Temporal relationships, necessary vs sufficient causes, Bradford Hill criteria (adapted for cross-sectional data).
+(*What evidence do we need before claiming one variable influences another?*)
+
+---
+
+## **Week 4: Introduction to the Linear Model**
+
+**Lesson 4.1 | The Linear Model Framework:** Understanding $Y = \beta_0 + \beta_1X + \epsilon$. Fitted values, residuals, least squares estimation.
+(*How can we express relationships between variables mathematically?*)
+
+**Lesson 4.2 | Hypothesis Testing with Linear Models:** Null and alternative hypotheses, p-values, alpha levels, Type I and Type II errors, statistical vs practical significance.
+(*How do we determine if an observed relationship is unlikely to be due to chance alone?*)
+
+**Lesson 4.3 | Model Assumptions & Diagnostics:** Linearity, independence, homoscedasticity, normality of residuals. Residual plots and diagnostic checks.
+(*How do we verify our model is appropriate for the data?*)
+
+---
+
+## **Week 5: Linear Models with Categorical Predictors**
+
+**Lesson 5.1 | Comparing Two Means: The Two-Sample t-test as Linear Regression:** Independent samples t-test as a linear model, indicator variables, effect sizes (Cohen's d).
+(*Are mean values different between two groups, such as diseased vs non-diseased?*)
+
+**Lesson 5.2 | Paired Comparisons:** Paired t-test as linear regression with difference scores.
+(*How do we compare paired observations, such as before/after measurements?*)
+
+**Lesson 5.3 | Comparing Multiple Means: ANOVA as Linear Regression:** One-way ANOVA as linear model with multiple indicator variables, F-statistic, post-hoc comparisons, Bonferroni correction.
+(*Are mean values different across multiple groups, such as different regions or treatment types?*)
+
+**Lesson 5.4 | Chi-square Tests for Categorical Outcomes:** Contingency tables, expected frequencies, chi-square test of independence.
+(*Are two categorical variables associated, such as vaccination status and disease outcome?*)
+
+---
+
+## **Week 6: Simple Linear Regression**
+
+**Lesson 6.1 | Linear Regression with Continuous Predictors:** Slope, intercept, interpretation of coefficients, $R^2$.
+(*How do we model and predict the relationship between two continuous variables?*)
+
+**Lesson 6.2 | Inference for Regression Coefficients:** Standard errors, confidence intervals, and hypothesis tests for slope and intercept.
+(*Is the relationship between our predictor and outcome statistically significant?*)
+
+**Lesson 6.3 | Predictions & Residual Analysis:** Making predictions, prediction intervals vs confidence intervals, examining residual patterns.
+(*How well does our model predict new observations, and where does it fail?*)
+
+---
+
+## **Week 7: Multiple Linear Regression**
+
+**Lesson 7.1 | Adding Multiple Predictors:** Partial coefficients, adjusted $R^2$, interpretation of coefficients while "holding other variables constant."
+(*How can we estimate the effect of education on income while accounting for age, location, and experience?*)
+
+**Lesson 7.2 | Addressing Confounding in Regression:** Crude vs adjusted estimates, identifying confounders using DAGs, when to include/exclude variables.
+(*How do we isolate the effect of our exposure of interest from other related factors?*)
+
+**Lesson 7.3 | Multicollinearity & Model Selection:** Detecting multicollinearity (VIF), consequences for inference, strategies for model building.
+(*What problems arise when our predictors are highly correlated with each other?*)
+
+**Lesson 7.4 | Transformations in Linear Models:** Log transformations for skewed variables, interpretation of log-transformed coefficients.
+(*What do we do when the linearity assumption is violated or variables are heavily skewed?*)
+
+**Lesson 7.5 | Reporting Linear Regression Results:** Creating coefficient tables, visualizing results, writing interpretation for public health audiences.
+(*How do we communicate findings clearly and accurately?*)
+
+---
+
+## **Week 8: Introduction to Logistic Regression**
+
+**Lesson 8.1 | Binary Outcomes & the Logit Link:** Why linear regression fails for binary outcomes, odds, log-odds, logistic function.
+(*How do we model yes/no outcomes, such as disease presence or vaccination status?*)
+
+**Lesson 8.2 | Interpreting Odds Ratios:** Calculating and interpreting odds ratios, confidence intervals for ORs, presenting results on probability scale.
+(*What does an odds ratio of 2.5 actually mean in terms of disease risk?*)
+
+**Lesson 8.3 | Model Fit & Diagnostics for Logistic Regression:** Predicted probabilities, classification tables, ROC curves, AUC, sensitivity, specificity.
+(*How well does our model discriminate between cases and non-cases?*)
+
+---
+
+## **Week 9: Multiple Logistic Regression**
+
+**Lesson 9.1 | Multiple Predictors in Logistic Models:** Adjusted odds ratios, controlling for confounding, interpretation of coefficients.
+(*How can we account for multiple risk factors, such as age, sex, and comorbidities, when modeling disease occurrence?*)
+
+**Lesson 9.2 | Logistic Regression Assumptions & Diagnostics:** Linearity in the logit, influential observations, multicollinearity, model comparison (likelihood ratio tests, AIC).
+(*How do we assess whether our logistic model is well-specified?*)
+
+**Lesson 9.3 | Reporting Logistic Regression Results:** Creating publication-ready tables, forest plots, writing methods and results sections.
+(*How do we present logistic regression findings in a research paper?*)
+
+---
+
+## **Week 10: Power, Multiple Testing & Best Practices**
+
+**Lesson 10.1 | Statistical Power & Sample Size Planning:** Defining power, factors affecting power, calculating required sample size for common tests (t-test, regression).
+(*How many participants do we need to detect a meaningful effect?*)
+
+**Lesson 10.2 | Multiple Testing & Correction Methods:** Family-wise error rate, Bonferroni correction, false discovery rate (FDR), when to apply corrections.
+(*What happens to our error rate when we perform many statistical tests?*)
+
+**Lesson 10.3 | Data Visualization for Statistical Communication:** Best practices for presenting statistical results graphically, coefficient plots, effect size visualization.
+(*How do we create figures that accurately convey statistical findings?*)
+
+**Lesson 10.4 | Reproducible Research & Documentation:** Creating analysis scripts, documenting decisions, reproducibility principles, common pitfalls in statistical analysis.
+(*How do we ensure our analysis can be understood, verified, and replicated by others?*)
+
+---
+
+## **Key Changes from Original Syllabus**
+
+- **Removed:** Probability distributions, interactions/effect modification
+- **Added:** Study design framework (Week 3), power/sample size (Week 10), multiple testing corrections (Week 10), DAGs and causal thinking
+- **Restructured:** T-tests and ANOVA now taught as special cases of linear regression (Week 5)
+- **Extended:** From 8 to 10 weeks for appropriate pacing
+- **Focused:** Explicitly on cross-sectional observational studies while acknowledging limitations
