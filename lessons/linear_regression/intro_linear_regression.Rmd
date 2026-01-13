@@ -1,0 +1,150 @@
+---
+title: "Introduction to Linear Regression"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+## Setup
+
+```{r}
+# Load packages
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, openintro)
+
+# Load the births14 dataset
+data(births14)
+
+# Filter for preemie babies and get last 8 rows
+preemie_data <- births14 %>%
+    filter(premie == "premie")
+
+preemie_bottom8 <- preemie_data %>%
+    slice_tail(n = 8)
+```
+
+## Fit a Linear Model
+
+```{r}
+# Fit linear regression: weight ~ weeks
+model <- lm(weight ~ weeks, data = preemie_bottom8)
+
+# Extract slope and intercept
+intercept <- coef(model)[1]
+slope <- coef(model)[2]
+
+# Display coefficients
+cat("Intercept:", round(intercept, 3), "\n")
+cat("Slope:", round(slope, 3), "\n")
+```
+
+## Add Predicted Values and Residuals
+
+```{r}
+# Add predicted values and residuals to the data
+preemie_bottom8 <- preemie_bottom8 %>%
+    mutate(
+        predicted = predict(model),
+        residual = weight - predicted
+    )
+
+# View the data with predictions and residuals
+preemie_bottom8 %>%
+    select(weeks, weight, predicted, residual)
+```
+
+## Visualizing the Linear Regression
+
+```{r, fig.width=10, fig.height=8}
+# Create plot showing regression line, residuals, slope and intercept
+ggplot(preemie_bottom8, aes(x = weeks, y = weight)) +
+    # Residual lines (vertical segments from points to regression line)
+    geom_segment(
+        aes(xend = weeks, yend = predicted),
+        color = "red",
+        linetype = "dashed",
+        linewidth = 0.8
+    ) +
+    # Regression line
+    geom_smooth(method = "lm", se = FALSE, color = "steelblue", linewidth = 1.2) +
+    # Actual data points
+    geom_point(size = 4, color = "black") +
+    # Predicted points on the line
+    geom_point(aes(y = predicted), size = 3, color = "steelblue", shape = 1, stroke = 1.5) +
+    # Intercept point (where line crosses y-axis, extended)
+    geom_point(
+        aes(x = 0, y = intercept),
+        size = 5, color = "darkgreen", shape = 17
+    ) +
+    # Extend x-axis to show intercept
+    xlim(0, max(preemie_bottom8$weeks) + 1) +
+    # Annotations for slope and intercept
+    annotate(
+        "text",
+        x = max(preemie_bottom8$weeks) - 2,
+        y = max(preemie_bottom8$weight),
+        label = paste0("Slope = ", round(slope, 3), "\n(weight per week)"),
+        hjust = 0,
+        size = 4,
+        color = "steelblue",
+        fontface = "bold"
+    ) +
+    annotate(
+        "text",
+        x = 2,
+        y = intercept + 0.5,
+        label = paste0("Intercept = ", round(intercept, 3)),
+        hjust = 0,
+        size = 4,
+        color = "darkgreen",
+        fontface = "bold"
+    ) +
+    # Residual label
+    annotate(
+        "text",
+        x = min(preemie_bottom8$weeks) - 1,
+        y = mean(preemie_bottom8$weight),
+        label = "Red dashed lines\n= Residuals",
+        hjust = 0,
+        size = 3.5,
+        color = "red"
+    ) +
+    labs(
+        title = "Linear Regression: Birthweight vs Gestational Weeks",
+        subtitle = "Showing residuals (red), regression line (blue), and intercept (green triangle)",
+        x = "Gestational Weeks",
+        y = "Birthweight (pounds)"
+    ) +
+    theme_minimal() +
+    theme(
+        plot.title = element_text(size = 14, face = "bold"),
+        plot.subtitle = element_text(size = 11, color = "gray40")
+    )
+```
+
+## Summary of Residuals
+
+```{r}
+# Show all residuals
+cat("Residuals for each observation:\n")
+for (i in 1:nrow(preemie_bottom8)) {
+    cat(
+        "Week", preemie_bottom8$weeks[i], 
+        ": Actual =", round(preemie_bottom8$weight[i], 2),
+        ", Predicted =", round(preemie_bottom8$predicted[i], 2),
+        ", Residual =", round(preemie_bottom8$residual[i], 2), "\n"
+    )
+}
+
+cat("\nSum of residuals:", round(sum(preemie_bottom8$residual), 4), "\n")
+cat("Sum of squared residuals (SSE):", round(sum(preemie_bottom8$residual^2), 4), "\n")
+```
+
+## Model Summary
+
+```{r}
+summary(model)
+```
+
