@@ -102,6 +102,8 @@ Even with flawless randomisation, **different random samples would produce diffe
 
 ## An example of sampling variation
 
+In this lesson, we analyse data from a population-based cohort study of diabetes in Chinese adults. The researchers investigated the association between BMI and diabetes, and how this might be impacted by age. The full dataset can be obtained from [Zenodo](https://zenodo.org/record/4997196), and the paper can be viewed [here](https://bmjopen.bmj.com/content/8/9/e021768).
+
 Steps:
 
 1.  Select a random sample of 50 from a population.
